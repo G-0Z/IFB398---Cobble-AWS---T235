@@ -2,9 +2,11 @@
 
 on:
   pull_request:
-    branches: [main, dev]
+    branches: [main]
   push:
-    branches: [main, dev]
+    branches:
+      - main
+      - '*-dev'
 
 jobs:
   terraform-validate:
