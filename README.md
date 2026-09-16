@@ -1,7 +1,7 @@
 # cobbled-aws
 
 **IFB398 Capstone Project - P608 / R014.1**
-Host organisation: Cyber Security Centre
+Host organisation: QUT Client Company
 
 ## Overview
 
