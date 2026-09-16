@@ -1,0 +1,9 @@
+/infrastructure/          @max-github-handle
+/docs/01-reference-architecture/   @max-github-handle
+/docs/02-landing-zone-design/      @max-github-handle
+/docs/03-security-controls/        @jacob-github-handle
+/docs/05-deployment-operations/    @tim-github-handle
+/docs/06-threat-model/             @khai-github-handle
+/docs/07-compliance-mapping/       @nilansh-github-handle
+/docs/08-presentation/             @max-github-handle
+/adr/                              @max-github-handle
