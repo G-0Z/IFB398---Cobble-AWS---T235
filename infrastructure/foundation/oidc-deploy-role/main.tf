@@ -57,7 +57,6 @@ data "aws_iam_policy_document" "deploy_permissions" {
       "guardduty:*",
       "budgets:*",
       "kms:*",
-      "dynamodb:*",
       "logs:*",
       "sts:GetCallerIdentity",
     ]
