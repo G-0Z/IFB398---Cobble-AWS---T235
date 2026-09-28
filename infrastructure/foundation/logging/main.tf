@@ -94,6 +94,11 @@ resource "aws_kms_alias" "logs" {
 
 resource "aws_s3_bucket" "trail" {
   bucket = "${var.project_name}-cloudtrail-${data.aws_caller_identity.current.account_id}"
+
+  # PoC needs to destroy/redeploy cleanly; CloudTrail writes objects almost
+  # immediately, so a plain destroy would otherwise fail on a non-empty
+  # bucket. Not something to carry into a real production trail bucket.
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_versioning" "trail" {

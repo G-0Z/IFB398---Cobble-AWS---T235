@@ -2,6 +2,10 @@ data "aws_caller_identity" "current" {}
 
 resource "aws_s3_bucket" "platform_data" {
   bucket = "${var.project_name}-platform-data-${data.aws_caller_identity.current.account_id}"
+
+  # PoC needs to destroy/redeploy cleanly; force_destroy lets terraform
+  # destroy remove the bucket even if something has written objects into it.
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_versioning" "platform_data" {
