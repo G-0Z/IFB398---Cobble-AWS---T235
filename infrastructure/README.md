@@ -13,12 +13,36 @@ deliberately left out (NAT gateway, multi-account split, compute) and why.
   never root credentials
 - Your own AWS console access already set up in the shared account
 
+## One-time setup (first person only)
+
+The state bucket and lock table this config's backend needs don't exist
+until someone creates them. If `bootstrap/README.md` says this is already
+done, skip to **Setup** below.
+
+1. `cd bootstrap`
+2. `terraform init && terraform apply`
+3. Confirm the bucket/table names match `backend.tf` in this directory.
+
 ## Setup
 
 1. Copy `terraform.tfvars.example` to `terraform.tfvars`.
-2. Fill in `alert_email` (ask in Discord if you don't have the shared address).
+2. Fill in/check `alert_email`, `github_org` and `github_repo` (ask in
+   Discord if the shared alert address has changed).
 3. `terraform init`
 4. `terraform plan` and read it before applying anything.
+5. `terraform apply`
+
+## Redeploying / making changes
+
+- Everyone shares the same remote state (S3 + DynamoDB lock), so `plan`
+  before every `apply` and don't apply concurrently with someone else.
+- After the first `apply`, `deploy_role_arn` (a Terraform output) is the
+  role GitHub Actions can assume via OIDC — no long-lived AWS keys needed
+  in CI for subsequent deploys.
+- `terraform destroy` tears down everything this config created *except*
+  the bootstrap state bucket/lock table (that's a separate config, see
+  `bootstrap/README.md`) — deliberate, so destroying the PoC doesn't also
+  delete the state it needs to know what to destroy.
 
 ## What's here
 
@@ -26,12 +50,14 @@ deliberately left out (NAT gateway, multi-account split, compute) and why.
 |---|---|
 | `main.tf` | Wires the modules together |
 | `variables.tf` | Everything configurable, see descriptions inline |
+| `bootstrap/` | One-time state bucket + lock table, applied by hand before anything else |
 | `foundation/oidc-deploy-role/` | GitHub Actions OIDC trust, so CI can deploy without stored AWS keys |
 | `foundation/logging/` | CloudTrail, KMS key, GuardDuty |
 | `data/` | Encrypted platform data bucket |
 | `network/` | VPC, public/private subnets, no NAT gateway (cost) |
 | `foundation/budget/` | AWS Budgets alert at 80%/100% of $25/month |
-| `edge/`, `platform/`, `modules/`, `environments/` | Empty placeholders — see below |
+| `edge/`, `platform/`, `environments/` | Empty placeholders — see below |
+| `modules/` | Not a Terraform module folder — reserved for future per-Cobbled-module infra, see `modules/README.md` |
 
 ## Folder layout
 
@@ -42,9 +68,9 @@ needing a rename later.
 
 | Folder | Target responsibility | PoC status |
 |---|---|---|
-| `foundation/` | Org, accounts, identity, log archive, security admin | `oidc-deploy-role` done; `logging`, `budget` empty |
-| `network/` | VPCs, subnets, endpoints, gateways, firewall controls | Empty — networking module not yet rebuilt here |
-| `data/` | RDS, subnet/parameter/option groups, backups, keys | Empty — only a plain S3 bucket planned for PoC |
+| `foundation/` | Org, accounts, identity, log archive, security admin | Implemented: `oidc-deploy-role`, `logging`, `budget` |
+| `network/` | VPCs, subnets, endpoints, gateways, firewall controls | Implemented: VPC + public/private subnets, no NAT |
+| `data/` | RDS, subnet/parameter/option groups, backups, keys | Implemented as a plain encrypted S3 bucket (no RDS in PoC scope) |
 | `edge/` | CloudFront, S3 origins, WAF, API Gateway, certificates | Empty — out of PoC scope (see ADR 0003) |
 | `platform/` | ECS/EKS, internal ALB, service discovery, deployment roles | Empty — out of PoC scope (see ADR 0003) |
 | `modules/{plane}/{code}/` | Per-Cobbled-module ECR/API/route/secrets/widget | Empty — no Cobbled application modules deployed by this PoC |
@@ -55,7 +81,9 @@ needing a rename later.
 - Single AWS account, single region. Target design uses per-environment accounts.
 - Deploy role IAM policy is scoped by service, not per-resource ARN.
 - No NAT gateway, private subnets have no internet egress yet.
-- `edge/`, `platform/`, `modules/` and `environments/` are empty scaffolding for
+- One shared KMS key for CloudTrail and the platform data bucket, instead of
+  separate keys per environment/data class.
+- `edge/`, `platform/` and `environments/` are empty scaffolding for
   future work, not missing PoC deliverables — the PoC scope only covers
   identity, logging, budget, networking and storage.
 
