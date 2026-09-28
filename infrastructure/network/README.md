@@ -8,7 +8,7 @@ PoC networking: one VPC, public and private subnets across however many AZs
 - `aws_vpc`, `aws_internet_gateway`
 - `aws_subnet` × N public, × N private (paired by index with the AZ list)
 - `aws_route_table` + associations — public routes `0.0.0.0/0` to the IGW;
-  private has no internet route (no NAT gateway, see ADR 0003)
+  private has no internet route (no NAT gateway yet)
 - `aws_flow_log` (+ CloudWatch Logs group, encrypted, and an IAM role scoped
   to just that log group) — captures ALL traffic for the VPC, per section
   4.3 of the engineering guide.

@@ -2,9 +2,9 @@
 
 Proves the landing zone design in `docs/02-landing-zone-design/` actually
 deploys, repeatably, via `terraform apply`. This is **PoC scope**, not the
-full target architecture — see `adr/0003-poc-scope-vs-target-architecture.md`
-for what's deliberately left out (NAT gateway, multi-account split, compute)
-and why.
+full target architecture in the Cobbled AWS Platform Engineering
+Implementation Guide — see "Known simplifications" below for what's
+deliberately left out (NAT gateway, multi-account split, compute) and why.
 
 ## Prerequisites
 
@@ -77,8 +77,8 @@ content for it, not before.
 | `foundation/` | Org, accounts, identity, log archive, security admin | Implemented: `oidc-deploy-role`, `logging`, `budget` |
 | `network/` | VPCs, subnets, endpoints, gateways, firewall controls | Implemented: VPC + public/private subnets, no NAT |
 | `data/` | RDS, subnet/parameter/option groups, backups, keys | Implemented as a plain encrypted S3 bucket (no RDS in PoC scope) |
-| `edge/` (not yet created) | CloudFront, S3 origins, WAF, API Gateway, certificates | Out of PoC scope (see ADR 0003) |
-| `platform/` (not yet created) | ECS/EKS, internal ALB, service discovery, deployment roles | Out of PoC scope (see ADR 0003) |
+| `edge/` (not yet created) | CloudFront, S3 origins, WAF, API Gateway, certificates | Out of PoC scope |
+| `platform/` (not yet created) | ECS/EKS, internal ALB, service discovery, deployment roles | Out of PoC scope |
 | `modules/{plane}/{code}/` (not yet created) | Per-Cobbled-module ECR/API/route/secrets/widget — not to be confused with the reusable building blocks above | No Cobbled application modules deployed by this PoC |
 | `environments/{dev\|test\|prod\|dr}/` (not yet created) | Approved environment parameters, no plaintext secrets | PoC currently uses a single root `terraform.tfvars` |
 
@@ -107,4 +107,4 @@ job).
 - `force_destroy = true` on the PoC's S3 buckets, so `terraform destroy`
   works cleanly — not something to carry into a bucket holding real data.
 
-Full reasoning for each is in the inline comments and in `adr/0003-poc-scope-vs-target-architecture.md`.
+Full reasoning for each is in the inline comments throughout `infrastructure/`.

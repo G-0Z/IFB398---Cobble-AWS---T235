@@ -44,6 +44,6 @@ run "deploy_policy_scoped_to_expected_services" {
     condition = toset(jsondecode(data.aws_iam_policy_document.deploy_permissions.json).Statement[0].Action) == toset([
       "ec2:*", "s3:*", "iam:*", "cloudtrail:*", "guardduty:*", "budgets:*", "kms:*", "logs:*", "sts:GetCallerIdentity"
     ])
-    error_message = "Deploy role policy action list changed — update this test (and README/ADR 0003) if that's intentional"
+    error_message = "Deploy role policy action list changed — update this test (and README) if that's intentional"
   }
 }

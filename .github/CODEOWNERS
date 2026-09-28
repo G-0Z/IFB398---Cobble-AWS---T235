@@ -1,9 +1,0 @@
-/infrastructure/                   @G-0Z
-/docs/01-reference-architecture/    @G-0Z
-/docs/02-landing-zone-design/       @G-0Z
-/docs/03-security-controls/         @JacobHardcastle
-/docs/05-deployment-operations/     @TimHartmann98
-/docs/06-threat-model/              @tdo212
-/docs/07-compliance-mapping/        @nilansh-github-handle
-/docs/08-presentation/              @G-0Z
-/adr/                               @G-0Z

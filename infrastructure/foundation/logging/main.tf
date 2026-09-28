@@ -4,7 +4,7 @@ data "aws_region" "current" {}
 # ---------------------------------------------------------------------------
 # KMS key shared by CloudTrail and the data/ module's platform bucket.
 # One shared key is a documented PoC simplification (guide recommends
-# separate keys per environment/data class for production) — see ADR 0003.
+# separate keys per environment/data class for production).
 # ---------------------------------------------------------------------------
 
 data "aws_iam_policy_document" "kms_key" {

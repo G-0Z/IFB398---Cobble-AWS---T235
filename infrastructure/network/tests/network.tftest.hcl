@@ -96,7 +96,7 @@ run "private_route_table_has_no_internet_route" {
 
   assert {
     condition     = length(aws_route_table.private.route) == 0
-    error_message = "Private route table should have no routes while there's no NAT gateway (ADR 0003) — if this now fails because a route was added, update this test alongside that work"
+    error_message = "Private route table should have no routes while there's no NAT gateway — if this now fails because a route was added, update this test alongside that work"
   }
 }
 

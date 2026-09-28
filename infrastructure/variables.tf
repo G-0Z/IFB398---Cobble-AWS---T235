@@ -52,7 +52,7 @@ variable "public_subnet_cidrs" {
 }
 
 variable "private_subnet_cidrs" {
-  description = "CIDR blocks for private subnets, one per AZ used. No NAT gateway yet, see ADR 0003, so these have no internet egress."
+  description = "CIDR blocks for private subnets, one per AZ used. No NAT gateway yet, so these have no internet egress."
   type        = list(string)
   default     = ["10.20.10.0/24", "10.20.11.0/24"]
 }
