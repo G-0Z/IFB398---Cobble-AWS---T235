@@ -3,6 +3,13 @@
 PoC networking: one VPC, public and private subnets across however many AZs
 `public_subnet_cidrs`/`private_subnet_cidrs` have entries for.
 
+## Files
+
+| File | Contents |
+|---|---|
+| `main.tf` | VPC, subnets, internet gateway, route tables |
+| `flow-logs.tf` | VPC Flow Logs: CloudWatch Logs group, IAM role, the flow log itself |
+
 ## Resources created
 
 - `aws_vpc`, `aws_internet_gateway`
