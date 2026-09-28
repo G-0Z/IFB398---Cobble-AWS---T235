@@ -14,8 +14,9 @@
 - Never run `terraform apply` against changes that haven't been through a
   PR, even though everyone currently has AWS console access. The repo is
   the source of truth, the console is not.
-- CI runs `terraform validate` + tfsec/Checkov on every PR automatically.
-  A red check means fix it before requesting review, not after.
+- CI runs `terraform fmt`/`validate`, `terraform test` (per-module, mock-based)
+  and a tfsec security scan on every PR automatically. A red check means fix
+  it before requesting review, not after.
 - If your change adds a new AWS service or widens permissions, say so
   explicitly in the PR description, someone will need to update the IAM
   policy scoping too.
