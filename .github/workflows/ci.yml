@@ -12,9 +12,14 @@ jobs:
   terraform-validate:
     name: Terraform format & validate
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # bootstrap/ is a separate root module (its own local state, not
+        # sourced by infrastructure/main.tf), so it needs its own init+validate.
+        working-directory: [infrastructure, infrastructure/bootstrap]
     defaults:
       run:
-        working-directory: infrastructure
+        working-directory: ${{ matrix.working-directory }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
