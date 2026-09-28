@@ -2,7 +2,7 @@
 
 One encrypted S3 bucket for platform data. Stands in for the RDS-based data
 tier described in the target architecture (section 9 of the engineering
-guide) — a database is out of PoC scope, see ADR 0003.
+guide) — a database is out of scope for this PoC deliverable.
 
 ## Resources created
 

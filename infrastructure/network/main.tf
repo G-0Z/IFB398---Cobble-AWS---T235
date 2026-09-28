@@ -65,8 +65,8 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-# No NAT gateway (cost) — see ADR 0003. Private subnets have no internet
-# route yet, just the default local route within the VPC.
+# No NAT gateway (cost). Private subnets have no internet route yet,
+# just the default local route within the VPC.
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.this.id
 
