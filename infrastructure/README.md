@@ -8,20 +8,20 @@ deliberately left out (NAT gateway, multi-account split, compute) and why.
 
 ## Prerequisites
 
-- Terraform >= 1.7
+- Terraform >= 1.10 (needed for `use_lockfile` S3-native state locking)
 - AWS CLI, configured with your own IAM user's access key (`aws configure`),
   never root credentials
 - Your own AWS console access already set up in the shared account
 
 ## One-time setup (first person only)
 
-The state bucket and lock table this config's backend needs don't exist
-until someone creates them. If `bootstrap/README.md` says this is already
-done, skip to **Setup** below.
+The state bucket this config's backend needs doesn't exist until someone
+creates it. If `bootstrap/README.md` says this is already done, skip to
+**Setup** below.
 
 1. `cd bootstrap`
 2. `terraform init && terraform apply`
-3. Confirm the bucket/table names match `backend.tf` in this directory.
+3. Confirm the bucket name matches `backend.tf` in this directory.
 
 ## Setup
 
@@ -34,13 +34,14 @@ done, skip to **Setup** below.
 
 ## Redeploying / making changes
 
-- Everyone shares the same remote state (S3 + DynamoDB lock), so `plan`
-  before every `apply` and don't apply concurrently with someone else.
+- Everyone shares the same remote state (S3, with `use_lockfile` locking),
+  so `plan` before every `apply` and don't apply concurrently with someone
+  else.
 - After the first `apply`, `deploy_role_arn` (a Terraform output) is the
   role GitHub Actions can assume via OIDC — no long-lived AWS keys needed
   in CI for subsequent deploys.
 - `terraform destroy` tears down everything this config created *except*
-  the bootstrap state bucket/lock table (that's a separate config, see
+  the bootstrap state bucket (that's a separate config, see
   `bootstrap/README.md`) — deliberate, so destroying the PoC doesn't also
   delete the state it needs to know what to destroy.
 
@@ -50,7 +51,7 @@ done, skip to **Setup** below.
 |---|---|
 | `main.tf` | Wires the modules together |
 | `variables.tf` | Everything configurable, see descriptions inline |
-| `bootstrap/` | One-time state bucket + lock table, applied by hand before anything else |
+| `bootstrap/` | One-time state bucket, applied by hand before anything else |
 | `foundation/oidc-deploy-role/` | GitHub Actions OIDC trust, so CI can deploy without stored AWS keys |
 | `foundation/logging/` | CloudTrail, KMS key, GuardDuty |
 | `data/` | Encrypted platform data bucket |

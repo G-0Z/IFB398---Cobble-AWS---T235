@@ -1,17 +1,20 @@
 # Bootstrap: Terraform state backend
 
-Creates the S3 bucket + DynamoDB lock table that `infrastructure/backend.tf`
-points at. This has to exist *before* `terraform init` works in the main
-`infrastructure/` config, so it's a separate root module with its own local
-state, applied once, by hand.
+Creates the S3 bucket that `infrastructure/backend.tf` points at. This has
+to exist *before* `terraform init` works in the main `infrastructure/`
+config, so it's a separate root module with its own local state, applied
+once, by hand.
+
+State locking uses the bucket itself (`use_lockfile` in `backend.tf`,
+Terraform >= 1.10's S3-native locking) — no DynamoDB table needed.
 
 ## Why this is separate
 
 Terraform can't create the S3 bucket it's about to store its own state in in
 the same `terraform apply` that uses that bucket as a backend — chicken and
 egg. So this tiny config uses local state (a `.tfstate` file in this folder,
-gitignored) and only ever creates two things: the state bucket and the lock
-table. Nobody should need to touch it again after the first apply.
+gitignored) and only ever creates one thing: the state bucket. Nobody should
+need to touch it again after the first apply.
 
 ## Setup
 
@@ -28,10 +31,13 @@ and gets the same remote state.
 ## Resources created
 
 - `aws_s3_bucket` — versioned, encrypted (SSE-S3), all public access blocked.
-- `aws_dynamodb_table` — state lock table, pay-per-request, `LockID` hash key.
 
 ## Notes
 
 - Only needs to be applied once per AWS account. If it already exists,
   running `apply` again is a no-op (still safe).
-- Do not delete the bucket or table while anyone still has state in it.
+- Do not delete the bucket while anyone still has state in it.
+- If this account previously used a `cobble-tfstate-lock` DynamoDB table
+  (from before the `use_lockfile` migration), it's no longer referenced by
+  anything and can be deleted once everyone has pulled the updated
+  `backend.tf` and re-run `terraform init -reconfigure` in `infrastructure/`.
