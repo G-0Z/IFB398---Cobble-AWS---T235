@@ -39,7 +39,23 @@ The scope of this project is not the Cobble application modules themselves. It i
 
 ## Repository structure
 
-Structure will be added as the project develops (e.g. `/architecture`, `/infrastructure`, `/docs`, `/runbooks`).
+```
+adr/                              Architecture decision records
+docs/
+  01-reference-architecture/      Deliverable 1
+  02-landing-zone-design/         Deliverable 2
+  03-security-controls/           Deliverable 3
+  05-deployment-operations/       Deliverable 5
+  06-threat-model/                Deliverable 6
+  07-compliance-mapping/          Deliverable 7
+  08-presentation/                Deliverable 8
+infrastructure/                   Deliverable 4 (Infrastructure-as-Code prototype)
+runbooks/                         Operational runbooks referenced by deliverable 5
+```
+
+Numbering follows the deliverables list above; `infrastructure/` covers deliverable 4
+outside of `docs/`, so `docs/04-...` is intentionally absent. See `.github/CODEOWNERS`
+for who owns each area.
 
 ## Status
 

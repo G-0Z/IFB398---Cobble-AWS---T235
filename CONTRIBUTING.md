@@ -25,7 +25,7 @@
 - If a decision changes something already written in `docs/`, update the
   doc in the same PR as the code change. Don't let them drift apart.
 - Any decision with real tradeoffs (tool choice, scope cut, architecture
-  change) gets an ADR in `architecture decision record/`, even a short one.
+  change) gets an ADR in `adr/`, even a short one.
 
 ## Commit messages
 
