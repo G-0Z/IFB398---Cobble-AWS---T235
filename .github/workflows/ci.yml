@@ -36,6 +36,36 @@ jobs:
       - name: Terraform validate
         run: terraform validate
 
+  terraform-test:
+    name: Terraform module tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Each module's tests/*.tftest.hcl uses mock_provider (or an
+        # offline-configured real provider), so these run without any
+        # AWS credentials and never touch the real account.
+        working-directory:
+          - infrastructure/network
+          - infrastructure/data
+          - infrastructure/foundation/budget
+          - infrastructure/foundation/logging
+          - infrastructure/foundation/oidc-deploy-role
+    defaults:
+      run:
+        working-directory: ${{ matrix.working-directory }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform init
+        run: terraform init -input=false
+
+      - name: Terraform test
+        run: terraform test
+
   security-scan:
     name: tfsec security scan
     runs-on: ubuntu-latest
