@@ -1,10 +1,10 @@
 # Terraform PoC (Deliverable 4)
 
 Proves the landing zone design in `docs/02-landing-zone-design/` actually
-deploys, repeatably, via `terraform apply`. This is **PoC scope**, not
-the full target architecture, see the "Open questions" section of
-`docs/01-reference-architecture/reference-architecture.md` for what's
-deliberately left out (NAT gateway, multi-account split, compute) and why.
+deploys, repeatably, via `terraform apply`. This is **PoC scope**, not the
+full target architecture — see `adr/0003-poc-scope-vs-target-architecture.md`
+for what's deliberately left out (NAT gateway, multi-account split, compute)
+and why.
 
 ## Prerequisites
 
@@ -57,35 +57,54 @@ creates it. If `bootstrap/README.md` says this is already done, skip to
 | `data/` | Encrypted platform data bucket |
 | `network/` | VPC, public/private subnets, no NAT gateway (cost) |
 | `foundation/budget/` | AWS Budgets alert at 80%/100% of $25/month |
-| `edge/`, `platform/`, `environments/` | Empty placeholders — see below |
-| `modules/` | Not a Terraform module folder — reserved for future per-Cobbled-module infra, see `modules/README.md` |
+
+Each module folder also has its own `versions.tf`, `README.md` and
+`tests/*.tftest.hcl` — see [Module tests](#module-tests) below.
 
 ## Folder layout
 
 The folder names follow the IaC repository structure in section 15.1 of
 the Cobbled AWS Platform Engineering Implementation Guide, so this PoC
 grows into the same shape the target architecture uses instead of
-needing a rename later.
+needing a rename later. Only `foundation/`, `network/` and `data/` are
+scaffolded right now — the rest of the target layout (`edge/`, `platform/`,
+`modules/{plane}/{code}/`, `environments/{dev|test|prod|dr}/`) is documented
+here but not created as empty folders; add each one when there's real
+content for it, not before.
 
 | Folder | Target responsibility | PoC status |
 |---|---|---|
 | `foundation/` | Org, accounts, identity, log archive, security admin | Implemented: `oidc-deploy-role`, `logging`, `budget` |
 | `network/` | VPCs, subnets, endpoints, gateways, firewall controls | Implemented: VPC + public/private subnets, no NAT |
 | `data/` | RDS, subnet/parameter/option groups, backups, keys | Implemented as a plain encrypted S3 bucket (no RDS in PoC scope) |
-| `edge/` | CloudFront, S3 origins, WAF, API Gateway, certificates | Empty — out of PoC scope (see ADR 0003) |
-| `platform/` | ECS/EKS, internal ALB, service discovery, deployment roles | Empty — out of PoC scope (see ADR 0003) |
-| `modules/{plane}/{code}/` | Per-Cobbled-module ECR/API/route/secrets/widget | Empty — no Cobbled application modules deployed by this PoC |
-| `environments/{dev\|test\|prod\|dr}/` | Approved environment parameters, no plaintext secrets | Empty — PoC currently uses a single root `terraform.tfvars` |
+| `edge/` (not yet created) | CloudFront, S3 origins, WAF, API Gateway, certificates | Out of PoC scope (see ADR 0003) |
+| `platform/` (not yet created) | ECS/EKS, internal ALB, service discovery, deployment roles | Out of PoC scope (see ADR 0003) |
+| `modules/{plane}/{code}/` (not yet created) | Per-Cobbled-module ECR/API/route/secrets/widget — not to be confused with the reusable building blocks above | No Cobbled application modules deployed by this PoC |
+| `environments/{dev\|test\|prod\|dr}/` (not yet created) | Approved environment parameters, no plaintext secrets | PoC currently uses a single root `terraform.tfvars` |
+
+## Module tests
+
+Every module under `foundation/`, `network/` and `data/` has its own
+`terraform test` suite (`tests/*.tftest.hcl`), mock/plan-based so they run
+free with no AWS credentials. Run them from inside the module directory:
+
+```
+cd network   # or data, foundation/budget, foundation/logging, foundation/oidc-deploy-role
+terraform init
+terraform test
+```
+
+CI runs all of them automatically on every PR (`ci.yml`'s `terraform-test`
+job).
 
 ## Known simplifications (documented, not oversights)
 
 - Single AWS account, single region. Target design uses per-environment accounts.
 - Deploy role IAM policy is scoped by service, not per-resource ARN.
 - No NAT gateway, private subnets have no internet egress yet.
-- One shared KMS key for CloudTrail and the platform data bucket, instead of
-  separate keys per environment/data class.
-- `edge/`, `platform/` and `environments/` are empty scaffolding for
-  future work, not missing PoC deliverables — the PoC scope only covers
-  identity, logging, budget, networking and storage.
+- One shared KMS key for CloudTrail, VPC flow logs and the platform data
+  bucket, instead of separate keys per environment/data class.
+- `force_destroy = true` on the PoC's S3 buckets, so `terraform destroy`
+  works cleanly — not something to carry into a bucket holding real data.
 
 Full reasoning for each is in the inline comments and in `adr/0003-poc-scope-vs-target-architecture.md`.
