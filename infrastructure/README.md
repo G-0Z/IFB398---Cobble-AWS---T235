@@ -24,18 +24,39 @@ deliberately left out (NAT gateway, multi-account split, compute) and why.
 
 | File/folder | Purpose |
 |---|---|
-| `main.tf` | Wires the five modules together |
+| `main.tf` | Wires the modules together |
 | `variables.tf` | Everything configurable, see descriptions inline |
-| `modules/oidc-deploy-role/` | GitHub Actions OIDC trust, so CI can deploy without stored AWS keys |
-| `modules/logging/` | CloudTrail, KMS key, GuardDuty |
-| `modules/storage/` | Encrypted platform data bucket |
-| `modules/networking/` | VPC, public/private subnets, no NAT gateway (cost) |
-| `modules/budget/` | AWS Budgets alert at 80%/100% of $25/month |
+| `foundation/oidc-deploy-role/` | GitHub Actions OIDC trust, so CI can deploy without stored AWS keys |
+| `foundation/logging/` | CloudTrail, KMS key, GuardDuty |
+| `data/` | Encrypted platform data bucket |
+| `network/` | VPC, public/private subnets, no NAT gateway (cost) |
+| `foundation/budget/` | AWS Budgets alert at 80%/100% of $25/month |
+| `edge/`, `platform/`, `modules/`, `environments/` | Empty placeholders — see below |
+
+## Folder layout
+
+The folder names follow the IaC repository structure in section 15.1 of
+the Cobbled AWS Platform Engineering Implementation Guide, so this PoC
+grows into the same shape the target architecture uses instead of
+needing a rename later.
+
+| Folder | Target responsibility | PoC status |
+|---|---|---|
+| `foundation/` | Org, accounts, identity, log archive, security admin | `oidc-deploy-role` done; `logging`, `budget` empty |
+| `network/` | VPCs, subnets, endpoints, gateways, firewall controls | Empty — networking module not yet rebuilt here |
+| `data/` | RDS, subnet/parameter/option groups, backups, keys | Empty — only a plain S3 bucket planned for PoC |
+| `edge/` | CloudFront, S3 origins, WAF, API Gateway, certificates | Empty — out of PoC scope (see ADR 0003) |
+| `platform/` | ECS/EKS, internal ALB, service discovery, deployment roles | Empty — out of PoC scope (see ADR 0003) |
+| `modules/{plane}/{code}/` | Per-Cobbled-module ECR/API/route/secrets/widget | Empty — no Cobbled application modules deployed by this PoC |
+| `environments/{dev\|test\|prod\|dr}/` | Approved environment parameters, no plaintext secrets | Empty — PoC currently uses a single root `terraform.tfvars` |
 
 ## Known simplifications (documented, not oversights)
 
 - Single AWS account, single region. Target design uses per-environment accounts.
 - Deploy role IAM policy is scoped by service, not per-resource ARN.
 - No NAT gateway, private subnets have no internet egress yet.
+- `edge/`, `platform/`, `modules/` and `environments/` are empty scaffolding for
+  future work, not missing PoC deliverables — the PoC scope only covers
+  identity, logging, budget, networking and storage.
 
 Full reasoning for each is in the inline comments and in `adr/0003-poc-scope-vs-target-architecture.md`.
