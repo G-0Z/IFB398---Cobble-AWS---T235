@@ -41,6 +41,5 @@ CloudTrail trail, and GuardDuty.
 
 - Only one GuardDuty detector is allowed per account/region; if one already
   exists, `terraform import` it instead of applying.
-- No log archive/security-tooling account separation yet (single-account PoC,
-  see ADR 0003) — trail and detector live in the same account as everything
-  else.
+- No log archive/security-tooling account separation yet (single-account
+  PoC) — trail and detector live in the same account as everything else.

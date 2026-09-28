@@ -40,7 +40,6 @@ The scope of this project is not the Cobble application modules themselves. It i
 ## Repository structure
 
 ```
-adr/                              Architecture decision records
 docs/
   01-reference-architecture/      Deliverable 1
   02-landing-zone-design/         Deliverable 2
@@ -54,14 +53,13 @@ runbooks/                         Operational runbooks referenced by deliverable
 ```
 
 Numbering follows the deliverables list above; `infrastructure/` covers deliverable 4
-outside of `docs/`, so `docs/04-...` is intentionally absent. See `.github/CODEOWNERS`
-for who owns each area.
+outside of `docs/`, so `docs/04-...` is intentionally absent.
 
 ## Status
 
 🚧 In progress — Terraform PoC (deliverable 4) is deployed to the shared AWS
 account with automated tests and CI. Other deliverables (docs/01-08) are
-still scaffolding, see each folder's owner in `.github/CODEOWNERS`.
+still scaffolding.
 
 ## Team
 
