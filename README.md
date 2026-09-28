@@ -33,7 +33,7 @@ The scope of this project is not the Cobble application modules themselves. It i
 ## Tech stack
 
 + **Cloud provider:** AWS (Organizations, Control Tower / landing zone concepts, IAM, VPC, KMS, Secrets Manager, CloudTrail, GuardDuty, Security Hub, Config, RDS, S3)
-+ **Infrastructure as Code:** TBC — Terraform, AWS CloudFormation, or AWS CDK
++ **Infrastructure as Code:** Terraform
 + **Containers/hosting:** Docker, ECS/EKS (as applicable)
 + **CI/CD:** GitHub Actions or AWS CodePipeline
 
@@ -59,7 +59,9 @@ for who owns each area.
 
 ## Status
 
-🚧 Early setup — repository and organisation scaffolding in progress.
+🚧 In progress — Terraform PoC (deliverable 4) is deployed to the shared AWS
+account with automated tests and CI. Other deliverables (docs/01-08) are
+still scaffolding, see each folder's owner in `.github/CODEOWNERS`.
 
 ## Team
 
