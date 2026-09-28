@@ -36,3 +36,9 @@ resource "aws_s3_bucket_public_access_block" "platform_data" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+
+resource "aws_s3_bucket_logging" "platform_data" {
+  bucket        = aws_s3_bucket.platform_data.id
+  target_bucket = var.access_log_bucket_id
+  target_prefix = "platform-data-bucket-logs/"
+}

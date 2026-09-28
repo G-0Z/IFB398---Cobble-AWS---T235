@@ -17,3 +17,8 @@ output "guardduty_detector_id" {
   description = "GuardDuty detector ID."
   value       = aws_guardduty_detector.this.id
 }
+
+output "access_log_bucket_id" {
+  description = "Shared S3 access-log destination bucket, for other buckets' server access logging."
+  value       = aws_s3_bucket.access_logs.id
+}

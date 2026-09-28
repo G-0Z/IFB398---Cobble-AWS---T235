@@ -28,11 +28,13 @@ module "network" {
   vpc_cidr             = var.vpc_cidr
   public_subnet_cidrs  = var.public_subnet_cidrs
   private_subnet_cidrs = var.private_subnet_cidrs
+  kms_key_arn          = module.logging.kms_key_arn
 }
 
 module "data" {
   source = "./data"
 
-  project_name = var.project_name
-  kms_key_arn  = module.logging.kms_key_arn
+  project_name         = var.project_name
+  kms_key_arn          = module.logging.kms_key_arn
+  access_log_bucket_id = module.logging.access_log_bucket_id
 }

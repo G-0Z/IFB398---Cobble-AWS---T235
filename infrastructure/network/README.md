@@ -9,6 +9,9 @@ PoC networking: one VPC, public and private subnets across however many AZs
 - `aws_subnet` × N public, × N private (paired by index with the AZ list)
 - `aws_route_table` + associations — public routes `0.0.0.0/0` to the IGW;
   private has no internet route (no NAT gateway, see ADR 0003)
+- `aws_flow_log` (+ CloudWatch Logs group, encrypted, and an IAM role scoped
+  to just that log group) — captures ALL traffic for the VPC, per section
+  4.3 of the engineering guide.
 
 ## Inputs
 
@@ -18,6 +21,7 @@ PoC networking: one VPC, public and private subnets across however many AZs
 | `vpc_cidr` | VPC CIDR block |
 | `public_subnet_cidrs` | List of public subnet CIDRs, one per AZ |
 | `private_subnet_cidrs` | List of private subnet CIDRs, one per AZ |
+| `kms_key_arn` | KMS key ARN to encrypt the flow log group with (from `foundation/logging`'s `kms_key_arn` output) |
 
 ## Outputs
 
