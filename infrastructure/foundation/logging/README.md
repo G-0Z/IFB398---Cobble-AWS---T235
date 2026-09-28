@@ -3,6 +3,16 @@
 Baseline account-level security logging: a CMK, an organisation-wide
 CloudTrail trail, and GuardDuty.
 
+## Files
+
+| File | Contents |
+|---|---|
+| `data.tf` | Shared `aws_caller_identity`/`aws_region` data sources |
+| `kms.tf` | The shared KMS key, its policy, and its alias |
+| `cloudtrail.tf` | Trail bucket, its policy, the trail itself, and its CloudWatch Logs integration |
+| `access-logs.tf` | Shared S3 access-log destination bucket, consumed by `data/` too |
+| `guardduty.tf` | GuardDuty detector |
+
 ## Resources created
 
 - `aws_kms_key` + alias — shared by CloudTrail, `network/`'s VPC flow log
