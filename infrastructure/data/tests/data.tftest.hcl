@@ -11,8 +11,9 @@ mock_provider "aws" {
 }
 
 variables {
-  project_name = "test"
-  kms_key_arn  = "arn:aws:kms:ap-southeast-2:123456789012:key/mock-key-id"
+  project_name         = "test"
+  kms_key_arn          = "arn:aws:kms:ap-southeast-2:123456789012:key/mock-key-id"
+  access_log_bucket_id = "test-access-logs-123456789012"
 }
 
 run "bucket_name_includes_project_and_account" {
@@ -67,5 +68,14 @@ run "bucket_has_force_destroy_enabled" {
   assert {
     condition     = aws_s3_bucket.platform_data.force_destroy == true
     error_message = "PoC bucket should allow force_destroy so terraform destroy doesn't get blocked by BucketNotEmpty"
+  }
+}
+
+run "bucket_access_logs_go_to_the_shared_bucket" {
+  command = apply
+
+  assert {
+    condition     = aws_s3_bucket_logging.platform_data.target_bucket == var.access_log_bucket_id
+    error_message = "Platform data bucket's access logs should go to the supplied access_log_bucket_id"
   }
 }

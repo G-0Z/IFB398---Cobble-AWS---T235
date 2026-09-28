@@ -28,12 +28,48 @@ mock_provider "aws" {
     }
   }
 
-  # aws_cloudtrail validates kms_key_id looks like a real ARN at plan time;
-  # the mock's fabricated arn for a brand-new key doesn't pass that check.
+  override_data {
+    target = data.aws_iam_policy_document.trail_to_cloudwatch_assume
+    values = {
+      json = jsonencode({ Version = "2012-10-17", Statement = [] })
+    }
+  }
+
+  override_data {
+    target = data.aws_iam_policy_document.trail_to_cloudwatch_permissions
+    values = {
+      json = jsonencode({ Version = "2012-10-17", Statement = [] })
+    }
+  }
+
+  override_data {
+    target = data.aws_iam_policy_document.access_logs_bucket
+    values = {
+      json = jsonencode({ Version = "2012-10-17", Statement = [] })
+    }
+  }
+
+  # aws_cloudtrail validates kms_key_id/cloud_watch_logs_group_arn look like
+  # real ARNs at plan time; the mock's fabricated arns for brand-new
+  # resources don't pass that check.
   override_resource {
     target = aws_kms_key.logs
     values = {
       arn = "arn:aws:kms:ap-southeast-2:123456789012:key/12345678-1234-1234-1234-123456789012"
+    }
+  }
+
+  override_resource {
+    target = aws_cloudwatch_log_group.trail
+    values = {
+      arn = "arn:aws:logs:ap-southeast-2:123456789012:log-group:/cobble/test/cloudtrail"
+    }
+  }
+
+  override_resource {
+    target = aws_iam_role.trail_to_cloudwatch
+    values = {
+      arn = "arn:aws:iam::123456789012:role/test-trail-to-cloudwatch"
     }
   }
 }
@@ -106,5 +142,40 @@ run "trail_bucket_has_force_destroy_enabled" {
   assert {
     condition     = aws_s3_bucket.trail.force_destroy == true
     error_message = "PoC trail bucket should allow force_destroy so terraform destroy doesn't get blocked by BucketNotEmpty"
+  }
+}
+
+run "cloudtrail_streams_to_cloudwatch" {
+  command = apply
+
+  assert {
+    condition     = aws_cloudtrail.this.cloud_watch_logs_role_arn == aws_iam_role.trail_to_cloudwatch.arn
+    error_message = "CloudTrail should stream to CloudWatch Logs via the trail_to_cloudwatch role"
+  }
+}
+
+run "access_log_bucket_blocks_public_access_and_is_versioned" {
+  command = apply
+
+  assert {
+    condition = (
+      aws_s3_bucket_public_access_block.access_logs.block_public_acls &&
+      aws_s3_bucket_public_access_block.access_logs.restrict_public_buckets
+    )
+    error_message = "Access-log bucket must block all public access"
+  }
+
+  assert {
+    condition     = one(aws_s3_bucket_versioning.access_logs.versioning_configuration).status == "Enabled"
+    error_message = "Access-log bucket must have versioning enabled"
+  }
+}
+
+run "trail_bucket_logs_to_the_access_log_bucket" {
+  command = apply
+
+  assert {
+    condition     = aws_s3_bucket_logging.trail.target_bucket == aws_s3_bucket.access_logs.id
+    error_message = "Trail bucket's access logs should go to the shared access-log bucket"
   }
 }

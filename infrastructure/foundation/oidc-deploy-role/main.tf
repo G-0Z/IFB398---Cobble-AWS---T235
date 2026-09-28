@@ -45,6 +45,7 @@ resource "aws_iam_role" "deploy" {
 # Scoped by service, not by resource ARN. Tightening this to specific
 # resource ARNs is a documented next step, not done yet — see this
 # module's README and ADR 0003.
+#tfsec:ignore:aws-iam-no-policy-wildcards -- documented PoC simplification, see comment above and ADR 0003.
 data "aws_iam_policy_document" "deploy_permissions" {
   statement {
     sid    = "PoCServiceAccess"

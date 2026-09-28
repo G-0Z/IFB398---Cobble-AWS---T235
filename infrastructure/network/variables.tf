@@ -17,3 +17,8 @@ variable "private_subnet_cidrs" {
   description = "CIDR blocks for private subnets, one per AZ used."
   type        = list(string)
 }
+
+variable "kms_key_arn" {
+  description = "KMS key ARN used to encrypt the VPC flow logs group. Consumed from foundation/logging's output."
+  type        = string
+}
