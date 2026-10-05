@@ -11,7 +11,7 @@ variable "project_name" {
 }
 
 variable "state_bucket_name" {
-  description = "Globally-unique S3 bucket name for Terraform state. Must match the bucket hardcoded in infrastructure/backend.tf."
+  description = "Globally-unique S3 bucket name for Terraform state. Must match the bucket hardcoded in infrastructure/envs/poc/backend.tf."
   type        = string
   default     = "cobble-tfstate-669591255093"
 }

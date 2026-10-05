@@ -1,5 +1,5 @@
 # Plan/mock-based tests: no AWS credentials or real resources needed, so
-# these run free in CI on every PR. See infrastructure/network/README.md
+# these run free in CI on every PR. See infrastructure/modules/network/README.md
 # for what this module is supposed to do.
 
 mock_provider "aws" {

@@ -1,3 +1,5 @@
+# `network` module
+
 ## Purpose
 
 PoC networking: one VPC, public and private subnets across however many AZs
@@ -28,7 +30,7 @@ PoC networking: one VPC, public and private subnets across however many AZs
 | `vpc_cidr` | VPC CIDR block |
 | `public_subnet_cidrs` | List of public subnet CIDRs, one per AZ |
 | `private_subnet_cidrs` | List of private subnet CIDRs, one per AZ |
-| `kms_key_arn` | KMS key ARN to encrypt the flow log group with (from `foundation/logging`'s `kms_key_arn` output) |
+| `kms_key_arn` | KMS key ARN to encrypt the flow log group with (from `security-baseline`'s `kms_key_arn` output) |
 
 ## Outputs
 

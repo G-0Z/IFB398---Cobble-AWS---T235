@@ -1,3 +1,5 @@
+# `oidc-deploy-role` module
+
 ## Purpose
 
 Lets GitHub Actions deploy to AWS without any stored long-lived AWS keys
