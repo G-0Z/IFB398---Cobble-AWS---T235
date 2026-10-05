@@ -82,6 +82,13 @@ jobs:
   security-scan:
     name: tfsec security scan
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Scan each root config. tfsec follows envs/poc's module calls into
+        # modules/, so every module gets scanned through it.
+        working-directory:
+          - infrastructure/envs/poc
+          - infrastructure/bootstrap
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -89,4 +96,4 @@ jobs:
       - name: Run tfsec
         uses: aquasecurity/tfsec-action@v1.0.3
         with:
-          working_directory: infrastructure
+          working_directory: ${{ matrix.working-directory }}
