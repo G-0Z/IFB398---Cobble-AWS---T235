@@ -1,7 +1,5 @@
 # Cobble AWS PoC
 
-[![CI](https://github.com/G-0Z/IFB398---Cobble-AWS---T235/actions/workflows/ci.yml/badge.svg)](https://github.com/G-0Z/IFB398---Cobble-AWS---T235/actions/workflows/ci.yml)
-
 **IFB398 Capstone · P608 / R014.1 · Tutorial group T235** · Host organisation: QUT Client Company
 
 A secure AWS landing zone and deployment model for **Cobble**, a proof-of-concept
