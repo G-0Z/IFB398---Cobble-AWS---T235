@@ -1,3 +1,4 @@
+#tfsec:ignore:aws-s3-enable-bucket-logging -- the shared access-log bucket lives in envs/poc, which gets torn down and redeployed; the state bucket must outlive it, so it can't log there. Versioning is on, so every state change is recoverable.
 resource "aws_s3_bucket" "tfstate" {
   bucket = var.state_bucket_name
 
@@ -16,6 +17,7 @@ resource "aws_s3_bucket_versioning" "tfstate" {
   }
 }
 
+#tfsec:ignore:aws-s3-encryption-customer-key -- documented PoC simplification: SSE-S3 keeps bootstrap self-contained (no KMS key to manage before anything else exists). Production would use a dedicated CMK for state.
 resource "aws_s3_bucket_server_side_encryption_configuration" "tfstate" {
   bucket = aws_s3_bucket.tfstate.id
 
