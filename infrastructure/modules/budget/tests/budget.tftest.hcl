@@ -1,5 +1,5 @@
 # Plan/mock-based tests: no AWS credentials or real resources needed.
-# See infrastructure/foundation/budget/README.md for what this module does.
+# See infrastructure/modules/budget/README.md for what this module does.
 
 mock_provider "aws" {}
 

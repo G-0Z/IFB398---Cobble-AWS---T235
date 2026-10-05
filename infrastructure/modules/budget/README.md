@@ -1,3 +1,5 @@
+# `budget` module
+
 ## Purpose
 
 Cost guardrail for the shared student AWS account: one monthly budget with

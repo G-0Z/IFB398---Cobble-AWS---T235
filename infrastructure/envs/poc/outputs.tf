@@ -5,12 +5,12 @@ output "deploy_role_arn" {
 
 output "cloudtrail_arn" {
   description = "CloudTrail trail ARN."
-  value       = module.logging.trail_arn
+  value       = module.security_baseline.trail_arn
 }
 
 output "guardduty_detector_id" {
   description = "GuardDuty detector ID."
-  value       = module.logging.guardduty_detector_id
+  value       = module.security_baseline.guardduty_detector_id
 }
 
 output "budget_name" {
