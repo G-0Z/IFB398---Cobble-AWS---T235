@@ -1,6 +1,8 @@
+# `security-baseline` module
+
 ## Purpose
 
-Baseline account-level security logging: a CMK, an organisation-wide
+Account-level security baseline: a KMS key, a multi-region
 CloudTrail trail, and GuardDuty.
 
 ## Files
@@ -41,7 +43,7 @@ CloudTrail trail, and GuardDuty.
 
 | Name | Description |
 |---|---|
-| `kms_key_arn` | Shared KMS key ARN, consumed by `network/` and `data/` |
+| `kms_key_arn` | Shared KMS key ARN, consumed by `network` and `data` |
 | `trail_arn` | CloudTrail trail ARN |
 | `trail_bucket_name` | CloudTrail log bucket name |
 | `guardduty_detector_id` | GuardDuty detector ID |

@@ -1,5 +1,5 @@
 # Plan/mock-based tests: no AWS credentials or real resources needed.
-# See infrastructure/data/README.md for what this module is supposed to do.
+# See infrastructure/modules/data/README.md for what this module is supposed to do.
 
 mock_provider "aws" {
   override_data {

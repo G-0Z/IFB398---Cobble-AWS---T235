@@ -19,6 +19,6 @@ variable "private_subnet_cidrs" {
 }
 
 variable "kms_key_arn" {
-  description = "KMS key ARN used to encrypt the VPC flow logs group. Consumed from foundation/logging's output."
+  description = "KMS key ARN used to encrypt the VPC flow logs group. Consumed from the security-baseline module's output."
   type        = string
 }
