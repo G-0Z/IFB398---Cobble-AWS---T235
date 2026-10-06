@@ -1,6 +1,8 @@
-# Shared S3 access-log destination bucket. Buckets that write real data
-# (the trail bucket in cloudtrail.tf, and data/'s platform bucket) point
-# their server access logs here so there's a record of who accessed them.
+# The access-log bucket: every other bucket sends its server access logs
+# (who requested what, when) here. It's written by hand instead of with the
+# s3-bucket module for two reasons:
+#   - it is the log destination, so it doesn't log itself
+#   - S3 access-log delivery only supports SSE-S3 on the destination, not KMS
 
 #tfsec:ignore:aws-s3-enable-bucket-logging -- this bucket IS the access-log destination; it doesn't log itself.
 resource "aws_s3_bucket" "access_logs" {
@@ -60,10 +62,4 @@ data "aws_iam_policy_document" "access_logs_bucket" {
 resource "aws_s3_bucket_policy" "access_logs" {
   bucket = aws_s3_bucket.access_logs.id
   policy = data.aws_iam_policy_document.access_logs_bucket.json
-}
-
-resource "aws_s3_bucket_logging" "trail" {
-  bucket        = aws_s3_bucket.trail.id
-  target_bucket = aws_s3_bucket.access_logs.id
-  target_prefix = "cloudtrail-bucket-logs/"
 }

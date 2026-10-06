@@ -7,11 +7,10 @@
 # state would try to re-read these mocked resources for real and fail).
 #
 # The trust policy's actual sub/aud restriction isn't covered by a test
-# here at all — it depends on aws_iam_openid_connect_provider.github.arn,
-# which is unknown at plan time for a resource that doesn't exist yet, and
-# genuinely applying this config needs a real AWS account. That property
-# is instead meant to be proven by actually assuming the role from GitHub
-# Actions (see the suggestion in this module's README).
+# here at all: it depends on aws_iam_openid_connect_provider.github.arn,
+# which is unknown at plan time for a resource that doesn't exist yet. It's
+# a known gap (see this module's README); the real proof is assuming the
+# role from GitHub Actions once CI deploys (ADR 0001, D6).
 
 mock_provider "aws" {
   # Both consuming resources validate their policy/assume_role_policy

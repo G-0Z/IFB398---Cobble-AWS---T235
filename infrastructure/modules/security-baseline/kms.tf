@@ -1,7 +1,12 @@
-# KMS key shared by CloudTrail, the VPC flow log group (network/), and the
-# data/ module's platform bucket. One shared key is a documented PoC
-# simplification (guide recommends separate keys per environment/data class
-# for production).
+# The PoC's one KMS key. It encrypts:
+#   - CloudTrail's log files and log group (cloudtrail.tf)
+#   - the VPC flow log group (modules/network)
+#   - the platform data bucket (envs/poc/main.tf)
+# One shared key is a documented PoC simplification; the Guide wants
+# separate keys per environment and data class (ADR 0001, D1).
+#
+# Each statement below grants one consumer what it needs. A new consumer
+# (another AWS service) needs a statement here too.
 
 data "aws_iam_policy_document" "kms_key" {
   statement {

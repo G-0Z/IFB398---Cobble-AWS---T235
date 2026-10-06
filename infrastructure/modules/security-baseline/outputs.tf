@@ -10,7 +10,7 @@ output "trail_arn" {
 
 output "trail_bucket_name" {
   description = "S3 bucket holding CloudTrail logs."
-  value       = aws_s3_bucket.trail.bucket
+  value       = module.trail_bucket.bucket_name
 }
 
 output "guardduty_detector_id" {

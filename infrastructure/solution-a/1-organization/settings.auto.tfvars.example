@@ -1,0 +1,12 @@
+# Copy to settings.auto.tfvars and replace every value. Nothing here is
+# secret, but the email addresses must be real, monitored team mailboxes.
+
+management_account_id = "123456789012"
+
+account_emails = {
+  security        = "cobble-aws-security@example.com"
+  shared_services = "cobble-aws-shared@example.com"
+  dev             = "cobble-aws-dev@example.com"
+  staging         = "cobble-aws-staging@example.com"
+  prod            = "cobble-aws-prod@example.com"
+}

@@ -12,3 +12,13 @@ output "private_subnet_ids" {
   description = "Private subnet IDs."
   value       = aws_subnet.private[*].id
 }
+
+output "database_subnet_ids" {
+  description = "Database subnet IDs (empty if database_subnet_cidrs is empty)."
+  value       = aws_subnet.database[*].id
+}
+
+output "vpc_cidr" {
+  description = "The VPC's IP range, for security group rules."
+  value       = aws_vpc.this.cidr_block
+}
