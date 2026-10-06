@@ -2,6 +2,7 @@
 
 on:
   pull_request:
+<<<<<<< HEAD
     branches: [main, dev]
   push:
     branches: [main, dev]
@@ -13,6 +14,18 @@ jobs:
     defaults:
       run:
         working-directory: infrastructure/terraform
+=======
+    branches: [main]
+  push:
+    branches:
+      - main
+      - '*-dev'
+
+jobs:
+  terraform-fmt:
+    name: Terraform format
+    runs-on: ubuntu-latest
+>>>>>>> 3056729a86a2d074c8879a29e57b81d259673f5b
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,8 +33,34 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
+<<<<<<< HEAD
       - name: Terraform fmt check
         run: terraform fmt -check -recursive
+=======
+      - name: Terraform fmt check (all of infrastructure/)
+        run: terraform fmt -check -recursive
+        working-directory: infrastructure
+
+  terraform-validate:
+    name: Terraform validate
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # The two root configs. bootstrap/ has its own local state and isn't
+        # called by envs/poc, so it needs its own init and validate.
+        working-directory:
+          - infrastructure/envs/poc
+          - infrastructure/bootstrap
+    defaults:
+      run:
+        working-directory: ${{ matrix.working-directory }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+>>>>>>> 3056729a86a2d074c8879a29e57b81d259673f5b
 
       - name: Terraform init (no backend, validate only)
         run: terraform init -backend=false
@@ -29,9 +68,52 @@ jobs:
       - name: Terraform validate
         run: terraform validate
 
+<<<<<<< HEAD
   security-scan:
     name: tfsec security scan
     runs-on: ubuntu-latest
+=======
+  terraform-test:
+    name: Terraform module tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Each module's tests/*.tftest.hcl uses mock_provider (or an
+        # offline-configured real provider), so these run without any
+        # AWS credentials and never touch the real account.
+        working-directory:
+          - infrastructure/modules/security-baseline
+          - infrastructure/modules/oidc-deploy-role
+          - infrastructure/modules/network
+          - infrastructure/modules/s3-bucket
+          - infrastructure/modules/log-delivery
+    defaults:
+      run:
+        working-directory: ${{ matrix.working-directory }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform init
+        run: terraform init -input=false
+
+      - name: Terraform test
+        run: terraform test
+
+  security-scan:
+    name: tfsec security scan
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Scan each root config. tfsec follows envs/poc's module calls into
+        # modules/, so every module gets scanned through it.
+        working-directory:
+          - infrastructure/envs/poc
+          - infrastructure/bootstrap
+>>>>>>> 3056729a86a2d074c8879a29e57b81d259673f5b
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -39,4 +121,8 @@ jobs:
       - name: Run tfsec
         uses: aquasecurity/tfsec-action@v1.0.3
         with:
+<<<<<<< HEAD
           working_directory: infrastructure/terraform
+=======
+          working_directory: ${{ matrix.working-directory }}
+>>>>>>> 3056729a86a2d074c8879a29e57b81d259673f5b

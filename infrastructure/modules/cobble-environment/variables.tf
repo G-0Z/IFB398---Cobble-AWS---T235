@@ -1,0 +1,185 @@
+# Everything that differs between dev, staging and prod is an input here.
+# Each environment folder (solution-a/4-workloads/<env>/main.tf) sets them.
+
+variable "project_name" {
+  description = "Prefix for every resource name."
+  type        = string
+  default     = "cobble"
+}
+
+variable "environment" {
+  description = "Which environment this is."
+  type        = string
+
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "environment must be \"dev\", \"staging\" or \"prod\"."
+  }
+}
+
+variable "protect_from_deletion" {
+  description = "Production safeguards: the database, load balancer and buckets refuse to be deleted, and the database keeps a final backup. false for dev and staging so they tear down cleanly."
+  type        = bool
+}
+
+# --- Network ----------------------------------------------------------------
+
+variable "vpc_cidr" {
+  description = "IP range for the environment's VPC. Must not overlap with any other environment."
+  type        = string
+}
+
+variable "public_subnet_cidrs" {
+  description = "One public subnet per AZ (load balancer and NAT gateways)."
+  type        = list(string)
+}
+
+variable "private_subnet_cidrs" {
+  description = "One private subnet per AZ (application containers)."
+  type        = list(string)
+}
+
+variable "database_subnet_cidrs" {
+  description = "One database subnet per AZ (no internet route)."
+  type        = list(string)
+}
+
+variable "nat_gateway_mode" {
+  description = "\"single\" (dev, staging) or \"one_per_az\" (prod). See modules/network."
+  type        = string
+}
+
+# --- Application ------------------------------------------------------------
+
+variable "container_image" {
+  description = "Cobble module image, with a fixed version tag, from the Shared Services ECR repository."
+  type        = string
+}
+
+variable "container_port" {
+  description = "Port the container listens on."
+  type        = number
+  default     = 80
+}
+
+variable "app_cpu" {
+  description = "CPU units per container (256 = 0.25 vCPU)."
+  type        = number
+}
+
+variable "app_memory" {
+  description = "Memory per container, in MiB."
+  type        = number
+}
+
+variable "app_desired_count" {
+  description = "How many copies of the container to run."
+  type        = number
+}
+
+variable "health_check_path" {
+  description = "Path the load balancer uses to check the app is healthy."
+  type        = string
+  default     = "/"
+}
+
+variable "read_only_root_filesystem" {
+  description = "Stop the container writing to its own filesystem. Turn off only for images that need it."
+  type        = bool
+  default     = true
+}
+
+variable "certificate_arn" {
+  description = "ACM certificate for the environment's domain (e.g. dev.cobble.com). null serves plain HTTP: only acceptable before a domain is set up."
+  type        = string
+  default     = null
+}
+
+variable "enable_waf" {
+  description = "Put AWS WAF in front of the load balancer."
+  type        = bool
+}
+
+variable "enable_container_insights" {
+  description = "Detailed container metrics (small extra cost)."
+  type        = bool
+}
+
+variable "log_retention_days" {
+  description = "How long application and network logs are kept in CloudWatch."
+  type        = number
+}
+
+# --- Database ---------------------------------------------------------------
+
+variable "db_instance_class" {
+  description = "Database server size."
+  type        = string
+}
+
+variable "db_multi_az" {
+  description = "Standby database copy in a second AZ."
+  type        = bool
+}
+
+variable "db_backup_retention_days" {
+  description = "Days of automatic database backups."
+  type        = number
+}
+
+variable "db_performance_insights" {
+  description = "Query-level database monitoring."
+  type        = bool
+}
+
+# --- Cost -------------------------------------------------------------------
+
+variable "budget_limit" {
+  description = "Monthly budget for this environment's account. Alerts at 80% (actual) and 100% (forecast)."
+  type        = number
+}
+
+variable "budget_currency" {
+  description = "Currency for budget_limit. AWS bills in USD by default."
+  type        = string
+  default     = "USD"
+}
+
+variable "alert_email" {
+  description = "Who receives budget alerts."
+  type        = string
+}
+
+# --- Deployment pipeline ----------------------------------------------------
+
+variable "github_org" {
+  description = "GitHub organisation or user that owns the repo."
+  type        = string
+}
+
+variable "github_repo" {
+  description = "GitHub repository that deploys this environment."
+  type        = string
+}
+
+variable "state_bucket_name" {
+  description = "Terraform state bucket (infrastructure/bootstrap)."
+  type        = string
+}
+
+variable "state_key" {
+  description = "This environment's state file path in the bucket."
+  type        = string
+}
+
+# --- Central security services (outputs of solution-a/2-security) ----------
+
+variable "config_bucket_name" {
+  description = "Central AWS Config bucket."
+  type        = string
+}
+
+variable "config_kms_key_arn" {
+  description = "Key for the central AWS Config bucket."
+  type        = string
+}

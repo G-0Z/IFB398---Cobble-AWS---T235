@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+# Environment variables file
+.env
+
+>>>>>>> 3056729a86a2d074c8879a29e57b81d259673f5b
 # Local .terraform directories
 .terraform/
 
@@ -15,6 +21,11 @@ crash.*.log
 # to change depending on the environment.
 *.tfvars
 *.tfvars.json
+<<<<<<< HEAD
+=======
+# ...except auto-loaded env inputs, which are committed on purpose (no secrets).
+!*.auto.tfvars
+>>>>>>> 3056729a86a2d074c8879a29e57b81d259673f5b
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
@@ -29,8 +40,14 @@ override.tf.json
 # Include override files you do wish to add to version control using negated pattern
 # !example_override.tf
 
+<<<<<<< HEAD
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
+=======
+# Saved plans (the runbooks write deploy.tfplan / destroy.tfplan). They can
+# contain sensitive values, so never commit them.
+*.tfplan
+>>>>>>> 3056729a86a2d074c8879a29e57b81d259673f5b
 
 # Ignore CLI configuration files
 .terraformrc
@@ -41,4 +58,8 @@ terraform.rc
 
 # Optional: ignore plan files saved before destroying Terraform configuration
 # Uncomment the line below if you want to ignore planout files.
+<<<<<<< HEAD
 # planout
+=======
+# planout
+>>>>>>> 3056729a86a2d074c8879a29e57b81d259673f5b
