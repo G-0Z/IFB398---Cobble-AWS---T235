@@ -133,4 +133,6 @@ terraform plan -detailed-exitcode # exit code 0 = no drift
 | `aws_ssoadmin_instances` returns nothing | Identity Center not enabled | Enable it in the console first |
 | Security Hub or GuardDuty "not a delegated administrator" | Step 1 not applied, or still propagating | Apply step 1; wait a few minutes; retry step 2 |
 | Denied by an SCP (`explicit deny in a service control policy`) | A guardrail blocked the action | Expected for other regions and for turning off security services. Check `1-organization/policies/` |
-| `email address must be real` | `@example.com` placeholders left in | Replace them |
+| `The term 'aws' is not recognized ` | `AWS is not installed or has not been restarted after installing`  | Download AWS CLI or restart the IDE/terminal for AWS CLI to be detected |
+| `The term 'terraform' is not recognized ` | `terraform is not installed or has not been restarted after installing`  | Download terraform or restart the IDE/terminal for terraform to be detected |
+
