@@ -15,7 +15,7 @@ output "guardduty_detector_id" {
 
 output "budget_name" {
   description = "AWS Budgets budget name."
-  value       = module.budget.budget_name
+  value       = aws_budgets_budget.monthly.name
 }
 
 output "vpc_id" {
@@ -35,5 +35,10 @@ output "private_subnet_ids" {
 
 output "platform_data_bucket" {
   description = "Encrypted platform data bucket name."
-  value       = module.data.bucket_name
+  value       = module.platform_data_bucket.bucket_name
+}
+
+output "demo_app_url" {
+  description = "Demo web app address (null unless enable_demo_app is true)."
+  value       = var.enable_demo_app ? module.demo_app[0].url : null
 }

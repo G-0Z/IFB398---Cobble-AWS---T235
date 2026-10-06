@@ -2,36 +2,19 @@
 
 ## Purpose
 
-Account-level security baseline: a KMS key, a multi-region
-CloudTrail trail, and GuardDuty.
+The account's core security controls: the KMS key, CloudTrail (an audit
+record of every API call), GuardDuty (threat detection), and the bucket that
+collects every other bucket's access logs.
 
 ## Files
 
 | File | Contents |
 |---|---|
-| `data.tf` | Shared `aws_caller_identity`/`aws_region` data sources |
-| `kms.tf` | The shared KMS key, its policy, and its alias |
-| `cloudtrail.tf` | Trail bucket, its policy, the trail itself, and its CloudWatch Logs integration |
-| `access-logs.tf` | Shared S3 access-log destination bucket, consumed by `data/` too |
+| `kms.tf` | The PoC's one KMS key, its policy (one statement per consumer), and alias |
+| `cloudtrail.tf` | The trail, its bucket (`s3-bucket` module), its CloudWatch delivery (`log-delivery` module), and the bucket policy letting CloudTrail write |
+| `access-logs.tf` | The access-log bucket, written by hand (see its header for why) |
 | `guardduty.tf` | GuardDuty detector |
-
-## Resources created
-
-- `aws_kms_key` + alias — shared by CloudTrail, `network/`'s VPC flow log
-  group, and the `data/` module's platform bucket. One key for the whole PoC
-  is a documented simplification; target design separates keys by
-  environment/data class.
-- `aws_s3_bucket` (+ versioning, SSE-KMS, public access block, bucket policy,
-  server access logging) — dedicated CloudTrail log bucket, separate from
-  application data.
-- `aws_cloudtrail` — multi-region trail, log file integrity validation on,
-  also streaming to a CloudWatch Logs group (via its own IAM role) for
-  real-time analysis.
-- `aws_guardduty_detector` — enabled with default settings.
-- `aws_s3_bucket` `access_logs` (+ versioning, SSE-S3, public access block,
-  bucket policy) — shared server access-log destination for the trail bucket
-  and `data/`'s platform bucket. SSE-S3 not SSE-KMS: S3 access-log delivery
-  doesn't support KMS-encrypted destination buckets.
+| `data.tf` | Current account ID and region lookups |
 
 ## Inputs
 
@@ -43,15 +26,19 @@ CloudTrail trail, and GuardDuty.
 
 | Name | Description |
 |---|---|
-| `kms_key_arn` | Shared KMS key ARN, consumed by `network` and `data` |
+| `kms_key_arn` | Shared KMS key, used by `network` and the platform data bucket |
+| `access_log_bucket_id` | Access-log bucket, used by every `s3-bucket` |
 | `trail_arn` | CloudTrail trail ARN |
 | `trail_bucket_name` | CloudTrail log bucket name |
 | `guardduty_detector_id` | GuardDuty detector ID |
-| `access_log_bucket_id` | Shared access-log destination bucket, consumed by `data/` |
 
 ## Notes
 
-- Only one GuardDuty detector is allowed per account/region; if one already
-  exists, `terraform import` it instead of applying.
-- No log archive/security-tooling account separation yet (single-account
-  PoC) — trail and detector live in the same account as everything else.
+- One GuardDuty detector is allowed per account and region. If one already
+  exists (for example, enabled by the org), see the deploy runbook's
+  troubleshooting table.
+- **Testing gap:** the tests replace the KMS key and bucket policies with
+  empty placeholders (the mock provider can't render them), so the policies'
+  content isn't tested. The trail bucket's hardening and the delivery role are
+  tested in `s3-bucket` and `log-delivery`.
+- Single-account PoC: no separate log-archive account yet (ADR 0001, D1).

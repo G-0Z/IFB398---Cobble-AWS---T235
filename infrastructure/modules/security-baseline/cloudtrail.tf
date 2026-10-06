@@ -1,52 +1,38 @@
-# CloudTrail: its own dedicated bucket, separate from the data/ module's
-# platform bucket, since audit logs and application data have different
-# retention/access requirements. Also streams to CloudWatch Logs for
-# real-time analysis, not just batched S3 delivery.
+# CloudTrail: records every API call in every region of the account.
+# Logs go to two places:
+#   - a dedicated S3 bucket (long-term, tamper-evident record), kept separate
+#     from platform data because audit logs have different access rules
+#   - a CloudWatch Logs group (searchable within seconds, for alerting)
 
-resource "aws_s3_bucket" "trail" {
-  bucket = "${var.project_name}-cloudtrail-${data.aws_caller_identity.current.account_id}"
+locals {
+  # Built from known values (not read back from the module) so the bucket
+  # policy below can be fully worked out at plan time.
+  trail_bucket_name = "${var.project_name}-cloudtrail-${data.aws_caller_identity.current.account_id}"
+  trail_bucket_arn  = "arn:aws:s3:::${local.trail_bucket_name}"
+}
 
-  # PoC needs to destroy/redeploy cleanly; CloudTrail writes objects almost
-  # immediately, so a plain destroy would otherwise fail on a non-empty
-  # bucket. Not something to carry into a real production trail bucket.
+module "trail_bucket" {
+  source = "../s3-bucket"
+
+  bucket_name          = local.trail_bucket_name
+  kms_key_arn          = aws_kms_key.logs.arn
+  access_log_bucket_id = aws_s3_bucket.access_logs.id
+  access_log_prefix    = "cloudtrail-bucket-logs/"
+  bucket_policy_json   = data.aws_iam_policy_document.trail_bucket.json
+
+  # CloudTrail writes objects almost immediately, so a plain destroy would
+  # fail on a non-empty bucket. Not something to carry into production.
   force_destroy = true
 }
 
-resource "aws_s3_bucket_versioning" "trail" {
-  bucket = aws_s3_bucket.trail.id
-
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "trail" {
-  bucket = aws_s3_bucket.trail.id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm     = "aws:kms"
-      kms_master_key_id = aws_kms_key.logs.arn
-    }
-    bucket_key_enabled = true
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "trail" {
-  bucket = aws_s3_bucket.trail.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
+# Lets CloudTrail check the bucket's ACL and write log files into it, only
+# under this account's AWSLogs/ prefix.
 data "aws_iam_policy_document" "trail_bucket" {
   statement {
     sid       = "AWSCloudTrailAclCheck"
     effect    = "Allow"
     actions   = ["s3:GetBucketAcl"]
-    resources = [aws_s3_bucket.trail.arn]
+    resources = [local.trail_bucket_arn]
 
     principals {
       type        = "Service"
@@ -58,7 +44,7 @@ data "aws_iam_policy_document" "trail_bucket" {
     sid       = "AWSCloudTrailWrite"
     effect    = "Allow"
     actions   = ["s3:PutObject"]
-    resources = ["${aws_s3_bucket.trail.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"]
+    resources = ["${local.trail_bucket_arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"]
 
     principals {
       type        = "Service"
@@ -73,58 +59,26 @@ data "aws_iam_policy_document" "trail_bucket" {
   }
 }
 
-resource "aws_s3_bucket_policy" "trail" {
-  bucket = aws_s3_bucket.trail.id
-  policy = data.aws_iam_policy_document.trail_bucket.json
-}
+module "trail_logs" {
+  source = "../log-delivery"
 
-resource "aws_cloudwatch_log_group" "trail" {
-  name              = "/cobble/${var.project_name}/cloudtrail"
+  log_group_name    = "/${var.project_name}/cloudtrail"
   retention_in_days = 90
-  kms_key_id        = aws_kms_key.logs.arn
-}
-
-data "aws_iam_policy_document" "trail_to_cloudwatch_assume" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["cloudtrail.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role" "trail_to_cloudwatch" {
-  name               = "${var.project_name}-trail-to-cloudwatch"
-  assume_role_policy = data.aws_iam_policy_document.trail_to_cloudwatch_assume.json
-}
-
-#tfsec:ignore:aws-iam-no-policy-wildcards -- the "*" here is scoped to this one log group's own streams (arn:*), not a blanket resource wildcard; this is AWS's own documented pattern for granting CloudWatch Logs write access.
-data "aws_iam_policy_document" "trail_to_cloudwatch_permissions" {
-  statement {
-    effect    = "Allow"
-    actions   = ["logs:CreateLogStream", "logs:PutLogEvents"]
-    resources = ["${aws_cloudwatch_log_group.trail.arn}:*"]
-  }
-}
-
-resource "aws_iam_role_policy" "trail_to_cloudwatch" {
-  name   = "${var.project_name}-trail-to-cloudwatch"
-  role   = aws_iam_role.trail_to_cloudwatch.id
-  policy = data.aws_iam_policy_document.trail_to_cloudwatch_permissions.json
+  kms_key_arn       = aws_kms_key.logs.arn
+  role_name         = "${var.project_name}-trail-to-cloudwatch"
+  service_principal = "cloudtrail.amazonaws.com"
 }
 
 resource "aws_cloudtrail" "this" {
   name                          = "${var.project_name}-trail"
-  s3_bucket_name                = aws_s3_bucket.trail.id
+  s3_bucket_name                = module.trail_bucket.bucket_name
   kms_key_id                    = aws_kms_key.logs.arn
   include_global_service_events = true
   is_multi_region_trail         = true
   enable_log_file_validation    = true
-  cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.trail.arn}:*"
-  cloud_watch_logs_role_arn     = aws_iam_role.trail_to_cloudwatch.arn
+  cloud_watch_logs_group_arn    = "${module.trail_logs.log_group_arn}:*"
+  cloud_watch_logs_role_arn     = module.trail_logs.role_arn
 
-  depends_on = [aws_s3_bucket_policy.trail]
+  # The bucket policy must exist before CloudTrail checks it can write.
+  depends_on = [module.trail_bucket]
 }

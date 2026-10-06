@@ -65,8 +65,9 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-# No NAT gateway (cost). Private subnets have no internet route yet,
-# just the default local route within the VPC.
+# Private subnets. With nat_gateway_mode = "none" (Solution B) there is no
+# internet route, just the default local route within the VPC. nat.tf adds
+# routes to NAT gateways when they're turned on.
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.this.id
 
@@ -76,7 +77,13 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "private" {
-  count          = length(aws_subnet.private)
-  subnet_id      = aws_subnet.private[count.index].id
-  route_table_id = aws_route_table.private.id
+  count     = length(aws_subnet.private)
+  subnet_id = aws_subnet.private[count.index].id
+
+  # The first AZ always uses the shared table. With nat_gateway_mode =
+  # "one_per_az", every other AZ uses its own table (see nat.tf); otherwise
+  # every AZ uses the shared table.
+  route_table_id = local.private_route_table_ids[
+    local.extra_private_route_tables > 0 ? count.index : 0
+  ]
 }

@@ -12,8 +12,8 @@ mock_provider "aws" {
   # aws_iam_policy_document is a local computation, not an AWS API call, but
   # mock_provider mocks it anyway (fabricating a non-JSON placeholder). The
   # resources consuming its .json validate that input as real JSON, so it
-  # needs a valid stand-in — this doesn't test the policy's actual content,
-  # see the module README for a note on testing that separately.
+  # needs a valid stand-in. These tests therefore don't check the KMS key or
+  # bucket policies' content; that's a known gap (see the module README).
   override_data {
     target = data.aws_iam_policy_document.kms_key
     values = {
@@ -23,20 +23,6 @@ mock_provider "aws" {
 
   override_data {
     target = data.aws_iam_policy_document.trail_bucket
-    values = {
-      json = jsonencode({ Version = "2012-10-17", Statement = [] })
-    }
-  }
-
-  override_data {
-    target = data.aws_iam_policy_document.trail_to_cloudwatch_assume
-    values = {
-      json = jsonencode({ Version = "2012-10-17", Statement = [] })
-    }
-  }
-
-  override_data {
-    target = data.aws_iam_policy_document.trail_to_cloudwatch_permissions
     values = {
       json = jsonencode({ Version = "2012-10-17", Statement = [] })
     }
@@ -60,14 +46,14 @@ mock_provider "aws" {
   }
 
   override_resource {
-    target = aws_cloudwatch_log_group.trail
+    target = module.trail_logs.aws_cloudwatch_log_group.this
     values = {
-      arn = "arn:aws:logs:ap-southeast-2:123456789012:log-group:/cobble/test/cloudtrail"
+      arn = "arn:aws:logs:ap-southeast-2:123456789012:log-group:/test/cloudtrail"
     }
   }
 
   override_resource {
-    target = aws_iam_role.trail_to_cloudwatch
+    target = module.trail_logs.aws_iam_role.this
     values = {
       arn = "arn:aws:iam::123456789012:role/test-trail-to-cloudwatch"
     }
@@ -82,7 +68,7 @@ run "trail_bucket_named_with_project_and_account" {
   command = apply
 
   assert {
-    condition     = aws_s3_bucket.trail.bucket == "test-cloudtrail-123456789012"
+    condition     = module.trail_bucket.bucket_name == "test-cloudtrail-123456789012"
     error_message = "Trail bucket name should be <project_name>-cloudtrail-<account_id>"
   }
 }
@@ -124,33 +110,14 @@ run "guardduty_detector_enabled" {
   }
 }
 
-run "trail_bucket_blocks_public_access" {
-  command = apply
 
-  assert {
-    condition = (
-      aws_s3_bucket_public_access_block.trail.block_public_acls &&
-      aws_s3_bucket_public_access_block.trail.restrict_public_buckets
-    )
-    error_message = "CloudTrail bucket must block all public access"
-  }
-}
-
-run "trail_bucket_has_force_destroy_enabled" {
-  command = apply
-
-  assert {
-    condition     = aws_s3_bucket.trail.force_destroy == true
-    error_message = "PoC trail bucket should allow force_destroy so terraform destroy doesn't get blocked by BucketNotEmpty"
-  }
-}
 
 run "cloudtrail_streams_to_cloudwatch" {
   command = apply
 
   assert {
-    condition     = aws_cloudtrail.this.cloud_watch_logs_role_arn == aws_iam_role.trail_to_cloudwatch.arn
-    error_message = "CloudTrail should stream to CloudWatch Logs via the trail_to_cloudwatch role"
+    condition     = aws_cloudtrail.this.cloud_watch_logs_role_arn == module.trail_logs.role_arn
+    error_message = "CloudTrail should stream to CloudWatch Logs via the trail_logs delivery role"
   }
 }
 
@@ -171,11 +138,14 @@ run "access_log_bucket_blocks_public_access_and_is_versioned" {
   }
 }
 
-run "trail_bucket_logs_to_the_access_log_bucket" {
+# The trail bucket's own hardening (versioning, encryption, public access
+# block, access logging) is tested once in modules/s3-bucket. This checks
+# only that the trail is wired to that bucket.
+run "trail_writes_to_its_dedicated_bucket" {
   command = apply
 
   assert {
-    condition     = aws_s3_bucket_logging.trail.target_bucket == aws_s3_bucket.access_logs.id
-    error_message = "Trail bucket's access logs should go to the shared access-log bucket"
+    condition     = aws_cloudtrail.this.s3_bucket_name == module.trail_bucket.bucket_name
+    error_message = "CloudTrail must write to the trail_bucket module's bucket"
   }
 }

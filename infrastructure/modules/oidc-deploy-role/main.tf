@@ -24,15 +24,14 @@ data "aws_iam_policy_document" "trust" {
       values   = ["sts.amazonaws.com"]
     }
 
-    # Restricted to this repo's main branch and pull requests, not every
-    # branch/fork, so a PR from an unrelated fork can't assume this role.
+    # Restricted to this repo's main branch only. Pull requests are
+    # deliberately excluded: this role has iam:*, so any PR branch able to
+    # assume it could grant itself admin. PR plans, when CI does them, need
+    # a separate read-only role (see docs/02-landing-zone-design/adr/0001).
     condition {
-      test     = "StringLike"
+      test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values = [
-        "repo:${var.github_org}/${var.github_repo}:ref:refs/heads/main",
-        "repo:${var.github_org}/${var.github_repo}:pull_request",
-      ]
+      values   = ["repo:${var.github_org}/${var.github_repo}:ref:refs/heads/main"]
     }
   }
 }

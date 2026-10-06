@@ -60,9 +60,9 @@ jobs:
         working-directory:
           - infrastructure/modules/security-baseline
           - infrastructure/modules/oidc-deploy-role
-          - infrastructure/modules/budget
           - infrastructure/modules/network
-          - infrastructure/modules/data
+          - infrastructure/modules/s3-bucket
+          - infrastructure/modules/log-delivery
     defaults:
       run:
         working-directory: ${{ matrix.working-directory }}
