@@ -18,6 +18,8 @@ crash.*.log
 # to change depending on the environment.
 *.tfvars
 *.tfvars.json
+# ...except auto-loaded env inputs, which are committed on purpose (no secrets).
+!*.auto.tfvars
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
@@ -32,8 +34,9 @@ override.tf.json
 # Include override files you do wish to add to version control using negated pattern
 # !example_override.tf
 
-# Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
-# example: *tfplan*
+# Saved plans (the runbooks write deploy.tfplan / destroy.tfplan). They can
+# contain sensitive values, so never commit them.
+*.tfplan
 
 # Ignore CLI configuration files
 .terraformrc

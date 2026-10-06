@@ -1,0 +1,17 @@
+# Copy to settings.auto.tfvars and replace every value.
+
+account_id       = "444444444444" # step 1 output: account_ids.dev
+assume_role_name = "OrganizationAccountAccessRole" # remove this line for GitHub Actions runs
+
+container_image = "333333333333.dkr.ecr.ap-southeast-2.amazonaws.com/cobble-module:1.0.0" # step 3 output + version
+# certificate_arn = "arn:aws:acm:ap-southeast-2:444444444444:certificate/..." # once dev.cobble.com is set up
+
+alert_email  = "cobble-aws-billing@example.com"
+budget_limit = 100
+
+github_org        = "Cyber-Safety-Centre"
+github_repo       = "2701-T235-AWS-Platform"
+state_bucket_name = "cobble-tfstate-123456789012"
+
+config_bucket_name = "cobble-config-history-210987654321" # step 2 output
+config_kms_key_arn = "arn:aws:kms:ap-southeast-2:210987654321:key/REPLACE-ME" # step 2 output
