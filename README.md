@@ -35,8 +35,9 @@ prototype. The decision is recorded in
 |---|---|
 | Understand what gets built and why | [`infrastructure/README.md`](infrastructure/README.md) |
 | Deploy or tear down Solution B | [`runbooks/deploy.md`](runbooks/deploy.md), [`runbooks/teardown.md`](runbooks/teardown.md) |
-| Deploy Solution A | [`runbooks/solution-a.md`](runbooks/solution-a.md) |
+| Deploy Solution A | [`runbooks/deploy-solution-a.md`](runbooks/deploy-solution-a.md) |
 | See what one building block does | Each folder in [`infrastructure/modules/`](infrastructure/modules/) has a README |
+| Understand what a name means, or name something new | [`docs/naming-conventions.md`](docs/naming-conventions.md) |
 | Read the design decisions | [`docs/02-landing-zone-design/adr/`](docs/02-landing-zone-design/adr/) |
 | Find a capstone deliverable | [`docs/README.md`](docs/README.md) |
 
@@ -44,7 +45,7 @@ prototype. The decision is recorded in
 
 ```
 .
-├── docs/                   Capstone deliverables 1-8 and design decisions (ADRs)
+├── docs/                   Capstone deliverables 1-8, design decisions (ADRs), naming conventions
 ├── infrastructure/         Deliverable 4: the Terraform code
 │   ├── bootstrap/          Terraform state bucket (run once per organisation)
 │   ├── envs/poc/           SOLUTION B: the single-account MVP
@@ -99,7 +100,7 @@ flowchart TB
         DEMO["Optional demo app<br/>load balancer + container<br/>(enable_demo_app)"]
     end
 
-    GH["GitHub Actions CI<br/>fmt · validate · test · tfsec"]
+    GH["GitHub Actions CI<br/>fmt · validate · test · Trivy"]
 
     GH -. state and lock .-> S3STATE
     TRAIL --> TRAILBUCKET

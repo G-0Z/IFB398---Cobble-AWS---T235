@@ -1,4 +1,4 @@
-﻿name: CI
+name: CI
 
 on:
   pull_request:
@@ -8,16 +8,23 @@ on:
       - main
       - '*-dev'
 
+# CI only reads the repo. Nothing here needs to write to GitHub.
+permissions:
+  contents: read
+
+# Actions are pinned to a commit hash, not a tag: a tag can be moved to point
+# at different code. The comment says which release the hash is.
+
 jobs:
   terraform-fmt:
     name: Terraform format
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
 
       - name: Terraform fmt check (all of infrastructure/)
         run: terraform fmt -check -recursive
@@ -28,20 +35,26 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # The two root configs. bootstrap/ has its own local state and isn't
-        # called by envs/poc, so it needs its own init and validate.
+        # Every root config: Solution B (envs/poc), the state bucket
+        # (bootstrap) and each step of Solution A.
         working-directory:
           - infrastructure/envs/poc
           - infrastructure/bootstrap
+          - infrastructure/solution-a/1-organization
+          - infrastructure/solution-a/2-security
+          - infrastructure/solution-a/3-shared-services
+          - infrastructure/solution-a/4-workloads/dev
+          - infrastructure/solution-a/4-workloads/staging
+          - infrastructure/solution-a/4-workloads/prod
     defaults:
       run:
         working-directory: ${{ matrix.working-directory }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
 
       - name: Terraform init (no backend, validate only)
         run: terraform init -backend=false
@@ -54,24 +67,30 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # Each module's tests/*.tftest.hcl uses mock_provider (or an
-        # offline-configured real provider), so these run without any
+        # Every module. Each module's tests/*.tftest.hcl uses mock_provider
+        # (or an offline-configured real provider), so these run without any
         # AWS credentials and never touch the real account.
         working-directory:
-          - infrastructure/modules/security-baseline
-          - infrastructure/modules/oidc-deploy-role
-          - infrastructure/modules/network
-          - infrastructure/modules/s3-bucket
+          - infrastructure/modules/access-log-bucket
+          - infrastructure/modules/account-baseline
+          - infrastructure/modules/cobble-environment
+          - infrastructure/modules/container-service
+          - infrastructure/modules/github-oidc
           - infrastructure/modules/log-delivery
+          - infrastructure/modules/network
+          - infrastructure/modules/oidc-deploy-role
+          - infrastructure/modules/postgres-database
+          - infrastructure/modules/s3-bucket
+          - infrastructure/modules/security-baseline
     defaults:
       run:
         working-directory: ${{ matrix.working-directory }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
 
       - name: Terraform init
         run: terraform init -input=false
@@ -80,20 +99,33 @@ jobs:
         run: terraform test
 
   security-scan:
-    name: tfsec security scan
+    name: Trivy security scan
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # Scan each root config. tfsec follows envs/poc's module calls into
-        # modules/, so every module gets scanned through it.
+        # Every root config. Trivy follows each root's module calls into
+        # modules/, so every module gets scanned through them.
         working-directory:
           - infrastructure/envs/poc
           - infrastructure/bootstrap
+          - infrastructure/solution-a/1-organization
+          - infrastructure/solution-a/2-security
+          - infrastructure/solution-a/3-shared-services
+          - infrastructure/solution-a/4-workloads/dev
+          - infrastructure/solution-a/4-workloads/staging
+          - infrastructure/solution-a/4-workloads/prod
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - name: Run tfsec
-        uses: aquasecurity/tfsec-action@v1.0.3
+      # Fails on any finding, of any severity. Deliberate exceptions are
+      # inline #tfsec:ignore / #trivy:ignore comments with a reason, plus
+      # .trivyignore.yaml for the one Trivy can't take inline.
+      - name: Run Trivy (Terraform misconfiguration scan)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
-          working_directory: ${{ matrix.working-directory }}
+          scan-type: config
+          scan-ref: ${{ matrix.working-directory }}
+          trivyignores: .trivyignore.yaml
+          exit-code: '1'
+          version: v0.74.0

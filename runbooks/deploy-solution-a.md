@@ -42,7 +42,7 @@ State bucket → Organisation, accounts, → Security   → Shared Services → 
 | 1 | `solution-a/1-organization` | Organisation, 5 member accounts, guardrails, Identity Center groups | `organization_id`, `account_ids` |
 | 2 | `solution-a/2-security` | Security account: Security Hub, GuardDuty, AWS Config, alerts | `config_bucket_name`, `config_kms_key_arn` |
 | 3 | `solution-a/3-shared-services` | Shared Services account: container registry | `container_registry_url` |
-| 4 | `solution-a/dev`, `staging`, `prod` | One environment per account, each running the Cobble module | `app_url` |
+| 4 | `solution-a/4-workloads/dev`, `staging`, `prod` | One environment per account, each running the Cobble module | `app_url` |
 
 > [!NOTE]
 > Work through the steps in order, and finish each step's **Verify** checks before starting the next. Several later steps fail in confusing ways if an earlier one is only half applied.
@@ -259,7 +259,7 @@ terraform plan -detailed-exitcode # exit code 0 = no drift
 
 | What | How |
 |---|---|
-| dev or staging (to save cost) | `terraform destroy` in its folder, run by a person signed in to the management account. Rebuild later with apply. CI can't tear down: the guardrail SCP stops its roles switching off AWS Config, by design. |
+| dev or staging (to save cost) | `terraform destroy` in its folder, run by a person signed in to the management account. Rebuild later with apply. CI can't tear down: the guardrail SCP stops its roles switching off AWS Config, by design. For the same reason, a change to an environment's AWS Config recorder or VPC flow logs must be applied by a person. |
 | prod | Set `protect_from_deletion = false` in `prod/main.tf`, apply, then destroy. Deliberately two steps. |
 | Steps 1 to 3 | Not torn down routinely. Member accounts are protected (`prevent_destroy`) and must be closed by hand in AWS Organizations. Audit logs stay locked for `audit_log_retention_days`. |
 
@@ -279,3 +279,5 @@ terraform plan -detailed-exitcode # exit code 0 = no drift
 | Security Hub or GuardDuty "not a delegated administrator" | Step 2 | Step 1 not applied, or still propagating | Apply step 1; wait a few minutes; retry step 2 |
 | Denied by an SCP (`explicit deny in a service control policy`) | Any step | A guardrail blocked the action | Expected for other regions and for turning off security services. Check `1-organization/policies/` |
 | `email address must be real` | Steps 1 to 4 | `@example.com` placeholders left in | Replace them |
+| `The term 'aws' is not recognized` | Before you start | AWS CLI not installed, or the terminal was opened before installing it | Install the AWS CLI, then restart the terminal or IDE |
+| `The term 'terraform' is not recognized` | Before you start | Terraform not installed, or the terminal was opened before installing it | Install Terraform, then restart the terminal or IDE |

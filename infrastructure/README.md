@@ -115,7 +115,7 @@ repo; project risk R7). Solution A adds the SCPs.
 | Audit log of every API call, all regions, integrity validation | Configured (removed on teardown) | Enforced (organisation trail; SCP) | `security-baseline/cloudtrail.tf`, `2-security/cloudtrail.tf` |
 | Audit logs can't be edited or deleted | Not covered | Configured (Object Lock, governance mode); enforced with compliance mode | `2-security/log-archive.tf` |
 | Audit log searchable in CloudWatch (90 days) | Configured | Designed (Phase 2; alerts come from Security Hub) | `security-baseline/cloudtrail.tf` |
-| Threat detection (GuardDuty) | Configured | Enforced (every account; SCP) | `security-baseline/guardduty.tf`, `2-security/detection.tf` |
+| Threat detection (GuardDuty) | Configured | Enforced (every account; SCP also stops findings being auto-archived) | `security-baseline/guardduty.tf`, `2-security/detection.tf` |
 | Posture checks (Security Hub: CIS v3.0, AWS FSBP) | Designed | Enforced (SCP) | `2-security/detection.tf` |
 | Configuration history (AWS Config) | Designed | Enforced (SCP) | `account-baseline/config.tf` |
 | Resources shared outside the organisation flagged (Access Analyzer) | Not covered | Enforced (SCP) | `2-security/detection.tf` |
@@ -130,11 +130,11 @@ repo; project risk R7). Solution A adds the SCPs.
 | HTTPS with TLS 1.2 or later | Not covered (demo is HTTP) | Configured (once a certificate is set) | `container-service/load-balancer.tf` |
 | Database password never in code | Not covered (no database) | Configured (RDS-managed secret) | `postgres-database/main.tf` |
 | Backups | Configured (S3 versioning) | Configured (plus database backups, 35 days in prod) | `s3-bucket/`, `postgres-database/` |
-| CI deploys without stored keys | Configured (`main` only; not used by CI yet) | Configured (read-only plan role for PRs; apply role behind GitHub environment approval) | `oidc-deploy-role/main.tf`, `github-oidc/main.tf` |
+| CI deploys without stored keys | Configured (`main` only; not used by CI yet) | Configured (read-only plan role for PRs, which can't read bucket or log contents; apply role behind GitHub environment approval) | `oidc-deploy-role/main.tf`, `github-oidc/main.tf` |
 | Terraform refuses to run against the wrong account | Configured | Configured | each `providers.tf` |
 | Monthly cost alert | Configured (USD 1) | Configured (per account) | `envs/poc/main.tf`, `cobble-environment/main.tf` |
 | Guide-required tags on every resource | Configured | Configured | each `providers.tf` |
-| fmt, validate, tests and tfsec on every pull request | Configured (merge not blocked: R7) | Configured (merge not blocked: R7) | `.github/workflows/ci.yml` |
+| fmt, validate, tests and Trivy scan of every root config on every pull request | Configured (merge not blocked: R7) | Configured (merge not blocked: R7) | `.github/workflows/ci.yml` |
 
 Every finding from the two security scanners, and what was decided about it,
 is in the [scan findings register](../docs/03-security-controls/scan-findings.md).
@@ -194,7 +194,7 @@ Unit prices used:
 |---|---|---|
 | Deploy Solution B | `envs/poc/` | see [runbooks/deploy.md](../runbooks/deploy.md) |
 | Tear down Solution B | `envs/poc/` | see [runbooks/teardown.md](../runbooks/teardown.md) |
-| Deploy Solution A | `solution-a/` | see [runbooks/solution-a.md](../runbooks/solution-a.md) |
+| Deploy Solution A | `solution-a/` | see [runbooks/deploy-solution-a.md](../runbooks/deploy-solution-a.md) |
 | Format everything | `infrastructure/` | `terraform fmt -recursive` |
 | Run a module's tests | `modules/<name>/` | `terraform init` then `terraform test` |
 

@@ -86,6 +86,31 @@ resource "aws_iam_role_policy" "plan_state" {
   })
 }
 
+# ReadOnlyAccess can also read what's *in* buckets and log groups. A plan only
+# needs settings, so reading data is denied: any branch can open a pull
+# request, and tenant data must not be reachable that way. The state file is
+# the one exception.
+resource "aws_iam_role_policy" "plan_no_data" {
+  name = "${var.name}-terraform-plan-no-data"
+  role = aws_iam_role.plan.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect      = "Deny"
+        Action      = "s3:GetObject"
+        NotResource = "${local.state_bucket_arn}/*"
+      },
+      {
+        Effect   = "Deny"
+        Action   = ["logs:GetLogEvents", "logs:FilterLogEvents", "logs:StartQuery"]
+        Resource = "*"
+      },
+    ]
+  })
+}
+
 # --- Apply role (approved GitHub environment) ------------------------------
 
 resource "aws_iam_role" "apply" {

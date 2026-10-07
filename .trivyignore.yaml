@@ -1,0 +1,10 @@
+# Trivy exceptions that can't be written as inline #trivy:ignore comments.
+# Every other exception is an inline comment next to the code it excuses.
+misconfigurations:
+  - id: AWS-0345
+    paths:
+      - "**/modules/oidc-deploy-role/main.tf"
+    statement: >-
+      Solution B's deploy role is scoped by service (s3:* and others), a
+      documented PoC simplification (ADR 0001, D6). Trivy doesn't honour
+      inline ignores on policy documents, so it is excused here.
