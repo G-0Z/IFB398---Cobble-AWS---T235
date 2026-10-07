@@ -92,7 +92,7 @@ risk to a deployed system.
 **Revisit when:**
 
 - The client provides the AWS organisation: deploy A step by step
-  (`runbooks/solution-a.md`) and update the control map.
+  (`runbooks/deploy-solution-a.md`) and update the control map.
 - The CI workflow is wired to A's plan and apply roles (ADR 0001, D6).
 
 ## Timeframe

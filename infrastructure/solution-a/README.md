@@ -6,7 +6,7 @@ detection and three isolated environments. Each numbered folder is one
 Terraform root config. Run them in order; each step uses outputs from the
 one before.
 
-**Step-by-step instructions:** [runbooks/solution-a.md](../../runbooks/solution-a.md)
+**Step-by-step instructions:** [runbooks/deploy-solution-a.md](../../runbooks/deploy-solution-a.md)
 **Why it's designed this way:** [ADR 0003](../../docs/02-landing-zone-design/adr/0003-two-solutions-mvp-and-full-landing-zone.md)
 
 ## The accounts
