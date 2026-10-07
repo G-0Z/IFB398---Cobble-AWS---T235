@@ -20,6 +20,10 @@ crash.*.log
 *.tfvars.json
 # ...except auto-loaded env inputs, which are committed on purpose (no secrets).
 !*.auto.tfvars
+# ...but not Solution A's filled-in copies (made from the .example files),
+# which hold real account IDs, emails and the state bucket name.
+infrastructure/solution-a/**/settings.auto.tfvars
+infrastructure/solution-a/**/backend.hcl
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in

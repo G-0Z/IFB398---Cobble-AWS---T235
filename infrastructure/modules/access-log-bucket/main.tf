@@ -17,6 +17,7 @@ data "aws_caller_identity" "current" {}
 data "aws_elb_service_account" "current" {}
 
 #tfsec:ignore:aws-s3-enable-bucket-logging -- this bucket IS the access-log destination; it doesn't log itself.
+#trivy:ignore:AWS-0089 -- same reason as the line above (Trivy's ID for this check).
 resource "aws_s3_bucket" "this" {
   bucket        = var.bucket_name
   force_destroy = var.force_destroy

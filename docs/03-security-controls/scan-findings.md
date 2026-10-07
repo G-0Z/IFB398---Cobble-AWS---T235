@@ -6,7 +6,7 @@ finding, so nothing is silently ignored.
 
 | Tool | Where it runs | Result (6 Oct 2026) |
 |---|---|---|
-| [tfsec](https://github.com/aquasecurity/tfsec) | CI, every pull request | **0 open findings** on all 8 root configs. Each deliberate exception has an inline `#tfsec:ignore` comment giving the reason. |
+| [Trivy](https://trivy.dev/) (replaced tfsec, which is deprecated) | CI, every pull request, on all 8 root configs | **0 open findings** (7 Oct 2026, Trivy 0.74.0). Each deliberate exception has an inline `#tfsec:ignore` or `#trivy:ignore` comment giving the reason; the one Trivy can't take inline is in [`.trivyignore.yaml`](../../.trivyignore.yaml). |
 | [Checkov](https://www.checkov.io/) | Run by hand as a stricter second opinion | **75 findings across 32 checks**, all reviewed below. 1 fixed; the rest are deliberate trade-offs, false positives, or Phase 2 work. |
 
 **Why so many Checkov findings?** Checkov reads each module on its own,
@@ -45,6 +45,18 @@ it on.
 | CKV_AWS_70 | Bucket policy allows any principal | Those statements are `Deny` (refuse non-HTTPS), or `Allow` limited by `aws:PrincipalOrgID` to the organisation |
 | CKV2_AWS_61 | No lifecycle configuration | Lifecycle rules are optional inputs to `s3-bucket`; Solution A's log and data buckets set them |
 
+## Found by manual review (7 Oct 2026)
+
+Issues no scanner reports, because they depend on how the pieces fit together.
+
+| Finding | Fix |
+|---|---|
+| The security-services SCP blocked turning services *off*, but not quietly disabling them: emptying the Config recorder, auto-archiving GuardDuty findings, suppressing Security Hub findings, deleting flow logs | 11 more actions denied in `1-organization/policies/protect-security-services.json.tftpl` |
+| Solution A's plan role (`ReadOnlyAccess`) could read bucket contents and logs. Any branch can open a pull request, so tenant data was reachable without signing in | `plan_no_data` policy in `modules/github-oidc/main.tf` denies it, except the state file; tested |
+| CI only checked Solution B: Solution A's root configs and 6 of 11 modules' tests never ran | Every root config and module added to `.github/workflows/ci.yml` |
+| CI's GitHub token had the repo's default permissions; actions were pinned by movable tags | `permissions: contents: read`; every action pinned to a commit hash |
+| Solution A's filled-in settings files (real account IDs and emails) weren't git-ignored | Added to `.gitignore` |
+
 ## Phase 2
 
 | Check | Finding | Plan |
@@ -55,8 +67,8 @@ it on.
 ## How to re-run
 
 ```powershell
-# tfsec (same as CI), from the repo root:
-tfsec infrastructure/solution-a/4-workloads/prod
+# Trivy (same as CI), from the repo root:
+trivy config --ignorefile .trivyignore.yaml infrastructure/solution-a/4-workloads/prod
 
 # Checkov:
 pip install checkov

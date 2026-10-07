@@ -52,6 +52,18 @@ run "plan_role_is_only_for_pull_requests" {
   }
 }
 
+run "plan_role_cannot_read_data" {
+  command = apply
+
+  assert {
+    condition = anytrue([
+      for s in jsondecode(aws_iam_role_policy.plan_no_data.policy).Statement :
+      s.Effect == "Deny" && s.Action == "s3:GetObject" && s.NotResource == "arn:aws:s3:::cobble-tfstate-123456789012/*"
+    ])
+    error_message = "The plan role must not read bucket contents, except the state file"
+  }
+}
+
 run "apply_role_needs_the_approved_environment" {
   command = apply
 

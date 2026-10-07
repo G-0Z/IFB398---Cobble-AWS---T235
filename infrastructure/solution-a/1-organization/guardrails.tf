@@ -18,6 +18,8 @@ locals {
       content     = file("${path.module}/policies/deny-leave-organization.json")
     }
     protect-security-services = {
+      # Blocks quiet bypasses too: emptying the Config recorder, auto-archiving
+      # GuardDuty findings, suppressing Security Hub findings, deleting flow logs.
       description = "CloudTrail, GuardDuty, Config, Security Hub and Access Analyzer cannot be turned off"
       content = templatefile("${path.module}/policies/protect-security-services.json.tftpl", {
         admin_role_arn_pattern = local.admin_role_arn_pattern
