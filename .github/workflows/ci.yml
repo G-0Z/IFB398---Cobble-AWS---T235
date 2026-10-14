@@ -36,6 +36,8 @@ jobs:
     name: Terraform validate
     runs-on: ubuntu-latest
     strategy:
+      # Run every job even if one fails, so each result is real.
+      fail-fast: false
       matrix:
         # Every root config: Solution B, the state bucket (bootstrap),
         # Solution A's workload and each landing-zone step.
@@ -69,6 +71,8 @@ jobs:
     name: Terraform module tests
     runs-on: ubuntu-latest
     strategy:
+      # Run every job even if one fails, so each result is real.
+      fail-fast: false
       matrix:
         # Every module, plus Solution A's workload (its own end-to-end test).
         # Each tests/*.tftest.hcl uses mock_provider
@@ -97,8 +101,11 @@ jobs:
         with:
           terraform_version: 1.16.2 # same version the lock files were made with; bump deliberately
 
+      # No backend: the tests use a mocked provider and never touch real
+      # state. (solution-a/workload has an S3 backend that needs its key and
+      # AWS credentials, which CI doesn't have.)
       - name: Terraform init
-        run: terraform init -input=false
+        run: terraform init -input=false -backend=false
 
       - name: Terraform test
         run: terraform test
@@ -107,6 +114,8 @@ jobs:
     name: Trivy security scan
     runs-on: ubuntu-latest
     strategy:
+      # Run every job even if one fails, so each result is real.
+      fail-fast: false
       matrix:
         # Every root config. Trivy follows each root's module calls into
         # modules/, so every module gets scanned through them.
