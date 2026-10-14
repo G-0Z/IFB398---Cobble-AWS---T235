@@ -105,7 +105,7 @@ run "guardduty_detector_enabled" {
   command = apply
 
   assert {
-    condition     = aws_guardduty_detector.this.enable == true
+    condition     = aws_guardduty_detector.this[0].enable == true
     error_message = "GuardDuty detector must be enabled"
   }
 }
@@ -147,5 +147,18 @@ run "trail_writes_to_its_dedicated_bucket" {
   assert {
     condition     = aws_cloudtrail.this.s3_bucket_name == module.trail_bucket.bucket_name
     error_message = "CloudTrail must write to the trail_bucket module's bucket"
+  }
+}
+
+run "guardduty_can_be_left_to_the_landing_zone" {
+  command = plan
+
+  variables {
+    enable_guardduty = false
+  }
+
+  assert {
+    condition     = length(aws_guardduty_detector.this) == 0
+    error_message = "With enable_guardduty = false, no detector may be created"
   }
 }

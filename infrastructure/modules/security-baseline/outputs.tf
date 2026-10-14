@@ -14,8 +14,8 @@ output "trail_bucket_name" {
 }
 
 output "guardduty_detector_id" {
-  description = "GuardDuty detector ID."
-  value       = aws_guardduty_detector.this.id
+  description = "GuardDuty detector ID, or null when enable_guardduty is false."
+  value       = one(aws_guardduty_detector.this[*].id)
 }
 
 output "access_log_bucket_id" {

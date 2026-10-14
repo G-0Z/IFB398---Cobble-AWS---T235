@@ -27,7 +27,7 @@ resource "aws_s3_bucket_policy" "org_state_access" {
         Effect    = "Allow"
         Principal = { AWS = "*" }
         Action    = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
-        Resource  = "${aws_s3_bucket.tfstate.arn}/solution-a/4-workloads/*"
+        Resource  = "${aws_s3_bucket.tfstate.arn}/solution-a/workload/*"
         Condition = {
           StringEquals = { "aws:PrincipalOrgID" = var.organization_id }
           ArnLike      = { "aws:PrincipalArn" = "arn:aws:iam::*:role/cobble-*-terraform-*" }

@@ -1,36 +1,41 @@
-# Runbook: tear down and redeploy
+# Runbook: tear down and redeploy Solution B
 
-**When:** after every demo or assessment (the PoC targets near-zero spend, so
-it isn't left running), or to prove the deployment is repeatable.
+**What it does:** removes Solution B, and optionally rebuilds it to prove
+the deployment is repeatable.
 
-Run this locally, not from CI: the deploy role would delete itself mid-run.
-Sign in first as described in [deploy.md](deploy.md#sign-in).
+**When:** after every demo or assessment (Solution B isn't left running), or
+whenever you want to show it redeploys identically.
+
+Run this from your own computer, not from GitHub: GitHub's deploy role would
+delete itself partway through. Sign in first as in
+[deploy.md](deploy.md#sign-in).
 
 ## Tear down
 
 ```powershell
-cd infrastructure/envs/poc
+cd infrastructure/solution-b
 terraform plan -destroy -out destroy.tfplan
 terraform apply destroy.tfplan
 ```
 
 Everything is removed except:
 
-- the state bucket (owned by `bootstrap/`, not this config)
-- the KMS key, which AWS holds for 7 days before deleting
+- the state bucket (it belongs to `bootstrap/`, not to Solution B)
+- the encryption key, which AWS holds for 7 days before deleting it
 
-Teardown also deletes the CloudTrail trail and its log bucket, so the audit
-record of the teardown itself goes with it. That's an accepted PoC trade-off;
-the fix (a separate, long-lived account layer) is recorded in
-[ADR 0001](../docs/02-landing-zone-design/adr/0001-deferred-landing-zone-design.md).
+Tearing down also deletes the audit trail and its logs, so there's no audit
+record of the teardown itself. That's an accepted trade-off for a demo
+platform. Solution A keeps its audit trail in a separate account, where it
+survives.
 
-## Redeploy (repeatability check)
+## Redeploy: the repeatability check
 
 ```powershell
-terraform plan -out deploy.tfplan   # 43 to add, same as the first deploy
+terraform plan -out deploy.tfplan   # should show 48 to add, the same as the first deploy
 terraform apply deploy.tfplan
-terraform plan -detailed-exitcode   # exit code 0 = no drift
+terraform plan -detailed-exitcode   # exit code 0 means what's running matches the code
 ```
 
-Ideally a teammate who didn't write the config runs this, following only
-these runbooks.
+Ideally a teammate who didn't write the code runs this, following only these
+runbooks. Record the result in the
+[evidence log](../docs/04-iac-evidence/README.md#evidence-log).

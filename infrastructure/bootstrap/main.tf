@@ -1,4 +1,4 @@
-#tfsec:ignore:aws-s3-enable-bucket-logging -- the shared access-log bucket lives in envs/poc, which gets torn down and redeployed; the state bucket must outlive it, so it can't log there. Versioning is on, so every state change is recoverable.
+#tfsec:ignore:aws-s3-enable-bucket-logging -- the shared access-log bucket lives in solution-b, which gets torn down and redeployed; the state bucket must outlive it, so it can't log there. Versioning is on, so every state change is recoverable.
 #trivy:ignore:AWS-0089 -- same reason as the line above (Trivy's ID for this check).
 resource "aws_s3_bucket" "tfstate" {
   bucket = var.state_bucket_name

@@ -1,6 +1,0 @@
-# Copy to backend.hcl, then: terraform init -backend-config=backend.hcl
-bucket       = "cobble-tfstate-<management-account-id>"
-key          = "solution-a/3-shared-services/terraform.tfstate"
-region       = "ap-southeast-2"
-use_lockfile = true
-encrypt      = true

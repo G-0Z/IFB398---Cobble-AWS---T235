@@ -1,0 +1,66 @@
+name: Drift detection
+
+# Nightly: does what's running in AWS still match the code? Catches console
+# changes (Implementation Guide section 15). Runs `terraform plan` on Solution
+# A's workload with each environment's read-only plan role, so it can never
+# change anything.
+#
+# An environment is skipped until it's deployed and its plan role is stored as
+# a repository variable (runbooks/deploy-solution-a.md, step 4). The demo and
+# Solution B aren't checked: they're torn down between demos, so they would
+# always show as drift.
+
+on:
+  schedule:
+    - cron: '0 18 * * *' # 04:00 Brisbane
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # to sign in to AWS with OIDC
+
+jobs:
+  drift:
+    name: Drift check (${{ matrix.environment }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [dev, staging, prod]
+    defaults:
+      run:
+        working-directory: infrastructure/solution-a/workload
+    env:
+      PLAN_ROLE_ARN: ${{ vars[format('SOLUTION_A_{0}_PLAN_ROLE_ARN', matrix.environment)] }}
+    steps:
+      - name: Skip if this environment isn't set up yet
+        id: enabled
+        working-directory: .
+        run: echo "enabled=${{ env.PLAN_ROLE_ARN != '' }}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout code
+        if: steps.enabled.outputs.enabled == 'true'
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Setup Terraform
+        if: steps.enabled.outputs.enabled == 'true'
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
+        with:
+          terraform_wrapper: false # keep plan's real exit code
+
+      - name: Sign in to AWS (read-only plan role)
+        if: steps.enabled.outputs.enabled == 'true'
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
+        with:
+          role-to-assume: ${{ env.PLAN_ROLE_ARN }}
+          aws-region: ap-southeast-2
+
+      - name: Terraform init
+        if: steps.enabled.outputs.enabled == 'true'
+        run: terraform init -input=false -backend-config="key=solution-a/workload/${{ matrix.environment }}/terraform.tfstate"
+
+      # Exit code 0 = no drift, 2 = drift (fails the job, which emails the
+      # repo's watchers), 1 = error.
+      - name: Terraform plan
+        if: steps.enabled.outputs.enabled == 'true'
+        run: terraform plan -input=false -lock=false -detailed-exitcode -no-color -var-file=${{ matrix.environment }}.tfvars

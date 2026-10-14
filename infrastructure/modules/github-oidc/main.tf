@@ -2,12 +2,13 @@
 # GitHub proves who it is with a short-lived OpenID Connect (OIDC) token, and
 # AWS hands back temporary credentials for one of two roles:
 #
-#   <name>-terraform-plan   pull requests: read-only, can only run `plan`
+#   <name>-terraform-plan   pull requests, and the nightly drift check on
+#                           main: read-only, can only run `plan`
 #   <name>-terraform-apply  the GitHub environment (with required
 #                           reviewers): can run `apply`
 #
 # This is the split ADR 0001 (D6) designed. Solution B's single deploy role
-# (modules/oidc-deploy-role) is left unchanged.
+# (modules/github-oidc) is left unchanged.
 
 data "tls_certificate" "github" {
   url = "https://token.actions.githubusercontent.com/.well-known/openid-configuration"
@@ -24,8 +25,8 @@ locals {
 
   # Who may assume a role: GitHub tokens for this repo, in the given context.
   trust_policy = { for role, subject in {
-    plan  = "${local.repo}:pull_request"
-    apply = "${local.repo}:environment:${var.github_environment}"
+    plan  = ["${local.repo}:pull_request", "${local.repo}:ref:refs/heads/main"]
+    apply = ["${local.repo}:environment:${var.github_environment}"]
     } : role => jsonencode({
       Version = "2012-10-17"
       Statement = [{

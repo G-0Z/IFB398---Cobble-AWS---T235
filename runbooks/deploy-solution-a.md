@@ -1,12 +1,18 @@
-# Runbook: deploy Solution A (full landing zone)
+# Runbook: build the full Solution A landing zone
+
+**What it does:** builds the whole six-account design: the organisation,
+people and groups, guardrails, central security, the container registry,
+and then the dev, staging and prod environments.
+
+> [!IMPORTANT]
+> **Most of this can't simply be torn down.** It creates five new AWS accounts, and those have to be closed by hand (see [Tear down](#tear-down)). Running everything costs about US$550 a month. **To show Solution A working without any of that, use [demo-solution-a.md](demo-solution-a.md) instead.**
 
 | | |
 |---|---|
-| **Purpose** | Build the organisation in the Cyber Security Centre's AWS management account |
-| **When** | Once. After that only step 4 changes routinely (and eventually through CI) |
-| **Time** | About half a day for steps 0 to 3, then about an hour per environment. Creating accounts and turning on Security Hub can take several minutes each |
-| **Run by** | A person with administrator rights in the **management account**, never as root |
-| **Related** | Solution B's runbooks ([deploy.md](deploy.md), [teardown.md](teardown.md)) are separate and unaffected |
+| **When** | Once. After that, only the environments (step 4) change routinely |
+| **Time** | About half a day for the landing zone, then about an hour per environment. Creating accounts and switching on Security Hub take several minutes each |
+| **Run by** | Someone with admin rights in the organisation's **management account**, signed in through single sign-on, never as root. The team's organisation is `o-b60hme0nfl`, managed from account `669591255093` |
+| **Related** | All runbooks: [README.md](README.md) |
 
 ## Contents
 
@@ -15,13 +21,14 @@
 3. [How every step works](#how-every-step-works)
 4. [Values to carry forward](#values-to-carry-forward)
 5. [Step 0: state bucket](#step-0-state-bucket)
-6. [Step 1: organisation, accounts, guardrails, sign-in](#step-1-organisation-accounts-guardrails-sign-in)
-7. [Step 2: Security account](#step-2-security-account)
-8. [Step 3: Shared Services account](#step-3-shared-services-account)
-9. [Step 4: dev, then staging, then prod](#step-4-dev-then-staging-then-prod)
-10. [Done checklist](#done-checklist)
-11. [Tear down](#tear-down)
-12. [Troubleshooting](#troubleshooting)
+6. [People and groups](#people-and-groups)
+7. [Step 1: organisation, accounts, guardrails, sign-in](#step-1-organisation-accounts-guardrails-sign-in)
+8. [Step 2: Security account](#step-2-security-account)
+9. [Step 3: Shared Services account](#step-3-shared-services-account)
+10. [Step 4: dev, then staging, then prod](#step-4-dev-then-staging-then-prod)
+11. [Done checklist](#done-checklist)
+12. [Tear down](#tear-down)
+13. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -38,11 +45,12 @@ State bucket → Organisation, accounts, → Security   → Shared Services → 
 
 | Step | Folder | What it builds | Hands on to the next step |
 |---|---|---|---|
-| 0 | `infrastructure/bootstrap` | Terraform state bucket (own workspace) | Bucket name |
-| 1 | `solution-a/1-organization` | Organisation, 5 member accounts, guardrails, Identity Center groups | `organization_id`, `account_ids` |
-| 2 | `solution-a/2-security` | Security account: Security Hub, GuardDuty, AWS Config, alerts | `config_bucket_name`, `config_kms_key_arn` |
-| 3 | `solution-a/3-shared-services` | Shared Services account: container registry | `container_registry_url` |
-| 4 | `solution-a/4-workloads/dev`, `staging`, `prod` | One environment per account, each running the Cobble module | `app_url` |
+| 0 | `infrastructure/bootstrap` | Terraform state bucket (shared with Solution B) | |
+| People | `solution-a/landing-zone/identity` | Identity Center groups, and a sign-in for each person in `users.csv` | Group names |
+| 1 | `solution-a/landing-zone/1-organization` | Organisation, 5 member accounts, guardrails, what each group may do in each account | `organization_id`, `account_ids` |
+| 2 | `solution-a/landing-zone/2-security` | Security account: Security Hub, GuardDuty, AWS Config, alerts | `config_bucket_name`, `config_kms_key_arn` |
+| 3 | `solution-a/landing-zone/3-shared-services` | Shared Services account: container registry | `container_registry_url` |
+| 4 | `solution-a/workload` with `dev.tfvars`, `staging.tfvars`, `prod.tfvars` | One environment per account, each running the Cobble module | `app_url` |
 
 > [!NOTE]
 > Work through the steps in order, and finish each step's **Verify** checks before starting the next. Several later steps fail in confusing ways if an earlier one is only half applied.
@@ -53,8 +61,9 @@ State bucket → Organisation, accounts, → Security   → Shared Services → 
 
 - [ ] [Terraform](https://developer.hashicorp.com/terraform/install) 1.10 or later, and the [AWS CLI](https://aws.amazon.com/cli/)
 - [ ] Signed in to the **management account** with administrator rights, never as root
-- [ ] One monitored team mailbox for each of the 5 new accounts, plus a security-alerts mailbox
-- [ ] IAM Identity Center enabled for the organisation (console: IAM Identity Center > Enable), with **MFA required** (Settings > Authentication)
+- [ ] A monitored email address for each of the 5 new accounts, plus one for security alerts. Gmail-style plus addresses work, for example `t235cobbleaws+dev@gmail.com`
+- [ ] If Solution B is deployed in the management account: set `enable_guardduty = false` in its `poc.auto.tfvars` and apply it first. Step 1 takes over threat detection there, and AWS allows only one detector
+- [ ] IAM Identity Center enabled for the organisation (console: IAM Identity Center > Enable), with **MFA required** and **Send email OTP** turned on (Settings > Authentication)
 - [ ] The costs in [infrastructure/README.md](../infrastructure/README.md#what-it-costs) agreed with the client
 
 Confirm you are in the right account before you touch anything:
@@ -67,13 +76,12 @@ aws sts get-caller-identity   # Account must be the management account
 
 ## How every step works
 
-Steps 1 to 4 follow the same pattern. Only the folder changes.
+The landing-zone steps (people, 1, 2, 3) follow the same pattern. Only the folder changes. Step 4 is different: see [Step 4](#step-4-dev-then-staging-then-prod).
 
 ```powershell
-cd infrastructure/solution-a/<step>
-Copy-Item backend.hcl.example backend.hcl                    # then edit it
+cd infrastructure/solution-a/landing-zone/<step>
 Copy-Item settings.auto.tfvars.example settings.auto.tfvars  # then edit it
-terraform init -backend-config=backend.hcl
+terraform init
 terraform plan -out step.tfplan    # read it before applying
 terraform apply step.tfplan
 terraform output                   # note the values the next step needs
@@ -81,7 +89,7 @@ terraform output                   # note the values the next step needs
 
 | Command | Why |
 |---|---|
-| `backend.hcl` | Points Terraform at the state bucket from step 0 |
+| `terraform init` | Connects to the state bucket from step 0. The bucket name is already in `backend.tf` |
 | `settings.auto.tfvars` | The values for this step: account IDs, emails, budgets and outputs from earlier steps |
 | `terraform plan -out` | Saves exactly what you reviewed, so `apply` does only that |
 | `terraform output` | Prints the values you must copy into later steps (see the table below) |
@@ -90,7 +98,7 @@ Ground rules:
 
 - Read every plan before applying it. A plan that wants to replace or destroy something you did not expect is a stop sign.
 - Replace every `@example.com` placeholder with a real address, or account creation fails.
-- Stay signed in to the management account throughout. Keep `assume_role_name = "OrganizationAccountAccessRole"` for runs by a person.
+- Stay signed in to the management account throughout. Steps 2 and 3 reach into their accounts through `OrganizationAccountAccessRole`; step 4 needs `-var "assume_role_name=OrganizationAccountAccessRole"`.
 
 ---
 
@@ -100,9 +108,8 @@ Copy these as you go. Each is produced by one step and consumed by a later one.
 
 | Value | Produced in | Used in |
 |---|---|---|
-| State bucket name | Step 0 | `backend.hcl` in **every** step folder |
 | `organization_id` | Step 1 | Step 0 re-run (`-var "organization_id=..."`) |
-| `account_ids` (management, security, shared services, dev, staging, prod) | Step 1 | The account ID fields in steps 2 to 4 |
+| `account_ids` (management, security, shared services, dev, staging, prod) | Step 1 | The account ID fields in steps 2 and 3, and `account_id` in each step 4 `.tfvars` |
 | `config_bucket_name`, `config_kms_key_arn` | Step 2 | Steps 3 and 4 |
 | `container_registry_url` | Step 3 | Step 4 `container_image` (as `<container_registry_url>:<version>`) |
 | `app_url` | Step 4 | Verification only |
@@ -111,32 +118,68 @@ Copy these as you go. Each is produced by one step and consumed by a later one.
 
 ## Step 0: state bucket
 
-**Goal:** create the state bucket for Solution A in the management account.
+**Goal:** a state bucket in the management account.
 
-Bootstrap keeps its own state locally, so give Solution A its **own workspace**. Otherwise Terraform would try to replace Solution B's bucket.
+Solution A shares Solution B's state bucket, `cobble-tfstate-669591255093`: Solution B's account is the organisation's management account. Its state lives under `solution-a/` beside Solution B's `poc/`. If the bucket already exists (it does once Solution B has been deployed), there's nothing to do here. Otherwise create it as in [bootstrap.md](bootstrap.md).
 
-```powershell
-cd infrastructure/bootstrap
-terraform init
-terraform workspace new solution-a        # 'terraform workspace select solution-a' next time
-terraform apply -var "account_id=<management-account-id>" -var "state_bucket_name=cobble-tfstate-<management-account-id>"
-```
-
-Put the bucket name into every `backend.hcl`.
+> [!NOTE]
+> **In a different organisation**, run bootstrap with that management account's ID, then change the bucket name in every `backend.tf` (Solution B, the workload and the four landing-zone steps) and `state_bucket_name` in the workload's `variables.tf`.
 
 **Verify**
 
-- [ ] `terraform workspace show` prints `solution-a`
 - [ ] `aws s3api head-bucket --bucket cobble-tfstate-<management-account-id>` returns without an error
+
+---
+
+## People and groups
+
+**Goal:** create the three Identity Center groups and a sign-in for each person.
+
+This step only touches the Identity Center directory. It creates no accounts and doesn't change the organisation. It runs in whichever account administers Identity Center: the management account, or a member account the organisation has made the delegated administrator. That makes it the one part of Solution A you can run on its own.
+
+```powershell
+cd infrastructure/solution-a/landing-zone/identity
+```
+
+Copy `users.csv.example` to `users.csv` and put in one row per person: their sign-in name, name, email and groups (`platform-admins`, `developers` or `auditors`; separate several with `;`). To add or remove someone later, edit the file and apply again. `users.csv` is not committed because it holds personal details.
+
+**If people or groups were already added by hand in the console**, bring them under Terraform first, or the apply fails with a conflict. Find the IDs (as a platform admin):
+
+```powershell
+$store = aws sso-admin list-instances --query "Instances[0].IdentityStoreId" --output text
+aws identitystore list-users  --identity-store-id $store --query "Users[].[UserName,UserId]"        --output table
+aws identitystore list-groups --identity-store-id $store --query "Groups[].[DisplayName,GroupId]" --output table
+```
+
+Put each existing person in `users.csv` with their **exact** sign-in name, then after `terraform init`:
+
+```powershell
+terraform import 'aws_identitystore_user.this[\"<user-name>\"]' "$store/<user-id>"
+terraform import 'aws_identitystore_group.this[\"developers\"]' "$store/<group-id>"   # only for cobble- groups that already exist
+```
+
+Group memberships added by hand are imported the same way (`aws_identitystore_group_membership.this["<user-name>/<group>"]`, ID `$store/<membership-id>`). It's simpler to remove them in the console and let Terraform add them back. The plan should then show only the changes you expect.
+
+Then plan and apply as in [How every step works](#how-every-step-works).
+
+**Afterwards:** tell each person to go to the AWS access portal URL (IAM Identity Center > Settings) and sign in with their sign-in name. Because **Send email OTP** is on, they get a one-time code by email and then set their own password and MFA device.
+
+> [!IMPORTANT]
+> Until step 1 has run, people can sign in to the portal but see **no accounts**. Groups only become access once step 1 assigns them a role in an account.
+
+**Verify**
+
+- [ ] The three `cobble-` groups exist in IAM Identity Center, and every person in `users.csv` is in theirs
+- [ ] One person has signed in to the access portal and set up MFA
 
 ---
 
 ## Step 1: organisation, accounts, guardrails, sign-in
 
-**Goal:** create the organisation, the 5 member accounts, the guardrail policies (SCPs) and the Identity Center groups.
+**Goal:** create the organisation, the 5 member accounts, the guardrail policies (SCPs) and each group's access to each account.
 
 ```powershell
-cd infrastructure/solution-a/1-organization
+cd infrastructure/solution-a/landing-zone/1-organization
 ```
 
 **If the organisation already exists**, bring it under Terraform first. Check with:
@@ -148,25 +191,24 @@ aws organizations describe-organization
 If it returns an organisation, import it:
 
 ```powershell
-terraform init -backend-config=backend.hcl
-terraform import aws_organizations_organization.this <organization-id>
+terraform init
+terraform import aws_organizations_organization.this <organization-id>   # o-b60hme0nfl for the T235 organisation
 ```
 
-Then plan and apply as in [How every step works](#how-every-step-works).
+Then plan and apply as in [How every step works](#how-every-step-works). It needs the groups from [People and groups](#people-and-groups) to exist already.
 
 **Record:** `organization_id` and `account_ids`.
 
 **By hand afterwards**
 
-1. In IAM Identity Center, create a user for each person and add them to `cobble-platform-admins`, `cobble-developers` or `cobble-auditors`.
-2. From now on, sign in through the AWS access portal instead of any IAM user.
-3. Re-run bootstrap (step 0, **same workspace**) with `-var "organization_id=<organization-id>"` so the CI roles created in step 4 can reach their state.
+1. From now on, sign in through the AWS access portal instead of any IAM user.
+2. Re-run bootstrap with `-var "organization_id=<organization-id>"` (in `infrastructure/bootstrap`, on the machine that holds its local state) so the CI roles created in step 4 can reach their state.
 
 **Verify**
 
 - [ ] `aws organizations list-accounts --query "Accounts[].[Name,Id,Status]" --output table` shows the 5 new accounts as `ACTIVE`
-- [ ] The three groups exist in IAM Identity Center and every person is in one
-- [ ] Bootstrap re-run completed in the `solution-a` workspace
+- [ ] Signed in through the access portal, each group sees its accounts (for example, `developers` sees dev, staging and prod)
+- [ ] The bootstrap re-run finished without errors
 
 ---
 
@@ -216,30 +258,39 @@ docker push <container_registry_url>:1.0.0
 
 **Goal:** create each environment, one at a time, in this order: **dev, staging, prod**.
 
-For each environment folder, fill in:
+All three use the one `solution-a/workload` folder. Each environment's values are in its own `.tfvars` file. In `dev.tfvars` (then `staging.tfvars`, then `prod.tfvars`), replace each `REPLACE:` value:
 
-- its account ID
-- `container_image` (`<container_registry_url>:<version>`)
-- the step 2 outputs
-- GitHub details
-- budget and email
+- `account_id`: step 1 output `account_ids.<environment>`
+- `container_image`: `<container_registry_url>:<version>` from step 3
+- `config_bucket_name`, `config_kms_key_arn`: step 2 outputs
 
-Keep `assume_role_name = "OrganizationAccountAccessRole"` for runs by a person. Plan and apply.
+Commit the filled-in files: they hold no secrets, and CI's drift check reads them.
+
+```powershell
+cd infrastructure/solution-a/workload
+$e = "dev"   # then staging, then prod
+terraform init -reconfigure -backend-config="key=solution-a/workload/$e/terraform.tfstate"
+terraform plan -var-file="$e.tfvars" -var "assume_role_name=OrganizationAccountAccessRole" -out "$e.tfplan"
+terraform apply "$e.tfplan"
+```
 
 **Verify each environment before starting the next**
 
 ```powershell
-terraform output app_url          # open it: the Cobble module should answer
-terraform plan -detailed-exitcode # exit code 0 = no drift
+terraform output app_url          # open it: the application should answer
+terraform plan -var-file="$e.tfvars" -var "assume_role_name=OrganizationAccountAccessRole" -detailed-exitcode   # exit code 0 = no drift
 ```
 
-- [ ] `app_url` opens and the Cobble module answers
+- [ ] `app_url` opens and the application answers
 - [ ] The plan exits with code 0 (no drift)
 
 **By hand afterwards**
 
 1. In GitHub (Settings > Environments), create `dev`, `staging` and `prod`. Add required reviewers to `staging` and `prod`.
-2. When the domain is ready, request an ACM certificate (for example for `dev.cobble.com`), set `certificate_arn`, and re-apply. HTTP then redirects to HTTPS.
+2. Turn on the nightly drift check (`.github/workflows/drift.yml`) for this environment. In GitHub, Settings > Secrets and variables > Actions > Variables, add `SOLUTION_A_<ENV>_PLAN_ROLE_ARN` (with `<ENV>` as `dev`, `staging` or `prod`) set to the `github_plan_role_arn` output.
+
+   Run the workflow by hand once (Actions > Drift detection > Run workflow, on `main`). It should pass. A failed run means someone changed AWS outside Terraform: re-apply, or put the change into code.
+3. When the domain is ready, request an ACM certificate (for example for `dev.cobble.com`), set `certificate_arn`, and re-apply. HTTP then redirects to HTTPS.
 
 ---
 
@@ -249,8 +300,9 @@ terraform plan -detailed-exitcode # exit code 0 = no drift
 - [ ] Everyone signs in through the AWS access portal, and MFA is required
 - [ ] Security alerts subscription is confirmed
 - [ ] The first Cobble image is in the registry
-- [ ] dev, staging and prod each answer at their `app_url` and show no drift
+- [ ] dev, staging and prod each answer at their `app_url`, and the plan shows nothing has drifted
 - [ ] GitHub environments exist, with reviewers on `staging` and `prod`
+- [ ] The drift detection workflow passes for dev, staging and prod
 - [ ] Certificates are set and HTTP redirects to HTTPS (once the domain is ready)
 
 ---
@@ -259,20 +311,22 @@ terraform plan -detailed-exitcode # exit code 0 = no drift
 
 | What | How |
 |---|---|
-| dev or staging (to save cost) | `terraform destroy` in its folder, run by a person signed in to the management account. Rebuild later with apply. CI can't tear down: the guardrail SCP stops its roles switching off AWS Config, by design. For the same reason, a change to an environment's AWS Config recorder or VPC flow logs must be applied by a person. |
-| prod | Set `protect_from_deletion = false` in `prod/main.tf`, apply, then destroy. Deliberately two steps. |
-| Steps 1 to 3 | Not torn down routinely. Member accounts are protected (`prevent_destroy`) and must be closed by hand in AWS Organizations. Audit logs stay locked for `audit_log_retention_days`. |
+| dev or staging (to save cost) | `terraform destroy -var-file="$e.tfvars" -var "assume_role_name=OrganizationAccountAccessRole"` in `solution-a/workload`, after `init` with that environment's key. Run by a person: GitHub's roles can't, because a guardrail stops them switching off configuration history. Rebuild later with apply |
+| prod | Set `protect_from_deletion = false` in `prod.tfvars`, apply, then destroy. Deliberately two steps |
+| The landing zone | Not torn down routinely. The member accounts are protected and must be closed by hand in AWS Organizations. Audit logs stay locked for `audit_log_retention_days` |
 
 ---
 
 ## Troubleshooting
 
 > [!TIP]
-> Most failures come down to being in the wrong account or acting before something has finished propagating. Check `aws sts get-caller-identity` first, and wait a few minutes before retrying.
+> Most failures come down to being in the wrong account, or moving on before AWS has finished setting something up. Check `aws sts get-caller-identity` first, and wait a few minutes before retrying.
 
 | Error | Usually in | Cause | Fix |
 |---|---|---|---|
-| `AWS account ID not allowed` | Any step | Wrong account, or wrong ID in settings | `aws sts get-caller-identity`; check `settings.auto.tfvars` |
+| `AWS account ID not allowed` | Any step | Wrong account, or wrong ID in the settings | `aws sts get-caller-identity`; check `settings.auto.tfvars` or the `.tfvars` file |
+| GuardDuty detector already exists | Step 1 | Solution B's threat detection is still on in the management account | Set `enable_guardduty = false` in Solution B and apply it, then retry |
+| Account limit reached creating accounts | Step 1 | A new organisation may start with a low account limit | Request an increase in Service Quotas (AWS Organizations), then retry |
 | `AlreadyInOrganizationException` / organisation already exists | Step 1 | The organisation predates Terraform | Import it (see [step 1](#step-1-organisation-accounts-guardrails-sign-in)) |
 | `AccessDenied` assuming `OrganizationAccountAccessRole` | Steps 2 to 4 | Account still being created, or not signed in to management | Wait a few minutes; check sign-in |
 | `aws_ssoadmin_instances` returns nothing | Step 1 | Identity Center not enabled | Enable it in the console first |

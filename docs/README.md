@@ -1,18 +1,26 @@
 # Capstone deliverables
 
-| # | Deliverable | Location | Status |
+The project brief asks for eight deliverables. Each has its own folder here.
+Deliverable 4 is the code itself, in [`infrastructure/`](../infrastructure/README.md),
+so its folder holds the evidence that the code works.
+
+| # | Deliverable | What it answers | Status |
 |---|---|---|---|
-| 1 | Reference architecture | [`01-reference-architecture/`](01-reference-architecture/) | Scaffolding |
-| 2 | Landing zone design | [`02-landing-zone-design/`](02-landing-zone-design/) | Started: [ADRs](02-landing-zone-design/adr/) 0001 to 0003 (0003: [Solution A and B](02-landing-zone-design/adr/0003-two-solutions-mvp-and-full-landing-zone.md)) |
-| 3 | Security controls | [`03-security-controls/`](03-security-controls/) | Started: [scan findings register](03-security-controls/scan-findings.md); control map in [`infrastructure/README.md`](../infrastructure/README.md#control-map) |
-| 4 | Terraform PoC | [`infrastructure/`](../infrastructure/) | Solution B deployed; Solution A written and tested |
-| 5 | Deployment and operations | [`05-deployment-operations/`](05-deployment-operations/), [`runbooks/`](../runbooks/) | Started: deploy and teardown [runbooks](../runbooks/) for both solutions |
-| 6 | Threat model | [`06-threat-model/`](06-threat-model/) | Scaffolding |
-| 7 | Compliance mapping | [`07-compliance-mapping/`](07-compliance-mapping/) | Scaffolding |
-| 8 | Presentation | [`08-presentation/`](08-presentation/) | Scaffolding |
+| 1 | [Reference architecture](01-reference-architecture/README.md) | How is Cobble hosted in AWS? | Drafted |
+| 2 | [Landing zone design](02-landing-zone-design/README.md) | Which accounts exist, who can do what, and which rules can't be broken? Also lists the key design decisions | Drafted |
+| 3 | [Security controls](03-security-controls/README.md) | Which controls protect the platform, and where are they built? | Drafted, with a [scan findings register](03-security-controls/scan-findings.md) |
+| 4 | [Infrastructure as code](04-iac-evidence/README.md) | Does the code deploy and redeploy reliably? | Both solutions deploy; evidence log to fill in |
+| 5 | [Deployment and operations](05-deployment-operations/README.md) | How is the platform deployed, monitored, patched, backed up and supported? | Drafted |
+| 6 | [Threat model](06-threat-model/README.md) | What could go wrong, and how much risk is left? | Drafted |
+| 7 | [Compliance mapping](07-compliance-mapping/README.md) | How does the design line up with NIST CSF, Essential Eight and ISO 27001? | Drafted |
+| 8 | [Presentation](08-presentation/README.md) | What do we tell stakeholders, and what do we demo? | Outline and demo script; deck to come |
 
-Deliverable 4 is code, so it lives in `infrastructure/` rather than here.
-Update the Status column as each deliverable lands.
+Update the Status column as each deliverable is finished.
 
-Naming rules for folders, files, Terraform and AWS resources:
-[`naming-conventions.md`](naming-conventions.md).
+## Reference pages
+
+| Page | Use it to |
+|---|---|
+| [Glossary](glossary.md) | Look up a term |
+| [Naming conventions](naming-conventions.md) | Name a folder, file or AWS resource |
+| [Frameworks and standards](frameworks-and-standards.md) | See which frameworks the design follows, and where |

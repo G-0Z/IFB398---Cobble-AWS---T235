@@ -1,37 +1,35 @@
-# `postgres-database` module
+# PostgreSQL database (`postgres-database`)
 
-**In one sentence:** a private, encrypted PostgreSQL database (Amazon RDS)
-whose admin password nobody ever sees.
+**What it builds:** a private, encrypted PostgreSQL database (Amazon RDS)
+whose admin password no person ever sees.
 
-**Used by:** Solution A (`cobble-environment`). Solution B has no database, to keep cost near zero.
+**Used by:** Solution A's workload. Solution B has no database, to keep its
+cost near zero.
 
-## What it creates
+## What you get
 
-| Resource | Why |
+| Part | Why |
 |---|---|
-| DB subnet group | Places the database in the database subnets (no internet route) |
-| Security group + rules | Only the listed security groups (the app) can connect, only on port 5432 |
-| Parameter group | Forces TLS on every connection; logs connections and slow queries |
-| RDS PostgreSQL instance | The database: encrypted with KMS, password in Secrets Manager, automatic backups and minor updates |
+| Placement in the database subnets | The database has no route to the internet |
+| Firewall rule | Only the web servers can connect, and only on the database port (5432) |
+| Database settings | Every connection must be encrypted; connections and slow queries are logged |
+| The database | Encrypted with the environment's key. AWS creates the password and keeps it in Secrets Manager. Automatic backups, and automatic minor version updates |
 
-## Inputs (main ones)
+## Main settings
 
-| Name | Meaning | Dev | Prod |
+| Setting | Meaning | dev | prod |
 |---|---|---|---|
 | `instance_class` | Server size | `db.t4g.micro` | `db.t4g.small` or larger |
-| `multi_az` | Standby copy in a second AZ | false | true |
-| `backup_retention_days` | Days of backups | 7 | 35 |
-| `deletion_protection` | Refuse deletion; keep a final snapshot | false | true |
-| `performance_insights` | Query-level monitoring | false | true |
+| `multi_az` | A standby copy in a second zone that takes over if the first fails | `false` | `true` |
+| `backup_retention_days` | Days of backups you can restore from | 7 | 35 |
+| `deletion_protection` | Refuse deletion, and keep a final backup if it's ever removed | `false` | `true` |
+| `performance_insights` | Query-level monitoring | `false` | `true` |
 
-See `variables.tf` for the full list with descriptions.
+The full list, with descriptions, is in `variables.tf`.
 
-## Outputs
+**Outputs:** `endpoint`, `port`, `database_name`, `admin_secret_arn`, `security_group_id`
 
-`endpoint`, `port`, `database_name`, `admin_secret_arn`, `security_group_id`
+## Good to know
 
-## Best practice
-
-- [Security best practices for Amazon RDS](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.Security.html)
-- [Password management with RDS and Secrets Manager](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html)
-- [Multi-AZ deployments](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html) (Well-Architected Reliability pillar)
+- The Implementation Guide specifies SQL Server. We use PostgreSQL for now to keep cost down, with the same security controls. The reasons are in [deliverable 2's key decisions](../../../docs/02-landing-zone-design/README.md#key-decisions).
+- Further reading: [RDS security best practices](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.Security.html), [RDS and Secrets Manager](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html), [Multi-AZ deployments](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html).

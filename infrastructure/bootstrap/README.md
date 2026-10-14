@@ -1,30 +1,35 @@
-# `bootstrap`: Terraform state bucket
+# Bootstrap: the state bucket
 
-Creates the S3 bucket that `infrastructure/envs/poc/backend.tf` stores its
-state in. It's a separate root config with its own local state, applied
-once per AWS account, by hand.
+Terraform keeps a record of everything it builds, called its **state**. This
+folder creates the S3 bucket where every other folder keeps that record, so
+the whole team shares one up-to-date copy.
+
+| | |
+|---|---|
+| **Builds** | One S3 bucket: versioned, encrypted, never public, protected from deletion |
+| **Run it** | Once per AWS account, by hand, before anything else. The team's account already has it (`cobble-tfstate-669591255093`) |
+| **Runbook** | [runbooks/bootstrap.md](../../runbooks/bootstrap.md) |
 
 ## Why it's separate
 
-Terraform can't create the bucket it stores its own state in during the same
-apply that uses it as a backend. So this tiny config keeps its state locally
-(a gitignored `.tfstate` in this folder) and only ever creates one thing.
+Terraform can't create the bucket it stores its own records in during the
+same run that uses it. So this small folder keeps its own record locally (in
+a git-ignored `terraform.tfstate` file here) and only ever creates the
+bucket.
 
-State locking uses the bucket itself (`use_lockfile`, Terraform >= 1.10), so
-no DynamoDB table is needed.
+The bucket also handles locking, so two people can't change the same thing
+at once (Terraform 1.10 or later).
 
-## Setup
+## For Solution A
 
-See [`runbooks/bootstrap.md`](../../runbooks/bootstrap.md).
+[`org-access.tf`](org-access.tf) adds a bucket policy that lets the GitHub
+roles in Solution A's environment accounts reach their own records under
+`solution-a/workload/`. It's only created when `organization_id` is set, so
+Solution B's bucket isn't affected.
 
-## Resources created
+## Things to know
 
-- `aws_s3_bucket`: versioned, SSE-S3 encrypted, all public access blocked,
-  no `force_destroy`.
-
-## Notes
-
-- Applying again is a no-op, so it's safe to re-run.
-- Don't delete the bucket while anyone still has state in it.
-- The bucket name is hardcoded in `envs/poc/backend.tf`, because backend
-  blocks can't reference variables. Keep the two in sync.
+- Running it again changes nothing, so it's safe to re-run.
+- Never delete the bucket while any folder still keeps its records in it.
+- The bucket name is written into every other folder's `backend.tf` (Terraform doesn't allow a variable there). If it ever changes, update them all: the list is in [runbooks/README.md](../../runbooks/README.md#deploying-into-a-different-aws-account).
+- The local `terraform.tfstate` is the only copy of this folder's record. Keep a backup somewhere outside the repo, and never move or rename this folder: Git would move the code and leave the record behind.

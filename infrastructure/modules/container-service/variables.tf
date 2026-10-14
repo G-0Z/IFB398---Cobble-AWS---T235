@@ -143,3 +143,22 @@ variable "enable_container_insights" {
   type        = bool
   default     = false
 }
+
+# --- Scaling ----------------------------------------------------------------
+
+variable "max_count" {
+  description = "Most containers auto scaling may run. null turns auto scaling off and keeps exactly desired_count. When set, desired_count is the minimum."
+  type        = number
+  default     = null
+
+  validation {
+    condition     = var.max_count == null || var.max_count >= var.desired_count
+    error_message = "max_count must be at least desired_count."
+  }
+}
+
+variable "target_cpu_percent" {
+  description = "Average CPU auto scaling aims for. The Implementation Guide suggests 55-65."
+  type        = number
+  default     = 60
+}

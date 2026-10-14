@@ -1,39 +1,32 @@
-# `log-delivery` module
+# Log delivery (`log-delivery`)
 
-## Purpose
+**What it builds:** an encrypted CloudWatch log group, and the permission an
+AWS service needs to write into it, and nothing more.
 
-The one recipe for "an AWS service writes logs into an encrypted CloudWatch
-Logs group". Used by CloudTrail (`security-baseline`) and VPC Flow Logs
-(`network`).
+**Used by:** the audit trail (`security-baseline`) and the network traffic
+logs (`network`).
 
-## Resources created
+## What you get
 
-| Resource | What it does |
+| Part | Why |
 |---|---|
-| `aws_cloudwatch_log_group` | Stores the logs, encrypted with the supplied KMS key, for `retention_in_days` |
-| `aws_iam_role` | Can be assumed only by `service_principal` (e.g. `cloudtrail.amazonaws.com`) |
-| `aws_iam_role_policy` | Lets that role create log streams and put log events in this one log group, nothing else |
+| Log group | Stores the logs, encrypted, for a set number of days |
+| Role | Can only be used by the one AWS service named (for example, CloudTrail) |
+| Role policy | Lets that service write to this one log group, and nothing else |
 
-## Inputs
+## Settings
 
-| Name | Description |
+| Setting | Meaning |
 |---|---|
-| `log_group_name` | e.g. `/cobble/cloudtrail` |
+| `log_group_name` | For example `/cobble/cloudtrail` |
 | `retention_in_days` | How long logs are kept |
-| `kms_key_arn` | Encrypts the log group; its key policy must allow CloudWatch Logs |
-| `role_name` | Name of the delivery role and its policy |
-| `service_principal` | The AWS service that writes the logs |
+| `kms_key_arn` | Key that encrypts the logs. Its policy must allow CloudWatch Logs |
+| `role_name` | Name of the role and its policy |
+| `service_principal` | The AWS service that writes the logs, for example `cloudtrail.amazonaws.com` |
 
-## Outputs
+**Outputs:** `log_group_arn`, `role_arn`
 
-| Name | Description |
-|---|---|
-| `log_group_arn` | Log group ARN (without `:*`) |
-| `role_arn` | Delivery role ARN |
+## Good to know
 
-## Notes
-
-- The IAM policies are written with `jsonencode`, so the tests check their real
-  content offline, not a mocked stand-in.
-- The KMS key policy grant for CloudWatch Logs lives with the key
-  (`security-baseline/kms.tf`), not here.
+- The permission for CloudWatch Logs to use the encryption key is granted where the key is defined (`security-baseline/kms.tf`), not here.
+- The policies are written in a way the tests can check for real, without AWS.

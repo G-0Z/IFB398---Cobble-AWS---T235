@@ -24,6 +24,6 @@ variable "state_bucket_name" {
 }
 
 variable "state_key" {
-  description = "This environment's state file inside the bucket, e.g. \"solution-a/4-workloads/dev/terraform.tfstate\"."
+  description = "This environment's state file inside the bucket, e.g. \"solution-a/workload/terraform.tfstate\"."
   type        = string
 }
