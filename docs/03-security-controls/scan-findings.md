@@ -1,19 +1,24 @@
 # Security scan findings register
 
-Every change is scanned by two tools. This register records what they found
-in the Terraform code (both solutions) and what was decided about each
-finding, so nothing is silently ignored.
+Two tools scan the code for security mistakes. This page records everything
+they found and what we decided about each finding, so nothing is quietly
+ignored.
+
+**In short:** the scanner that guards every change (Trivy) reports nothing
+open. The stricter second opinion (Checkov) reports 75 findings. We fixed
+one, and the rest are deliberate trade-offs, false alarms, or Phase 2 work,
+each explained below. A manual review found five more issues that no
+scanner could see, and all five are fixed.
 
 | Tool | Where it runs | Result (6 Oct 2026) |
 |---|---|---|
-| [Trivy](https://trivy.dev/) (replaced tfsec, which is deprecated) | CI, every pull request, on all 8 root configs | **0 open findings** (7 Oct 2026, Trivy 0.74.0). Each deliberate exception has an inline `#tfsec:ignore` or `#trivy:ignore` comment giving the reason; the one Trivy can't take inline is in [`.trivyignore.yaml`](../../.trivyignore.yaml). |
-| [Checkov](https://www.checkov.io/) | Run by hand as a stricter second opinion | **75 findings across 32 checks**, all reviewed below. 1 fixed; the rest are deliberate trade-offs, false positives, or Phase 2 work. |
+| [Trivy](https://trivy.dev/) | Automatically on every pull request, on all 7 root configs. A finding blocks the merge | **0 open findings** (14 Oct 2026, Trivy 0.74.0). Each deliberate exception is a comment next to the code, giving the reason |
+| [Checkov](https://www.checkov.io/) | By hand, as a stricter second opinion | **75 findings across 32 checks**, all reviewed below |
 
-**Why so many Checkov findings?** Checkov reads each module on its own,
-without the values each environment passes in. So, for example, it flags
-"load balancer uses HTTP" even though HTTPS switches on whenever a
-certificate is supplied, and "no deletion protection" even though prod turns
-it on.
+**Why so many Checkov findings?** Checkov reads each building block on its
+own, without the settings each environment gives it. So it flags "load
+balancer uses HTTP" even though HTTPS switches on as soon as there's a
+certificate, and "no deletion protection" even though prod turns it on.
 
 ## Fixed
 
@@ -26,16 +31,16 @@ it on.
 | Check(s) | Finding | Decision | Applies to |
 |---|---|---|---|
 | CKV_AWS_144, CKV2_AWS_62 | No cross-region replication; no S3 event notifications | Disaster recovery to a second region is out of scope (project plan). Notifications aren't needed. | Both |
-| CKV_AWS_145, CKV_AWS_18 | Some buckets use SSE-S3, not KMS; some buckets don't log access | Access-log buckets can only use SSE-S3 and can't log to themselves (AWS limitation). The state bucket stays self-contained (ADR 0002). | Both |
+| CKV_AWS_145, CKV_AWS_18 | Some buckets use SSE-S3, not KMS; some buckets don't log access | Access-log buckets can only use SSE-S3 and can't log to themselves (AWS limitation). The state bucket stays self-contained. | Both |
 | CKV_AWS_338 | CloudWatch log retention under 1 year | 30 to 90 days in CloudWatch keeps cost down; audit logs are kept long term in S3 (Object Lock in A) | Both |
-| CKV_AWS_130, CKV_AWS_333 | Public subnets assign public IPs; demo container has a public IP | Public tier by design. Solution B's demo avoids a NAT gateway (~US$43/month); its firewall only accepts the load balancer. Solution A's containers are private. | B (demo) |
+| CKV_AWS_130, CKV_AWS_333 | Public subnets assign public IPs; demo container has a public IP | Public tier by design. Solution B's demo avoids a NAT gateway (~A$62/month); its firewall only accepts the load balancer. Solution A's containers are private. | B (demo) |
 | CKV_AWS_260 | Port 80 open to the internet | The load balancer is the public entry point; with a certificate, port 80 only redirects to HTTPS | Both |
-| CKV_AWS_274, CKV_AWS_109, CKV_AWS_110, CKV_AWS_111, CKV_AWS_107, CKV_AWS_108, CKV_AWS_356, CKV2_AWS_40 | Broad IAM permissions | Solution B's deploy role (`iam:*` and others) is a documented simplification (ADR 0001). Solution A's apply role is admin of its own account only, behind GitHub environment approval and SCPs (ADR 0003). The KMS key policies' `"Resource": "*"` is how KMS key policies work (it means the key itself). | Both |
+| CKV_AWS_274, CKV_AWS_109, CKV_AWS_110, CKV_AWS_111, CKV_AWS_107, CKV_AWS_108, CKV_AWS_356, CKV2_AWS_40 | Broad IAM permissions | The GitHub deploy role is admin of its own account only, and can only be used after a reviewer approves the deployment; in Solution A, guardrails also limit it. The KMS key policies' `"Resource": "*"` is how KMS key policies work (it means the key itself). | Both |
 | CKV_AWS_136 | ECR not encrypted with KMS | AWS-managed encryption keeps cross-account pulls simple; images hold code, not tenant data | A |
 | CKV_AWS_121, CKV2_AWS_3 | Config and GuardDuty not in all regions | The restrict-regions SCP blocks every other region | A |
 | CKV_AWS_394 | Availability zone data source not pinned | Zones are picked by index; a pinned list would break the module in other regions | Both |
 
-## False positives (Checkov can't see the inputs)
+## False alarms (Checkov can't see the settings)
 
 | Check(s) | Finding | Why it doesn't apply |
 |---|---|---|
@@ -47,13 +52,13 @@ it on.
 
 ## Found by manual review (7 Oct 2026)
 
-Issues no scanner reports, because they depend on how the pieces fit together.
+Issues no scanner reports, because they depend on how the pieces fit together. All are fixed.
 
 | Finding | Fix |
 |---|---|
 | The security-services SCP blocked turning services *off*, but not quietly disabling them: emptying the Config recorder, auto-archiving GuardDuty findings, suppressing Security Hub findings, deleting flow logs | 11 more actions denied in `1-organization/policies/protect-security-services.json.tftpl` |
-| Solution A's plan role (`ReadOnlyAccess`) could read bucket contents and logs. Any branch can open a pull request, so tenant data was reachable without signing in | `plan_no_data` policy in `modules/github-oidc/main.tf` denies it, except the state file; tested |
-| CI only checked Solution B: Solution A's root configs and 6 of 11 modules' tests never ran | Every root config and module added to `.github/workflows/ci.yml` |
+| GitHub's read-only role could read the contents of buckets and logs. Anyone with a branch can open a pull request, so tenant data was reachable | `plan_no_data` policy in `modules/github-oidc/main.tf` denies it, except the state file; tested |
+| The automatic checks only covered Solution B: Solution A's code and most module tests never ran | Every root config and module added to `.github/workflows/ci.yml` |
 | CI's GitHub token had the repo's default permissions; actions were pinned by movable tags | `permissions: contents: read`; every action pinned to a commit hash |
 | Solution A's filled-in settings files (real account IDs and emails) weren't git-ignored | Added to `.gitignore` |
 
@@ -68,7 +73,7 @@ Issues no scanner reports, because they depend on how the pieces fit together.
 
 ```powershell
 # Trivy (same as CI), from the repo root:
-trivy config --ignorefile .trivyignore.yaml infrastructure/solution-a/4-workloads/prod
+trivy config --ignorefile .trivyignore.yaml infrastructure/solution-a/workload
 
 # Checkov:
 pip install checkov

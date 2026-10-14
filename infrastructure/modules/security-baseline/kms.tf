@@ -1,7 +1,7 @@
 # The PoC's one KMS key. It encrypts:
 #   - CloudTrail's log files and log group (cloudtrail.tf)
 #   - the VPC flow log group (modules/network)
-#   - the platform data bucket (envs/poc/main.tf)
+#   - the platform data bucket (solution-b/main.tf)
 # One shared key is a documented PoC simplification; the Guide wants
 # separate keys per environment and data class (ADR 0001, D1).
 #

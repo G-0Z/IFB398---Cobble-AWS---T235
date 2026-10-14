@@ -35,15 +35,15 @@ variables {
   github_repo        = "example-repo"
   github_environment = "dev"
   state_bucket_name  = "cobble-tfstate-123456789012"
-  state_key          = "solution-a/4-workloads/dev/terraform.tfstate"
+  state_key          = "solution-a/workload/terraform.tfstate"
 }
 
-run "plan_role_is_only_for_pull_requests" {
+run "plan_role_is_only_for_pull_requests_and_main" {
   command = apply
 
   assert {
-    condition     = jsondecode(aws_iam_role.plan.assume_role_policy).Statement[0].Condition.StringEquals["token.actions.githubusercontent.com:sub"] == "repo:example-org/example-repo:pull_request"
-    error_message = "The plan role must only trust pull requests from this repo"
+    condition     = jsondecode(aws_iam_role.plan.assume_role_policy).Statement[0].Condition.StringEquals["token.actions.githubusercontent.com:sub"] == ["repo:example-org/example-repo:pull_request", "repo:example-org/example-repo:ref:refs/heads/main"]
+    error_message = "The plan role must only trust pull requests and the main branch of this repo"
   }
 
   assert {
@@ -68,7 +68,7 @@ run "apply_role_needs_the_approved_environment" {
   command = apply
 
   assert {
-    condition     = jsondecode(aws_iam_role.apply.assume_role_policy).Statement[0].Condition.StringEquals["token.actions.githubusercontent.com:sub"] == "repo:example-org/example-repo:environment:dev"
+    condition     = jsondecode(aws_iam_role.apply.assume_role_policy).Statement[0].Condition.StringEquals["token.actions.githubusercontent.com:sub"] == ["repo:example-org/example-repo:environment:dev"]
     error_message = "The apply role must only trust runs in the named GitHub environment"
   }
 }
@@ -79,7 +79,7 @@ run "plan_role_can_only_write_the_lock_file" {
   assert {
     condition = alltrue([
       for s in jsondecode(aws_iam_role_policy.plan_state.policy).Statement :
-      !contains(flatten([s.Action]), "s3:PutObject") || s.Resource == "arn:aws:s3:::cobble-tfstate-123456789012/solution-a/4-workloads/dev/terraform.tfstate.tflock"
+      !contains(flatten([s.Action]), "s3:PutObject") || s.Resource == "arn:aws:s3:::cobble-tfstate-123456789012/solution-a/workload/terraform.tfstate.tflock"
     ])
     error_message = "The plan role may write the lock file but never the state itself"
   }

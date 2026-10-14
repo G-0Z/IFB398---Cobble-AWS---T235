@@ -24,7 +24,7 @@ variable "kms_key_arn" {
 }
 
 # --- Optional extras (off by default) ---------------------------------------
-# Solution B (envs/poc) leaves all of these at their defaults, so it deploys
+# Solution B (solution-b) leaves all of these at their defaults, so it deploys
 # exactly what it always has. Solution A turns them on per environment.
 
 variable "nat_gateway_mode" {

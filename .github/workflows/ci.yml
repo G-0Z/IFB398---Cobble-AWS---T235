@@ -25,6 +25,8 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
+        with:
+          terraform_version: 1.16.2 # same version the lock files were made with; bump deliberately
 
       - name: Terraform fmt check (all of infrastructure/)
         run: terraform fmt -check -recursive
@@ -34,18 +36,19 @@ jobs:
     name: Terraform validate
     runs-on: ubuntu-latest
     strategy:
+      # Run every job even if one fails, so each result is real.
+      fail-fast: false
       matrix:
-        # Every root config: Solution B (envs/poc), the state bucket
-        # (bootstrap) and each step of Solution A.
+        # Every root config: Solution B, the state bucket (bootstrap),
+        # Solution A's workload and each landing-zone step.
         working-directory:
-          - infrastructure/envs/poc
+          - infrastructure/solution-b
           - infrastructure/bootstrap
-          - infrastructure/solution-a/1-organization
-          - infrastructure/solution-a/2-security
-          - infrastructure/solution-a/3-shared-services
-          - infrastructure/solution-a/4-workloads/dev
-          - infrastructure/solution-a/4-workloads/staging
-          - infrastructure/solution-a/4-workloads/prod
+          - infrastructure/solution-a/workload
+          - infrastructure/solution-a/landing-zone/identity
+          - infrastructure/solution-a/landing-zone/1-organization
+          - infrastructure/solution-a/landing-zone/2-security
+          - infrastructure/solution-a/landing-zone/3-shared-services
     defaults:
       run:
         working-directory: ${{ matrix.working-directory }}
@@ -55,6 +58,8 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
+        with:
+          terraform_version: 1.16.2 # same version the lock files were made with; bump deliberately
 
       - name: Terraform init (no backend, validate only)
         run: terraform init -backend=false
@@ -66,22 +71,24 @@ jobs:
     name: Terraform module tests
     runs-on: ubuntu-latest
     strategy:
+      # Run every job even if one fails, so each result is real.
+      fail-fast: false
       matrix:
-        # Every module. Each module's tests/*.tftest.hcl uses mock_provider
+        # Every module, plus Solution A's workload (its own end-to-end test).
+        # Each tests/*.tftest.hcl uses mock_provider
         # (or an offline-configured real provider), so these run without any
         # AWS credentials and never touch the real account.
         working-directory:
           - infrastructure/modules/access-log-bucket
           - infrastructure/modules/account-baseline
-          - infrastructure/modules/cobble-environment
           - infrastructure/modules/container-service
           - infrastructure/modules/github-oidc
           - infrastructure/modules/log-delivery
           - infrastructure/modules/network
-          - infrastructure/modules/oidc-deploy-role
           - infrastructure/modules/postgres-database
           - infrastructure/modules/s3-bucket
           - infrastructure/modules/security-baseline
+          - infrastructure/solution-a/workload
     defaults:
       run:
         working-directory: ${{ matrix.working-directory }}
@@ -91,9 +98,14 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
+        with:
+          terraform_version: 1.16.2 # same version the lock files were made with; bump deliberately
 
+      # No backend: the tests use a mocked provider and never touch real
+      # state. (solution-a/workload has an S3 backend that needs its key and
+      # AWS credentials, which CI doesn't have.)
       - name: Terraform init
-        run: terraform init -input=false
+        run: terraform init -input=false -backend=false
 
       - name: Terraform test
         run: terraform test
@@ -102,18 +114,19 @@ jobs:
     name: Trivy security scan
     runs-on: ubuntu-latest
     strategy:
+      # Run every job even if one fails, so each result is real.
+      fail-fast: false
       matrix:
         # Every root config. Trivy follows each root's module calls into
         # modules/, so every module gets scanned through them.
         working-directory:
-          - infrastructure/envs/poc
+          - infrastructure/solution-b
           - infrastructure/bootstrap
-          - infrastructure/solution-a/1-organization
-          - infrastructure/solution-a/2-security
-          - infrastructure/solution-a/3-shared-services
-          - infrastructure/solution-a/4-workloads/dev
-          - infrastructure/solution-a/4-workloads/staging
-          - infrastructure/solution-a/4-workloads/prod
+          - infrastructure/solution-a/workload
+          - infrastructure/solution-a/landing-zone/identity
+          - infrastructure/solution-a/landing-zone/1-organization
+          - infrastructure/solution-a/landing-zone/2-security
+          - infrastructure/solution-a/landing-zone/3-shared-services
     steps:
       - name: Checkout code
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4

@@ -20,10 +20,12 @@ crash.*.log
 *.tfvars.json
 # ...except auto-loaded env inputs, which are committed on purpose (no secrets).
 !*.auto.tfvars
+# ...and Solution A's workload settings, one per environment (no secrets).
+!infrastructure/solution-a/workload/*.tfvars
 # ...but not Solution A's filled-in copies (made from the .example files),
 # which hold real account IDs, emails and the state bucket name.
 infrastructure/solution-a/**/settings.auto.tfvars
-infrastructure/solution-a/**/backend.hcl
+infrastructure/solution-a/**/users.csv
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
@@ -52,3 +54,7 @@ terraform.rc
 # Optional: ignore plan files saved before destroying Terraform configuration
 # Uncomment the line below if you want to ignore planout files.
 # planout
+
+# Lock files belong to root configs (committed there). A module's own lock
+# file is never used by the configs that call it, so it is not committed.
+infrastructure/modules/**/.terraform.lock.hcl

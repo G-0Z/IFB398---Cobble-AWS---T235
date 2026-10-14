@@ -1,44 +1,34 @@
-# `security-baseline` module
+# Account security baseline (`security-baseline`)
 
-## Purpose
+**What it builds:** Solution B's core security in one package: an
+encryption key, an audit trail of every action (CloudTrail), threat
+detection (GuardDuty), and the bucket that collects access logs from the
+other buckets.
 
-The account's core security controls: the KMS key, CloudTrail (an audit
-record of every API call), GuardDuty (threat detection), and the bucket that
-collects every other bucket's access logs.
+**Used by:** Solution B. Solution A spreads the same controls across its
+Security account (`landing-zone/2-security`) and the `access-log-bucket`
+module.
 
-## Files
+## What's in each file
 
-| File | Contents |
+| File | Holds |
 |---|---|
-| `kms.tf` | The PoC's one KMS key, its policy (one statement per consumer), and alias |
-| `cloudtrail.tf` | The trail, its bucket (`s3-bucket` module), its CloudWatch delivery (`log-delivery` module), and the bucket policy letting CloudTrail write |
-| `access-logs.tf` | The access-log bucket, written by hand (see its header for why) |
-| `guardduty.tf` | GuardDuty detector |
-| `data.tf` | Current account ID and region lookups |
+| `kms.tf` | The account's encryption key and who may use it |
+| `cloudtrail.tf` | The audit trail, its locked-down bucket (`s3-bucket`), and its searchable copy in CloudWatch (`log-delivery`) |
+| `access-logs.tf` | The access-log bucket (the header explains why it's written by hand) |
+| `guardduty.tf` | Threat detection. Optional, see below |
+| `data.tf` | Looks up the current account and region |
 
-## Inputs
+## Settings
 
-| Name | Description |
-|---|---|
-| `project_name` | Naming prefix |
+| Setting | Meaning | Default |
+|---|---|---|
+| `project_name` | Name prefix | required |
+| `enable_guardduty` | Turn on threat detection. Set `false` once Solution A's landing zone runs in the same account, because it then owns the one detector AWS allows | `true` |
 
-## Outputs
+**Outputs:** `kms_key_arn`, `access_log_bucket_id`, `trail_arn`, `trail_bucket_name`, `guardduty_detector_id`
 
-| Name | Description |
-|---|---|
-| `kms_key_arn` | Shared KMS key, used by `network` and the platform data bucket |
-| `access_log_bucket_id` | Access-log bucket, used by every `s3-bucket` |
-| `trail_arn` | CloudTrail trail ARN |
-| `trail_bucket_name` | CloudTrail log bucket name |
-| `guardduty_detector_id` | GuardDuty detector ID |
+## Good to know
 
-## Notes
-
-- One GuardDuty detector is allowed per account and region. If one already
-  exists (for example, enabled by the org), see the deploy runbook's
-  troubleshooting table.
-- **Testing gap:** the tests replace the KMS key and bucket policies with
-  empty placeholders (the mock provider can't render them), so the policies'
-  content isn't tested. The trail bucket's hardening and the delivery role are
-  tested in `s3-bucket` and `log-delivery`.
-- Single-account PoC: no separate log-archive account yet (ADR 0001, D1).
+- The audit trail is deleted when Solution B is torn down, an accepted trade-off for a demo platform. Solution A keeps it in a separate account where it can't be deleted.
+- The automated tests can't check the content of the key and bucket policies (the pretend AWS can't render them). The bucket hardening and the log delivery role are tested in their own modules.

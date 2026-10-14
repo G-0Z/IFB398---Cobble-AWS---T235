@@ -1,15 +1,16 @@
-# Runbook: bootstrap the state bucket
+# Runbook: create the state bucket
 
-**When:** once per AWS account, before anyone deploys. The PoC account
-(`669591255093`) is already bootstrapped: skip this unless the state bucket
-`cobble-tfstate-669591255093` is missing.
+**What it does:** creates the S3 bucket where Terraform keeps its records
+for every other folder.
 
-## Prerequisites
+**When:** once per AWS account, before anything else is deployed. The
+team's account (`669591255093`) already has it, so skip this unless the
+bucket `cobble-tfstate-669591255093` is missing.
 
-- [Terraform](https://developer.hashicorp.com/terraform/install) >= 1.10
-- [AWS CLI](https://aws.amazon.com/cli/)
-- Signed in to the AWS CLI as described in [deploy.md](deploy.md#sign-in),
-  with rights to create S3 buckets. Never use root.
+## Before you start
+
+- Terraform 1.10 or later, and the AWS CLI
+- Signed in to the team's account ([deploy.md](deploy.md#sign-in)) with rights to create S3 buckets. Never use the root user
 
 ## Steps
 
@@ -21,25 +22,25 @@ terraform init
 terraform apply
 ```
 
-The provider refuses to run against any account other than `account_id`
-in `variables.tf`, so a wrong-account apply fails before changing anything.
+Terraform refuses to run against any account other than the one in
+`variables.tf`, so a mistake fails before it changes anything.
 
 ## Check
 
-The `state_bucket_name` output must match the `bucket` in
-`infrastructure/envs/poc/backend.tf`. If it doesn't, update `backend.tf`.
+The `state_bucket_name` output must match the bucket name in every
+`backend.tf` (see [runbooks/README.md](README.md#deploying-into-a-different-aws-account)).
 
-## Notes
+## If the local record is lost
 
-Bootstrap keeps its state in a local `terraform.tfstate`, which is gitignored.
-**Currently held by:** Max Gosling. If that file is lost, the bucket keeps
-working; re-adopt it with:
+This folder keeps its own record in a local `terraform.tfstate` file, which
+isn't on GitHub. **Currently held by:** Max Gosling.
+
+If that file is lost, the bucket keeps working. To bring it back under
+Terraform, import it:
 
 ```powershell
 terraform import aws_s3_bucket.tfstate cobble-tfstate-669591255093
 ```
 
-(and the same for the versioning, encryption and public-access-block
-resources, using the bucket name as the ID). Moving this state into the
-bucket itself is a deferred improvement, see
-[ADR 0001](../docs/02-landing-zone-design/adr/0001-deferred-landing-zone-design.md).
+Then do the same for its versioning, encryption and public-access-block
+settings, using the bucket name as the ID.

@@ -1,70 +1,72 @@
-# Runbook: deploy the PoC
+# Runbook: deploy Solution B
 
-**When:** before a demo or assessment, or to test a change to
-`infrastructure/`. The PoC targets near-zero spend, so it stays deployed only
-while it's needed. Tear it down afterwards with [teardown.md](teardown.md).
+**What it does:** builds Solution B, the secure single-account platform: 48
+resources in about 5 minutes.
 
-## Prerequisites
+**When:** before a demo or assessment, or to test a change. Solution B is
+meant to cost nearly nothing, so tear it down afterwards with
+[teardown.md](teardown.md).
 
-- [Terraform](https://developer.hashicorp.com/terraform/install) >= 1.10 and
-  the [AWS CLI](https://aws.amazon.com/cli/)
-- State bucket exists (see [bootstrap.md](bootstrap.md); already done for the
-  PoC account)
-- Signed in to AWS, see below
+## Before you start
 
-No tfvars file to create: inputs live in the committed
-`infrastructure/envs/poc/poc.auto.tfvars`, which Terraform loads
-automatically. Change values there, in a PR.
+- Terraform 1.10 or later, and the AWS CLI
+- The state bucket exists. It already does in the team's account; otherwise see [bootstrap.md](bootstrap.md)
+- Signed in to AWS (below)
+
+There's nothing to fill in. Every setting is in
+`infrastructure/solution-b/poc.auto.tfvars`, which Terraform loads
+automatically. To change a setting, edit that file in a pull request.
 
 ## Sign in
 
-**Target (once the org has set up IAM Identity Center):**
+Use single sign-on (IAM Identity Center):
 
 ```powershell
 aws configure sso                       # once; name the profile cobble-poc
-aws sso login --profile cobble-poc      # each session
+aws sso login --profile cobble-poc      # at the start of each session
 $env:AWS_PROFILE = "cobble-poc"
 ```
 
-**Until then (interim):** your IAM user, with MFA turned on, via
-`aws configure`. These IAM users are deleted once SSO works.
+The older IAM users (with MFA) still work through `aws configure`, but
+they're being retired: use single sign-on where you can.
 
-Either way, confirm before deploying:
+Either way, check you're in the right account before deploying:
 
 ```powershell
 aws sts get-caller-identity   # Account must be 669591255093
 ```
 
-## Steps
+## Deploy
 
 ```powershell
-cd infrastructure/envs/poc
+cd infrastructure/solution-b
 terraform init
-terraform plan -out deploy.tfplan   # read it before applying
+terraform plan -out deploy.tfplan   # read what it will do before going ahead
 terraform apply deploy.tfplan
 ```
 
-A first deploy into an empty account creates 43 resources.
+A first deploy into an empty account creates 48 resources.
 
-**Demo app (optional):** to show the MVP serving a web page, set
-`enable_demo_app = true` in `poc.auto.tfvars` (in a PR) and deploy. That adds
-16 resources (a load balancer, one small container and their firewall
-rules), and `terraform output demo_app_url` gives the address. It costs
-roughly US$1.30 a day while on, so set it back to `false` or tear down after
-the demo.
+### Optional: the demo web page
+
+To show Solution B serving a web page, set `enable_demo_app = true` in
+`poc.auto.tfvars` and deploy. That adds a load balancer and one small web
+server (16 more resources), and `terraform output demo_app_url` gives the
+address. It costs about A$1.90 a day while it's on, so switch it back off
+or tear down after the demo.
 
 ## Check
 
 ```powershell
-terraform plan -detailed-exitcode   # exit code 0 = no drift
+terraform plan -detailed-exitcode   # exit code 0 means what's running matches the code
 ```
 
-## Troubleshooting
+## If something goes wrong
 
 | Error | Cause | Fix |
 |---|---|---|
-| `AWS account ID not allowed` | Signed in to the wrong account | Re-check `aws sts get-caller-identity`, switch profile |
-| GuardDuty detector already exists | Only one per account/region, possibly enabled by the org | If the org manages GuardDuty, remove it from this config; otherwise `terraform import module.security_baseline.aws_guardduty_detector.this <detector-id>` |
-| OIDC provider already exists | Only one GitHub provider per account | `terraform import module.oidc_deploy_role.aws_iam_openid_connect_provider.github <provider-arn>` |
-| Backend init fails | State bucket missing or name mismatch | Run [bootstrap.md](bootstrap.md), check `backend.tf` |
-| `ExpiredToken` / SSO errors | SSO session expired | `aws sso login --profile cobble-poc` |
+| `AWS account ID not allowed` | Signed in to the wrong account | Check `aws sts get-caller-identity` and switch profile |
+| GuardDuty detector already exists | AWS allows one per account and region, and something else already turned it on (for example, Solution A's landing zone) | Set `enable_guardduty = false` in `poc.auto.tfvars` |
+| OIDC provider already exists | AWS allows one GitHub sign-in provider per account | `terraform import module.github_deploy.aws_iam_openid_connect_provider.github <provider-arn>` |
+| `terraform init` fails on the backend | The state bucket is missing or named differently | Run [bootstrap.md](bootstrap.md) and check `backend.tf` |
+| `ExpiredToken` or single sign-on errors | Your sign-in session expired | `aws sso login --profile cobble-poc` |

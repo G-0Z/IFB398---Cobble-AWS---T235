@@ -182,3 +182,42 @@ run "failed_deployments_roll_back" {
     error_message = "A deployment that can't start healthy containers should roll back automatically"
   }
 }
+
+run "auto_scaling_is_off_by_default" {
+  command = plan
+
+  assert {
+    condition     = length(aws_appautoscaling_target.this) == 0
+    error_message = "Auto scaling must be off unless max_count is set"
+  }
+}
+
+run "auto_scaling_keeps_desired_count_as_the_floor" {
+  command = plan
+
+  variables {
+    desired_count = 2
+    max_count     = 10
+  }
+
+  assert {
+    condition     = aws_appautoscaling_target.this[0].min_capacity == 2 && aws_appautoscaling_target.this[0].max_capacity == 10
+    error_message = "Auto scaling must run between desired_count and max_count"
+  }
+
+  assert {
+    condition     = aws_appautoscaling_policy.cpu[0].target_tracking_scaling_policy_configuration[0].target_value == 60
+    error_message = "Auto scaling must target 60% CPU by default"
+  }
+}
+
+run "max_count_below_desired_count_is_rejected" {
+  command = plan
+
+  variables {
+    desired_count = 2
+    max_count     = 1
+  }
+
+  expect_failures = [var.max_count]
+}

@@ -1,47 +1,37 @@
-# `s3-bucket` module
+# Hardened S3 bucket (`s3-bucket`)
 
-## Purpose
+**What it builds:** one S3 bucket with every protection switched on. Every
+bucket that holds real data is built from this one recipe, so "how are our
+buckets protected?" has one answer, in one place.
 
-The one recipe for a hardened S3 bucket. Every bucket that holds real data
-(the CloudTrail bucket and the platform data bucket) is built from it, so
-"how are our buckets protected?" has one answer, in one place.
+**Used by:** both solutions: the audit-log buckets, the data buckets and the
+locked audit archive.
 
 ## What every bucket gets
 
-| Protection | Resource | Why |
-|---|---|---|
-| Versioning | `aws_s3_bucket_versioning` | Overwritten or deleted objects can be recovered |
-| Encryption with a KMS key | `aws_s3_bucket_server_side_encryption_configuration` | Data at rest is encrypted with a key we control and audit |
-| Public access blocked (all 4 settings) | `aws_s3_bucket_public_access_block` | The bucket can't be made public by mistake |
-| Access logging | `aws_s3_bucket_logging` | Every request to the bucket is recorded |
-| Bucket policy (optional) | `aws_s3_bucket_policy` | Only when a service needs to write in (e.g. CloudTrail) |
+None of these can be switched off by whoever uses the module.
 
-None of the first four can be turned off by a caller.
-
-## Inputs
-
-| Name | Description |
+| Protection | Why |
 |---|---|
-| `bucket_name` | Globally unique name |
-| `kms_key_arn` | Key that encrypts every object |
-| `access_log_bucket_id` | Where access logs go |
-| `access_log_prefix` | This bucket's folder in the access-log bucket (unique per bucket) |
-| `force_destroy` | `true` lets `terraform destroy` delete a non-empty bucket (PoC only) |
-| `bucket_policy_json` | Optional policy JSON; default `null` (no policy) |
+| Versioning | A deleted or overwritten file can be recovered |
+| Encryption with our own key | Data at rest is encrypted with a key we control and can audit |
+| Public access blocked (all four settings) | The bucket can't be made public by mistake |
+| Access logging | Every request to the bucket is recorded |
 
-## Outputs
+## Optional extras
 
-| Name | Description |
+| Setting | What it adds |
 |---|---|
-| `bucket_name` | Bucket name |
-| `bucket_arn` | Bucket ARN |
+| `bucket_policy_json` | A bucket policy, when a service needs to write in (for example, CloudTrail) |
+| `object_lock_retention_days`, `object_lock_mode` | Files can't be changed or deleted until a date. Used for audit logs |
+| `noncurrent_version_expiration_days` | Old versions are deleted after this many days |
+| `archive_after_days` | Files move to cheaper storage after this many days |
+| `force_destroy` | `true` lets `terraform destroy` delete a bucket that still has files in it. For demos only |
 
-## Not built with this module (on purpose)
+**Required:** `bucket_name` (unique across all of AWS), `kms_key_arn`, `access_log_bucket_id`, `access_log_prefix`.
+**Outputs:** `bucket_name`, `bucket_arn`
 
-- **The access-log bucket** (`security-baseline/access-logs.tf`). It is the
-  log destination, so it can't log to itself, and S3 log delivery doesn't
-  support KMS on the destination.
-- **The Terraform state bucket** (`bootstrap/`). It's deployed once, by hand,
-  and must not change because this module changed.
+## Not built with this module, on purpose
 
-See [ADR 0002](../../../docs/02-landing-zone-design/adr/0002-codebase-structure-for-readability.md).
+- **The access-log buckets** (`security-baseline`, `access-log-bucket`). They're where access logs go, so they can't log to themselves, and AWS's log delivery doesn't support our own encryption keys there.
+- **The state bucket** (`bootstrap/`). It's set up once, by hand, and mustn't change just because this module changed.
