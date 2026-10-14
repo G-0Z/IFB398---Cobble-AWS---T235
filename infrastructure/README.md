@@ -7,8 +7,8 @@ again and you get exactly the same result.
 **In short:** there are two solutions, built from one shared set of
 building blocks (modules).
 
-- **Solution B** builds a secure single-account platform: 48 resources in about 5 minutes, for about US$0.
-- **Solution A** builds the full design. Its workload (web servers, database, network) can be deployed into one account for a demo: 66 resources, about US$0.15 an hour. Its landing zone sets up the six-account organisation around it.
+- **Solution B** builds a secure single-account platform: 48 resources in about 5 minutes, for about A$0.
+- **Solution A** builds the full design. Its workload (web servers, database, network) can be deployed into one account for a demo: 66 resources, about A$0.22 an hour. Its landing zone sets up the six-account organisation around it.
 
 To deploy anything, start with [runbooks/README.md](../runbooks/README.md).
 
@@ -105,7 +105,7 @@ enforcing needs guardrails, which need the multi-account organisation.
 | Backups | Configured (file versioning) | Configured (plus database backups, 35 days in prod) | `s3-bucket/`, `postgres-database/` |
 | GitHub deploys without stored keys: read-only role for checks, approval needed to deploy | Configured | Configured | `github-oidc/main.tf` |
 | Terraform refuses to run against the wrong account | Configured | Configured | Each `providers.tf` |
-| Monthly cost alert | Configured (US$1) | Configured (per account) | `solution-b/main.tf`, `workload/main.tf` |
+| Monthly cost alert | Configured (US$1, about A$1.45) | Configured (per account) | `solution-b/main.tf`, `workload/main.tf` |
 | The Guide's required tags on every resource | Configured | Configured | Each `providers.tf` |
 | Every change formatted, validated, tested and scanned | Configured (GitHub Free can't make it mandatory) | Configured (same) | `.github/workflows/ci.yml` |
 
@@ -121,44 +121,51 @@ Known gaps in Solution A:
 
 ## What it costs
 
-Rough monthly estimates in US dollars for Sydney, with low traffic and
-everything left running all month. They're for comparing options, not
-quotes: check the [AWS Pricing Calculator](https://calculator.aws/) before
-committing.
+Rough estimates in **Australian dollars** for Sydney, with low traffic and
+everything left running all month. AWS publishes its prices in US dollars,
+so they're converted at **A$1.44 per US$1** (the rate in late July 2026).
+They're for comparing options, not quotes: check the
+[AWS Pricing Calculator](https://calculator.aws/) and today's exchange rate
+before committing.
+
+AWS budgets only work in US dollars, so the budget limits in the code are
+in USD (Solution B's US$1 alert is about A$1.45). By default AWS also bills
+in US dollars; the payment currency can be changed to AUD in the Billing
+console.
 
 | | Cost |
 |---|---|
-| Solution B | Under $5 a month; about $0 when torn down between demos |
-| Solution B with the demo web page on | About $1.30 a day |
-| Solution A demo (the workload in one account) | About $0.15 an hour, $3.50 a day |
-| Solution A, everything running | About $550 a month |
+| Solution B | Under A$7 a month; about A$0 when torn down between demos |
+| Solution B with the demo web page on | About A$1.90 a day |
+| Solution A demo (the workload in one account) | About A$0.22 an hour, A$5 a day |
+| Solution A, everything running | About A$790 a month |
 
 Solution A by account:
 
 | Account | Main costs | Per month |
 |---|---|---|
-| Management, Security, Shared Services | Threat detection, security checks, configuration history, keys, log storage, image registry | $50 to $100 |
-| dev | NAT gateway $43, load balancer ~$20, web server ~$11, database $18, public IPs ~$11, logs and keys | About $110 |
-| staging | As dev, plus the web firewall ~$10 | About $120 |
-| prod | 2 NAT gateways $86, load balancer ~$20, 2 larger web servers ~$43, database with standby copy ~$80, web firewall ~$10, public IPs ~$15 | About $260 |
+| Management, Security, Shared Services | Threat detection, security checks, configuration history, keys, log storage, image registry | A$70 to A$145 |
+| dev | NAT gateway A$62, load balancer ~A$29, web server ~A$16, database A$26, public IPs ~A$16, logs and keys | About A$160 |
+| staging | As dev, plus the web firewall ~A$14 | About A$175 |
+| prod | 2 NAT gateways A$124, load balancer ~A$29, 2 larger web servers ~A$62, database with standby copy ~A$115, web firewall ~A$14, public IPs ~A$22 | About A$375 |
 
 The biggest saving is turning dev and staging off when nobody is using them.
 They're built to tear down and rebuild cleanly, and doing so brings Solution
-A to about $330 a month.
+A to about A$475 a month.
 
-Unit prices used:
+Unit prices used (AWS's US-dollar price, converted):
 
 | Item | Price | Source |
 |---|---|---|
-| NAT gateway (Sydney) | $0.059 per hour (~$43/month) | [cloudburn.io regional table](https://cloudburn.io/blog/aws-nat-gateway-pricing) |
-| RDS PostgreSQL db.t4g.micro / db.t4g.small (Sydney, single zone) | ~$18 / ~$37 per month; a standby copy doubles it | [Bytebase RDS price data](https://www.bytebase.com/dbcost/rds/instance/db.t4g.small/) |
-| Public IPv4 address | $0.005 per hour (~$3.65/month) | [Amazon VPC pricing](https://aws.amazon.com/vpc/pricing/) |
-| Application Load Balancer | ~$0.025 per hour plus usage | [Elastic Load Balancing pricing](https://aws.amazon.com/elasticloadbalancing/pricing/) |
-| Fargate | ~$0.05 per vCPU-hour, ~$0.005 per GB-hour | [AWS Fargate pricing](https://aws.amazon.com/fargate/pricing/) |
-| AWS WAF | $5 per web ACL + $1 per rule per month + $0.60 per million requests | [AWS WAF pricing](https://aws.amazon.com/waf/pricing/) |
-| KMS key | $1 per key per month | [AWS KMS pricing](https://aws.amazon.com/kms/pricing/) |
-| AWS Config | $0.003 per configuration item recorded | [AWS Config pricing](https://aws.amazon.com/config/pricing/) |
-| Security Hub | $0.001 per check (first 100,000); 30-day free trial | [Security Hub pricing](https://aws.amazon.com/security-hub/cspm/pricing) |
+| NAT gateway (Sydney) | A$0.085 per hour (~A$62/month) | [cloudburn.io regional table](https://cloudburn.io/blog/aws-nat-gateway-pricing) |
+| RDS PostgreSQL db.t4g.micro / db.t4g.small (Sydney, single zone) | ~A$26 / ~A$53 per month; a standby copy doubles it | [Bytebase RDS price data](https://www.bytebase.com/dbcost/rds/instance/db.t4g.small/) |
+| Public IPv4 address | A$0.0072 per hour (~A$5.25/month) | [Amazon VPC pricing](https://aws.amazon.com/vpc/pricing/) |
+| Application Load Balancer | ~A$0.036 per hour plus usage | [Elastic Load Balancing pricing](https://aws.amazon.com/elasticloadbalancing/pricing/) |
+| Fargate | ~A$0.072 per vCPU-hour, ~A$0.0072 per GB-hour | [AWS Fargate pricing](https://aws.amazon.com/fargate/pricing/) |
+| AWS WAF | A$7.20 per web ACL + A$1.44 per rule per month + A$0.86 per million requests | [AWS WAF pricing](https://aws.amazon.com/waf/pricing/) |
+| KMS key | A$1.44 per key per month | [AWS KMS pricing](https://aws.amazon.com/kms/pricing/) |
+| AWS Config | A$0.0043 per configuration item recorded | [AWS Config pricing](https://aws.amazon.com/config/pricing/) |
+| Security Hub | A$0.0014 per check (first 100,000); 30-day free trial | [Security Hub pricing](https://aws.amazon.com/security-hub/cspm/pricing) |
 
 ## Handy commands
 

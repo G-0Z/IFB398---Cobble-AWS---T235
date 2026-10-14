@@ -37,6 +37,6 @@ firewall rule.
 
 ## Good to know
 
-- With the defaults (Solution B) there's no NAT gateway, which saves about US$43 a month. The trade-off is that private subnets can't reach the internet.
+- With the defaults (Solution B) there's no NAT gateway, which saves about A$62 a month. The trade-off is that private subnets can't reach the internet.
 - Firewall rules (security groups) aren't defined here. Each module that runs something (`container-service`, `postgres-database`) owns its own.
 - AWS recommends one NAT gateway per zone in production, so losing one zone doesn't cut the others off ([NAT gateway basics](https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-basics.html); Well-Architected REL10). Separate subnet layers keep databases off the internet (Well-Architected SEC05).

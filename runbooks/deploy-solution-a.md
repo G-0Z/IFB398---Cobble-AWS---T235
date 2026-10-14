@@ -5,7 +5,7 @@ people and groups, guardrails, central security, the container registry,
 and then the dev, staging and prod environments.
 
 > [!IMPORTANT]
-> **Most of this can't simply be torn down.** It creates five new AWS accounts, and those have to be closed by hand (see [Tear down](#tear-down)). Running everything costs about US$550 a month. **To show Solution A working without any of that, use [demo-solution-a.md](demo-solution-a.md) instead.**
+> **Most of this can't simply be torn down.** It creates five new AWS accounts, and those have to be closed by hand (see [Tear down](#tear-down)). Running everything costs about A$790 a month. **To show Solution A working without any of that, use [demo-solution-a.md](demo-solution-a.md) instead.**
 
 | | |
 |---|---|

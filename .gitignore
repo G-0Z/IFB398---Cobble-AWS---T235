@@ -20,6 +20,8 @@ crash.*.log
 *.tfvars.json
 # ...except auto-loaded env inputs, which are committed on purpose (no secrets).
 !*.auto.tfvars
+# ...and Solution A's workload settings, one per environment (no secrets).
+!infrastructure/solution-a/workload/*.tfvars
 # ...but not Solution A's filled-in copies (made from the .example files),
 # which hold real account IDs, emails and the state bucket name.
 infrastructure/solution-a/**/settings.auto.tfvars

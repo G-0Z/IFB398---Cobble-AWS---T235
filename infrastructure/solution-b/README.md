@@ -6,10 +6,10 @@ it. It's also called **the MVP** or **the PoC**.
 
 | | |
 |---|---|
-| **Builds** | An encryption key, an audit trail of every action (CloudTrail), threat detection (GuardDuty), a private network with traffic logging, an encrypted data bucket, GitHub's access roles, and a US$1 budget alert. Optionally, a demo web page |
+| **Builds** | An encryption key, an audit trail of every action (CloudTrail), threat detection (GuardDuty), a private network with traffic logging, an encrypted data bucket, GitHub's access roles, and a budget alert at US$1 (about A$1.45; AWS budgets only work in US dollars). Optionally, a demo web page |
 | **Runs in** | The team's AWS account. Terraform refuses to run against any other account |
 | **Settings** | [`poc.auto.tfvars`](poc.auto.tfvars): the only file to edit to change a setting. It holds no secrets, so it's committed |
-| **Cost** | About US$0, because it's only deployed around demos. The demo web page adds about US$1.30 a day |
+| **Cost** | About A$0, because it's only deployed around demos. The demo web page adds about A$1.90 a day |
 | **Deploy / tear down** | [runbooks/deploy.md](../../runbooks/deploy.md), [runbooks/teardown.md](../../runbooks/teardown.md) |
 
 To see everything it builds, read [`main.tf`](main.tf) from top to bottom.
@@ -37,7 +37,7 @@ flowchart TB
             DEPLOYROLE["Read-only role<br/>and deploy role"]
         end
 
-        BUDGET["Budget alert<br/>US$1/month"]
+        BUDGET["Budget alert<br/>US$1 (≈A$1.45)/month"]
 
         subgraph NETWORK["Private network · 2 zones"]
             IGW["Internet gateway"]

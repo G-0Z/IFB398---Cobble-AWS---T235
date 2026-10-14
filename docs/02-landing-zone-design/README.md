@@ -131,8 +131,8 @@ load balancer with a web firewall and HTTPS gives the protection we need for
 less cost and complexity. *Revisit when* the domain and the application's
 API routes exist.
 
-**7. Solution B accepts some shortcuts to stay near US$0.** One account; no
-NAT gateway (it costs about US$43 a month), so the private network has no
+**7. Solution B accepts some shortcuts to stay near A$0.** One account; no
+NAT gateway (it costs about A$62 a month), so the private network has no
 outbound internet; and the audit trail is deleted on teardown. Solution A
 shows the full answer to each one. *Revisit* if Solution B is ever left
 running long-term.

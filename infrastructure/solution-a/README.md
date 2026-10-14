@@ -8,7 +8,7 @@ It comes in two parts, and you don't need the whole thing to see it working:
 
 | Part | What it is | How to see it |
 |---|---|---|
-| [`workload/`](workload/) | One Cobble environment: the network, web servers, database and data bucket. The same code builds every environment; only the settings file differs (`demo`, `dev`, `staging` or `prod.tfvars`) | **Demo:** deploy it into the team's account for a few hours (about US$0.15 an hour), then tear it down. [runbooks/demo-solution-a.md](../../runbooks/demo-solution-a.md) |
+| [`workload/`](workload/) | One Cobble environment: the network, web servers, database and data bucket. The same code builds every environment; only the settings file differs (`demo`, `dev`, `staging` or `prod.tfvars`) | **Demo:** deploy it into the team's account for a few hours (about A$0.22 an hour), then tear it down. [runbooks/demo-solution-a.md](../../runbooks/demo-solution-a.md) |
 | [`landing-zone/`](landing-zone/) | The organisation around the environments: people, accounts and guardrails, central security, the container registry. Set up once and left running | [runbooks/deploy-solution-a.md](../../runbooks/deploy-solution-a.md) |
 
 Why it's designed this way is explained in

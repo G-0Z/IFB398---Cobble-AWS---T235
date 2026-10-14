@@ -25,7 +25,7 @@ variable "budget_limit" {
 }
 
 variable "budget_currency" {
-  description = "Currency for budget_limit."
+  description = "Currency for budget_limit. AWS budgets only work in US dollars (about A$1.44 per US$1 in July 2026)."
   type        = string
   default     = "USD"
 }

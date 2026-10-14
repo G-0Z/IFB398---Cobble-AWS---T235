@@ -89,11 +89,11 @@ resource "aws_budgets_budget" "monthly" {
 #
 # Cost-saving trade-offs, both fixed in Solution A:
 #   - the container runs in a public subnet with a public IP, because there
-#     is no NAT gateway (about US$43/month in Sydney). Its firewall still
+#     is no NAT gateway (about A$62/month in Sydney). Its firewall still
 #     only accepts traffic from the load balancer.
 #   - plain HTTP, because there is no domain or certificate yet.
 # Switch it off (or tear down) after the demo: while it's on it costs
-# roughly US$1.30 a day (load balancer, container and public IP addresses).
+# roughly A$1.90 a day (load balancer, container and public IP addresses).
 
 module "demo_app" {
   count  = var.enable_demo_app ? 1 : 0

@@ -199,7 +199,7 @@ there is no such backup. This is the largest remaining recovery risk.
 |---|---|---|
 | Daily | Read any security alert or budget email; check the nightly drift run | Security operations; platform team |
 | Weekly | Review new Security Hub findings and the GuardDuty summary; assign owners | Security operations |
-| Weekly | Tear down dev and staging when idle (saves about $220 a month) | Platform team |
+| Weekly | Tear down dev and staging when idle (saves about A$315 a month) | Platform team |
 | Monthly | Rebuild and release container images; review spend against budget | Module team; platform product owner |
 | Quarterly | Database restore test; access review (who is in which Identity Center group: edit `users.csv`); bump Terraform providers and actions | Database engineering; security operations; platform team |
 | Yearly | Review RTO/RPO, retention periods and this document; consider switching audit logs to compliance mode | Platform product owner |

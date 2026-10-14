@@ -22,7 +22,7 @@ deployed into AWS, shown in the console, and torn down again.
 | AWS accounts | 1 | 6: management, security, shared services, dev, staging, prod |
 | What you can see running | Encryption, audit logging, threat detection, a private network, a budget alert | All of B, plus web servers in private subnets behind a load balancer, a private database, auto scaling and a web firewall |
 | Extra security | | Guardrails no one can switch off, single sign-on, tamper-proof audit logs, central security monitoring |
-| Cost | About US$0 (deployed only for demos) | Demo: about US$0.15 an hour. Everything running: about US$550 a month |
+| Cost (AUD) | About A$0 (deployed only for demos) | Demo: about A$0.22 an hour. Everything running: about A$790 a month |
 | Code | [`infrastructure/solution-b/`](infrastructure/solution-b/) | [`infrastructure/solution-a/`](infrastructure/solution-a/) |
 
 Solution B can be shown working today for almost nothing. Solution A is what

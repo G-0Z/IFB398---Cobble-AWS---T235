@@ -52,7 +52,7 @@ A first deploy into an empty account creates 48 resources.
 To show Solution B serving a web page, set `enable_demo_app = true` in
 `poc.auto.tfvars` and deploy. That adds a load balancer and one small web
 server (16 more resources), and `terraform output demo_app_url` gives the
-address. It costs about US$1.30 a day while it's on, so switch it back off
+address. It costs about A$1.90 a day while it's on, so switch it back off
 or tear down after the demo.
 
 ## Check

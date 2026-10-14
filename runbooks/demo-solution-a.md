@@ -6,8 +6,8 @@ uses the settings in
 [`demo.tfvars`](../infrastructure/solution-a/workload/demo.tfvars): 66
 resources, about 15 minutes.
 
-**Cost:** about US$0.15 an hour (NAT gateway, load balancer, database, web
-server). A 3-hour demo costs about US$0.50, but it's US$3.50 a day if
+**Cost:** about A$0.22 an hour (NAT gateway, load balancer, database, web
+server). A 3-hour demo costs about A$0.70, but it's A$5 a day if
 forgotten, so **always tear it down**.
 
 ## What you'll be showing

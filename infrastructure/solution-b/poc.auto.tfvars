@@ -13,7 +13,7 @@ alert_email = "t235cobbleaws@gmail.com"
 
 # Near-zero spend target: any real spend should alert.
 budget_limit    = 1
-budget_currency = "USD"
+budget_currency = "USD" # AWS budgets only work in US dollars. US$1 is about A$1.45
 
 # Must match the repo GitHub Actions deploys from.
 github_org  = "G-0Z"
