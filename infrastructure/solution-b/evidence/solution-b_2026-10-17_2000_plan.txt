@@ -1,0 +1,1211 @@
+module.github_deploy.data.tls_certificate.github: Reading...
+module.network.data.aws_availability_zones.available: Reading...
+module.security_baseline.data.aws_caller_identity.current: Reading...
+module.security_baseline.data.aws_region.current: Reading...
+module.network.data.aws_region.current: Reading...
+module.security_baseline.data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.network.data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.security_baseline.data.aws_caller_identity.current: Read complete after 0s [id=669591255093]
+module.security_baseline.data.aws_iam_policy_document.trail_bucket: Reading...
+module.security_baseline.data.aws_iam_policy_document.kms_key: Reading...
+module.security_baseline.data.aws_iam_policy_document.trail_bucket: Read complete after 0s [id=1904515996]
+module.security_baseline.data.aws_iam_policy_document.kms_key: Read complete after 0s [id=992005895]
+module.network.data.aws_availability_zones.available: Read complete after 1s [id=ap-southeast-2]
+module.github_deploy.data.tls_certificate.github: Read complete after 1s [id=6bcf7b7f2005c947073a003ff3b596f7fcc8066f]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+  # aws_budgets_budget.monthly will be created
+  + resource "aws_budgets_budget" "monthly" {
+      + account_id        = (known after apply)
+      + arn               = (known after apply)
+      + budget_type       = "COST"
+      + id                = (known after apply)
+      + limit_amount      = "1"
+      + limit_unit        = "USD"
+      + name              = "cobble-monthly-cost"
+      + name_prefix       = (known after apply)
+      + tags_all          = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+      + time_period_end   = "2087-06-15_00:00"
+      + time_period_start = (known after apply)
+      + time_unit         = "MONTHLY"
+
+      + cost_filter (known after apply)
+
+      + cost_types (known after apply)
+
+      + notification {
+          + comparison_operator        = "GREATER_THAN"
+          + notification_type          = "ACTUAL"
+          + subscriber_email_addresses = [
+              + "t235cobbleaws@gmail.com",
+            ]
+          + subscriber_sns_topic_arns  = []
+          + threshold                  = 100
+          + threshold_type             = "PERCENTAGE"
+        }
+      + notification {
+          + comparison_operator        = "GREATER_THAN"
+          + notification_type          = "ACTUAL"
+          + subscriber_email_addresses = [
+              + "t235cobbleaws@gmail.com",
+            ]
+          + subscriber_sns_topic_arns  = []
+          + threshold                  = 80
+          + threshold_type             = "PERCENTAGE"
+        }
+    }
+
+  # module.github_deploy.aws_iam_openid_connect_provider.github will be created
+  + resource "aws_iam_openid_connect_provider" "github" {
+      + arn             = (known after apply)
+      + client_id_list  = [
+          + "sts.amazonaws.com",
+        ]
+      + id              = (known after apply)
+      + tags_all        = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+      + thumbprint_list = [
+          + "ab9d0263244dd0326eb67015705a667e79cfe998",
+        ]
+      + url             = "https://token.actions.githubusercontent.com"
+    }
+
+  # module.github_deploy.aws_iam_role.apply will be created
+  + resource "aws_iam_role" "apply" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = (known after apply)
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "cobble-terraform-apply"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.github_deploy.aws_iam_role.plan will be created
+  + resource "aws_iam_role" "plan" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = (known after apply)
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "cobble-terraform-plan"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.github_deploy.aws_iam_role_policy.apply_state will be created
+  + resource "aws_iam_role_policy" "apply_state" {
+      + id          = (known after apply)
+      + name        = "cobble-terraform-state-write"
+      + name_prefix = (known after apply)
+      + policy      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = "s3:ListBucket"
+                      + Effect   = "Allow"
+                      + Resource = "arn:aws:s3:::cobble-tfstate-669591255093"
+                    },
+                  + {
+                      + Action   = [
+                          + "s3:GetObject",
+                          + "s3:PutObject",
+                          + "s3:DeleteObject",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = [
+                          + "arn:aws:s3:::cobble-tfstate-669591255093/poc/terraform.tfstate",
+                          + "arn:aws:s3:::cobble-tfstate-669591255093/poc/terraform.tfstate.tflock",
+                        ]
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + role        = (known after apply)
+    }
+
+  # module.github_deploy.aws_iam_role_policy.plan_no_data will be created
+  + resource "aws_iam_role_policy" "plan_no_data" {
+      + id          = (known after apply)
+      + name        = "cobble-terraform-plan-no-data"
+      + name_prefix = (known after apply)
+      + policy      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action      = "s3:GetObject"
+                      + Effect      = "Deny"
+                      + NotResource = "arn:aws:s3:::cobble-tfstate-669591255093/*"
+                    },
+                  + {
+                      + Action   = [
+                          + "logs:GetLogEvents",
+                          + "logs:FilterLogEvents",
+                          + "logs:StartQuery",
+                        ]
+                      + Effect   = "Deny"
+                      + Resource = "*"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + role        = (known after apply)
+    }
+
+  # module.github_deploy.aws_iam_role_policy.plan_state will be created
+  + resource "aws_iam_role_policy" "plan_state" {
+      + id          = (known after apply)
+      + name        = "cobble-terraform-state-read"
+      + name_prefix = (known after apply)
+      + policy      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = "s3:ListBucket"
+                      + Effect   = "Allow"
+                      + Resource = "arn:aws:s3:::cobble-tfstate-669591255093"
+                    },
+                  + {
+                      + Action   = "s3:GetObject"
+                      + Effect   = "Allow"
+                      + Resource = "arn:aws:s3:::cobble-tfstate-669591255093/poc/terraform.tfstate"
+                    },
+                  + {
+                      + Action   = [
+                          + "s3:GetObject",
+                          + "s3:PutObject",
+                          + "s3:DeleteObject",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "arn:aws:s3:::cobble-tfstate-669591255093/poc/terraform.tfstate.tflock"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + role        = (known after apply)
+    }
+
+  # module.github_deploy.aws_iam_role_policy_attachment.apply_admin will be created
+  + resource "aws_iam_role_policy_attachment" "apply_admin" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+      + role       = "cobble-terraform-apply"
+    }
+
+  # module.github_deploy.aws_iam_role_policy_attachment.plan_read_only will be created
+  + resource "aws_iam_role_policy_attachment" "plan_read_only" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+      + role       = "cobble-terraform-plan"
+    }
+
+  # module.network.aws_flow_log.this will be created
+  + resource "aws_flow_log" "this" {
+      + arn                      = (known after apply)
+      + iam_role_arn             = (known after apply)
+      + id                       = (known after apply)
+      + log_destination          = (known after apply)
+      + log_destination_type     = "cloud-watch-logs"
+      + log_format               = (known after apply)
+      + log_group_name           = (known after apply)
+      + max_aggregation_interval = 60
+      + tags_all                 = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+      + traffic_type             = "ALL"
+      + vpc_id                   = (known after apply)
+    }
+
+  # module.network.aws_internet_gateway.this will be created
+  + resource "aws_internet_gateway" "this" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + owner_id = (known after apply)
+      + tags     = {
+          + "Name" = "cobble-igw"
+        }
+      + tags_all = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-igw"
+          + "Owner"       = "IFB398-T235"
+        }
+      + vpc_id   = (known after apply)
+    }
+
+  # module.network.aws_route_table.private will be created
+  + resource "aws_route_table" "private" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + route            = (known after apply)
+      + tags             = {
+          + "Name" = "cobble-private-rt"
+        }
+      + tags_all         = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-private-rt"
+          + "Owner"       = "IFB398-T235"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # module.network.aws_route_table.public will be created
+  + resource "aws_route_table" "public" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + route            = [
+          + {
+              + cidr_block                 = "0.0.0.0/0"
+              + gateway_id                 = (known after apply)
+                # (11 unchanged attributes hidden)
+            },
+        ]
+      + tags             = {
+          + "Name" = "cobble-public-rt"
+        }
+      + tags_all         = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-public-rt"
+          + "Owner"       = "IFB398-T235"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # module.network.aws_route_table_association.private[0] will be created
+  + resource "aws_route_table_association" "private" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.network.aws_route_table_association.private[1] will be created
+  + resource "aws_route_table_association" "private" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.network.aws_route_table_association.public[0] will be created
+  + resource "aws_route_table_association" "public" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.network.aws_route_table_association.public[1] will be created
+  + resource "aws_route_table_association" "public" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.network.aws_subnet.private[0] will be created
+  + resource "aws_subnet" "private" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "ap-southeast-2a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.20.10.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name" = "cobble-private-0"
+          + "Tier" = "private"
+        }
+      + tags_all                                       = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-private-0"
+          + "Owner"       = "IFB398-T235"
+          + "Tier"        = "private"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.network.aws_subnet.private[1] will be created
+  + resource "aws_subnet" "private" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "ap-southeast-2b"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.20.11.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name" = "cobble-private-1"
+          + "Tier" = "private"
+        }
+      + tags_all                                       = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-private-1"
+          + "Owner"       = "IFB398-T235"
+          + "Tier"        = "private"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.network.aws_subnet.public[0] will be created
+  + resource "aws_subnet" "public" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "ap-southeast-2a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.20.0.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = true
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name" = "cobble-public-0"
+          + "Tier" = "public"
+        }
+      + tags_all                                       = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-public-0"
+          + "Owner"       = "IFB398-T235"
+          + "Tier"        = "public"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.network.aws_subnet.public[1] will be created
+  + resource "aws_subnet" "public" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "ap-southeast-2b"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.20.1.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = true
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name" = "cobble-public-1"
+          + "Tier" = "public"
+        }
+      + tags_all                                       = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-public-1"
+          + "Owner"       = "IFB398-T235"
+          + "Tier"        = "public"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.network.aws_vpc.this will be created
+  + resource "aws_vpc" "this" {
+      + arn                                  = (known after apply)
+      + cidr_block                           = "10.20.0.0/16"
+      + default_network_acl_id               = (known after apply)
+      + default_route_table_id               = (known after apply)
+      + default_security_group_id            = (known after apply)
+      + dhcp_options_id                      = (known after apply)
+      + enable_dns_hostnames                 = true
+      + enable_dns_support                   = true
+      + enable_network_address_usage_metrics = (known after apply)
+      + id                                   = (known after apply)
+      + instance_tenancy                     = "default"
+      + ipv6_association_id                  = (known after apply)
+      + ipv6_cidr_block                      = (known after apply)
+      + ipv6_cidr_block_network_border_group = (known after apply)
+      + main_route_table_id                  = (known after apply)
+      + owner_id                             = (known after apply)
+      + tags                                 = {
+          + "Name" = "cobble-vpc"
+        }
+      + tags_all                             = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-vpc"
+          + "Owner"       = "IFB398-T235"
+        }
+    }
+
+  # module.platform_data_bucket.aws_s3_bucket.this will be created
+  + resource "aws_s3_bucket" "this" {
+      + acceleration_status         = (known after apply)
+      + acl                         = (known after apply)
+      + arn                         = (known after apply)
+      + bucket                      = "cobble-platform-data-669591255093"
+      + bucket_domain_name          = (known after apply)
+      + bucket_prefix               = (known after apply)
+      + bucket_regional_domain_name = (known after apply)
+      + force_destroy               = true
+      + hosted_zone_id              = (known after apply)
+      + id                          = (known after apply)
+      + object_lock_enabled         = (known after apply)
+      + policy                      = (known after apply)
+      + region                      = (known after apply)
+      + request_payer               = (known after apply)
+      + tags_all                    = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+      + website_domain              = (known after apply)
+      + website_endpoint            = (known after apply)
+
+      + cors_rule (known after apply)
+
+      + grant (known after apply)
+
+      + lifecycle_rule (known after apply)
+
+      + logging (known after apply)
+
+      + object_lock_configuration (known after apply)
+
+      + replication_configuration (known after apply)
+
+      + server_side_encryption_configuration (known after apply)
+
+      + versioning (known after apply)
+
+      + website (known after apply)
+    }
+
+  # module.platform_data_bucket.aws_s3_bucket_logging.this will be created
+  + resource "aws_s3_bucket_logging" "this" {
+      + bucket        = (known after apply)
+      + id            = (known after apply)
+      + target_bucket = (known after apply)
+      + target_prefix = "platform-data-bucket-logs/"
+    }
+
+  # module.platform_data_bucket.aws_s3_bucket_public_access_block.this will be created
+  + resource "aws_s3_bucket_public_access_block" "this" {
+      + block_public_acls       = true
+      + block_public_policy     = true
+      + bucket                  = (known after apply)
+      + id                      = (known after apply)
+      + ignore_public_acls      = true
+      + restrict_public_buckets = true
+    }
+
+  # module.platform_data_bucket.aws_s3_bucket_server_side_encryption_configuration.this will be created
+  + resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + rule {
+          + bucket_key_enabled = true
+
+          + apply_server_side_encryption_by_default {
+              + kms_master_key_id = (known after apply)
+              + sse_algorithm     = "aws:kms"
+            }
+        }
+    }
+
+  # module.platform_data_bucket.aws_s3_bucket_versioning.this will be created
+  + resource "aws_s3_bucket_versioning" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + versioning_configuration {
+          + mfa_delete = (known after apply)
+          + status     = "Enabled"
+        }
+    }
+
+  # module.security_baseline.data.aws_iam_policy_document.access_logs_bucket will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "access_logs_bucket" {
+      + id            = (known after apply)
+      + json          = (known after apply)
+      + minified_json = (known after apply)
+
+      + statement {
+          + actions   = [
+              + "s3:PutObject",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + (known after apply),
+            ]
+          + sid       = "S3ServerAccessLogsPolicy"
+
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "669591255093",
+                ]
+              + variable = "aws:SourceAccount"
+            }
+
+          + principals {
+              + identifiers = [
+                  + "logging.s3.amazonaws.com",
+                ]
+              + type        = "Service"
+            }
+        }
+    }
+
+  # module.security_baseline.aws_cloudtrail.this will be created
+  + resource "aws_cloudtrail" "this" {
+      + arn                           = (known after apply)
+      + cloud_watch_logs_group_arn    = (known after apply)
+      + cloud_watch_logs_role_arn     = (known after apply)
+      + enable_log_file_validation    = true
+      + enable_logging                = true
+      + home_region                   = (known after apply)
+      + id                            = (known after apply)
+      + include_global_service_events = true
+      + is_multi_region_trail         = true
+      + is_organization_trail         = false
+      + kms_key_id                    = (known after apply)
+      + name                          = "cobble-trail"
+      + s3_bucket_name                = "cobble-cloudtrail-669591255093"
+      + sns_topic_arn                 = (known after apply)
+      + tags_all                      = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+    }
+
+  # module.security_baseline.aws_guardduty_detector.this[0] will be created
+  + resource "aws_guardduty_detector" "this" {
+      + account_id                   = (known after apply)
+      + arn                          = (known after apply)
+      + enable                       = true
+      + finding_publishing_frequency = (known after apply)
+      + id                           = (known after apply)
+      + tags_all                     = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+
+      + datasources (known after apply)
+    }
+
+  # module.security_baseline.aws_kms_alias.logs will be created
+  + resource "aws_kms_alias" "logs" {
+      + arn            = (known after apply)
+      + id             = (known after apply)
+      + name           = "alias/cobble-logs"
+      + name_prefix    = (known after apply)
+      + target_key_arn = (known after apply)
+      + target_key_id  = (known after apply)
+    }
+
+  # module.security_baseline.aws_kms_key.logs will be created
+  + resource "aws_kms_key" "logs" {
+      + arn                                = (known after apply)
+      + bypass_policy_lockout_safety_check = false
+      + customer_master_key_spec           = "SYMMETRIC_DEFAULT"
+      + deletion_window_in_days            = 7
+      + description                        = "Cobble PoC logging and platform data encryption key"
+      + enable_key_rotation                = true
+      + id                                 = (known after apply)
+      + is_enabled                         = true
+      + key_id                             = (known after apply)
+      + key_usage                          = "ENCRYPT_DECRYPT"
+      + multi_region                       = (known after apply)
+      + policy                             = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "kms:*"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + AWS = "arn:aws:iam::669591255093:root"
+                        }
+                      + Resource  = "*"
+                      + Sid       = "EnableRootAccountPermissions"
+                    },
+                  + {
+                      + Action    = "kms:GenerateDataKey*"
+                      + Condition = {
+                          + StringLike = {
+                              + "kms:EncryptionContext:aws:cloudtrail:arn" = "arn:aws:cloudtrail:*:669591255093:trail/*"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "cloudtrail.amazonaws.com"
+                        }
+                      + Resource  = "*"
+                      + Sid       = "AllowCloudTrailToEncryptLogs"
+                    },
+                  + {
+                      + Action    = "kms:DescribeKey"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "cloudtrail.amazonaws.com"
+                        }
+                      + Resource  = "*"
+                      + Sid       = "AllowCloudTrailToDescribeKey"
+                    },
+                  + {
+                      + Action    = [
+                          + "kms:ReEncryptFrom",
+                          + "kms:Decrypt",
+                        ]
+                      + Condition = {
+                          + StringEquals = {
+                              + "kms:CallerAccount" = "669591255093"
+                            }
+                          + StringLike   = {
+                              + "kms:EncryptionContext:aws:cloudtrail:arn" = "arn:aws:cloudtrail:*:669591255093:trail/*"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + AWS = "*"
+                        }
+                      + Resource  = "*"
+                      + Sid       = "AllowAccountPrincipalsToDecryptLogs"
+                    },
+                  + {
+                      + Action    = [
+                          + "kms:ReEncrypt*",
+                          + "kms:GenerateDataKey*",
+                          + "kms:Encrypt",
+                          + "kms:DescribeKey",
+                          + "kms:Decrypt",
+                        ]
+                      + Condition = {
+                          + ArnLike = {
+                              + "kms:EncryptionContext:aws:logs:arn" = "arn:aws:logs:ap-southeast-2:669591255093:*"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "logs.ap-southeast-2.amazonaws.com"
+                        }
+                      + Resource  = "*"
+                      + Sid       = "AllowCloudWatchLogsToUseKey"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + rotation_period_in_days            = (known after apply)
+      + tags_all                           = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+    }
+
+  # module.security_baseline.aws_s3_bucket.access_logs will be created
+  + resource "aws_s3_bucket" "access_logs" {
+      + acceleration_status         = (known after apply)
+      + acl                         = (known after apply)
+      + arn                         = (known after apply)
+      + bucket                      = "cobble-access-logs-669591255093"
+      + bucket_domain_name          = (known after apply)
+      + bucket_prefix               = (known after apply)
+      + bucket_regional_domain_name = (known after apply)
+      + force_destroy               = true
+      + hosted_zone_id              = (known after apply)
+      + id                          = (known after apply)
+      + object_lock_enabled         = (known after apply)
+      + policy                      = (known after apply)
+      + region                      = (known after apply)
+      + request_payer               = (known after apply)
+      + tags_all                    = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+      + website_domain              = (known after apply)
+      + website_endpoint            = (known after apply)
+
+      + cors_rule (known after apply)
+
+      + grant (known after apply)
+
+      + lifecycle_rule (known after apply)
+
+      + logging (known after apply)
+
+      + object_lock_configuration (known after apply)
+
+      + replication_configuration (known after apply)
+
+      + server_side_encryption_configuration (known after apply)
+
+      + versioning (known after apply)
+
+      + website (known after apply)
+    }
+
+  # module.security_baseline.aws_s3_bucket_policy.access_logs will be created
+  + resource "aws_s3_bucket_policy" "access_logs" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+      + policy = (known after apply)
+    }
+
+  # module.security_baseline.aws_s3_bucket_public_access_block.access_logs will be created
+  + resource "aws_s3_bucket_public_access_block" "access_logs" {
+      + block_public_acls       = true
+      + block_public_policy     = true
+      + bucket                  = (known after apply)
+      + id                      = (known after apply)
+      + ignore_public_acls      = true
+      + restrict_public_buckets = true
+    }
+
+  # module.security_baseline.aws_s3_bucket_server_side_encryption_configuration.access_logs will be created
+  + resource "aws_s3_bucket_server_side_encryption_configuration" "access_logs" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + rule {
+          + apply_server_side_encryption_by_default {
+              + sse_algorithm     = "AES256"
+                # (1 unchanged attribute hidden)
+            }
+        }
+    }
+
+  # module.security_baseline.aws_s3_bucket_versioning.access_logs will be created
+  + resource "aws_s3_bucket_versioning" "access_logs" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + versioning_configuration {
+          + mfa_delete = (known after apply)
+          + status     = "Enabled"
+        }
+    }
+
+  # module.network.module.flow_log_destination.aws_cloudwatch_log_group.this will be created
+  + resource "aws_cloudwatch_log_group" "this" {
+      + arn               = (known after apply)
+      + id                = (known after apply)
+      + kms_key_id        = (known after apply)
+      + log_group_class   = (known after apply)
+      + name              = "/cobble/vpc-flow-logs"
+      + name_prefix       = (known after apply)
+      + retention_in_days = 30
+      + skip_destroy      = false
+      + tags_all          = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+    }
+
+  # module.network.module.flow_log_destination.aws_iam_role.this will be created
+  + resource "aws_iam_role" "this" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "vpc-flow-logs.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "cobble-vpc-flow-logs"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.network.module.flow_log_destination.aws_iam_role_policy.this will be created
+  + resource "aws_iam_role_policy" "this" {
+      + id          = (known after apply)
+      + name        = "cobble-vpc-flow-logs"
+      + name_prefix = (known after apply)
+      + policy      = (known after apply)
+      + role        = (known after apply)
+    }
+
+  # module.security_baseline.module.trail_bucket.aws_s3_bucket.this will be created
+  + resource "aws_s3_bucket" "this" {
+      + acceleration_status         = (known after apply)
+      + acl                         = (known after apply)
+      + arn                         = (known after apply)
+      + bucket                      = "cobble-cloudtrail-669591255093"
+      + bucket_domain_name          = (known after apply)
+      + bucket_prefix               = (known after apply)
+      + bucket_regional_domain_name = (known after apply)
+      + force_destroy               = true
+      + hosted_zone_id              = (known after apply)
+      + id                          = (known after apply)
+      + object_lock_enabled         = (known after apply)
+      + policy                      = (known after apply)
+      + region                      = (known after apply)
+      + request_payer               = (known after apply)
+      + tags_all                    = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+      + website_domain              = (known after apply)
+      + website_endpoint            = (known after apply)
+
+      + cors_rule (known after apply)
+
+      + grant (known after apply)
+
+      + lifecycle_rule (known after apply)
+
+      + logging (known after apply)
+
+      + object_lock_configuration (known after apply)
+
+      + replication_configuration (known after apply)
+
+      + server_side_encryption_configuration (known after apply)
+
+      + versioning (known after apply)
+
+      + website (known after apply)
+    }
+
+  # module.security_baseline.module.trail_bucket.aws_s3_bucket_logging.this will be created
+  + resource "aws_s3_bucket_logging" "this" {
+      + bucket        = (known after apply)
+      + id            = (known after apply)
+      + target_bucket = (known after apply)
+      + target_prefix = "cloudtrail-bucket-logs/"
+    }
+
+  # module.security_baseline.module.trail_bucket.aws_s3_bucket_policy.this[0] will be created
+  + resource "aws_s3_bucket_policy" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+      + policy = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "s3:GetBucketAcl"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "cloudtrail.amazonaws.com"
+                        }
+                      + Resource  = "arn:aws:s3:::cobble-cloudtrail-669591255093"
+                      + Sid       = "AWSCloudTrailAclCheck"
+                    },
+                  + {
+                      + Action    = "s3:PutObject"
+                      + Condition = {
+                          + StringEquals = {
+                              + "s3:x-amz-acl" = "bucket-owner-full-control"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "cloudtrail.amazonaws.com"
+                        }
+                      + Resource  = "arn:aws:s3:::cobble-cloudtrail-669591255093/AWSLogs/669591255093/*"
+                      + Sid       = "AWSCloudTrailWrite"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+    }
+
+  # module.security_baseline.module.trail_bucket.aws_s3_bucket_public_access_block.this will be created
+  + resource "aws_s3_bucket_public_access_block" "this" {
+      + block_public_acls       = true
+      + block_public_policy     = true
+      + bucket                  = (known after apply)
+      + id                      = (known after apply)
+      + ignore_public_acls      = true
+      + restrict_public_buckets = true
+    }
+
+  # module.security_baseline.module.trail_bucket.aws_s3_bucket_server_side_encryption_configuration.this will be created
+  + resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + rule {
+          + bucket_key_enabled = true
+
+          + apply_server_side_encryption_by_default {
+              + kms_master_key_id = (known after apply)
+              + sse_algorithm     = "aws:kms"
+            }
+        }
+    }
+
+  # module.security_baseline.module.trail_bucket.aws_s3_bucket_versioning.this will be created
+  + resource "aws_s3_bucket_versioning" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + versioning_configuration {
+          + mfa_delete = (known after apply)
+          + status     = "Enabled"
+        }
+    }
+
+  # module.security_baseline.module.trail_logs.aws_cloudwatch_log_group.this will be created
+  + resource "aws_cloudwatch_log_group" "this" {
+      + arn               = (known after apply)
+      + id                = (known after apply)
+      + kms_key_id        = (known after apply)
+      + log_group_class   = (known after apply)
+      + name              = "/cobble/cloudtrail"
+      + name_prefix       = (known after apply)
+      + retention_in_days = 90
+      + skip_destroy      = false
+      + tags_all          = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+    }
+
+  # module.security_baseline.module.trail_logs.aws_iam_role.this will be created
+  + resource "aws_iam_role" "this" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "cloudtrail.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "cobble-trail-to-cloudwatch"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "IFB398-capstone"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "poc"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "IFB398-T235"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.security_baseline.module.trail_logs.aws_iam_role_policy.this will be created
+  + resource "aws_iam_role_policy" "this" {
+      + id          = (known after apply)
+      + name        = "cobble-trail-to-cloudwatch"
+      + name_prefix = (known after apply)
+      + policy      = (known after apply)
+      + role        = (known after apply)
+    }
+
+Plan: 48 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + budget_name           = "cobble-monthly-cost"
+  + cloudtrail_arn        = (known after apply)
+  + github_apply_role_arn = (known after apply)
+  + github_plan_role_arn  = (known after apply)
+  + guardduty_detector_id = (known after apply)
+  + platform_data_bucket  = "cobble-platform-data-669591255093"
+  + private_subnet_ids    = [
+      + (known after apply),
+      + (known after apply),
+    ]
+  + public_subnet_ids     = [
+      + (known after apply),
+      + (known after apply),
+    ]
+  + vpc_id                = (known after apply)
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+Saved the plan to: tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "tfplan"

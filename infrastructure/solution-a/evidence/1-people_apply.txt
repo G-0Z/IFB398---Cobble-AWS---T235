@@ -1,0 +1,14 @@
+aws_identitystore_group.this["auditors"]: Creating...
+aws_identitystore_group.this["developers"]: Creating...
+aws_identitystore_group.this["platform-admins"]: Creating...
+aws_identitystore_user.this["max.gosling"]: Creating...
+aws_identitystore_group.this["auditors"]: Creation complete after 1s [id=d-97679ebd7b/399e44c8-4051-7057-34cb-1fd8ceef7023]
+aws_identitystore_user.this["max.gosling"]: Creation complete after 1s [id=d-97679ebd7b/99aee458-00e1-7021-2e03-82333dc281b4]
+aws_identitystore_group.this["developers"]: Creation complete after 1s [id=d-97679ebd7b/d98e0418-1061-7075-4abe-d51109fcb12b]
+
+Error: creating IdentityStore Group (cobble-platform-admins): operation error identitystore: CreateGroup, https response error StatusCode: 400, RequestID: 91f68d44-3a05-4277-8422-9db1f38c6e70, ConflictException: Duplicate GroupDisplayName
+
+  with aws_identitystore_group.this["platform-admins"],
+  on main.tf line 44, in resource "aws_identitystore_group" "this":
+  44: resource "aws_identitystore_group" "this" {
+

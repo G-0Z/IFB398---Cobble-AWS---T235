@@ -45,8 +45,8 @@ terraform destroy          # when you're done
 # Solution A's workload in the same account: about 15 minutes, 66 resources
 cd infrastructure/solution-a/workload
 terraform init -reconfigure -backend-config="key=solution-a/workload/demo/terraform.tfstate"
-terraform apply  -var-file=demo.tfvars
-terraform destroy -var-file=demo.tfvars
+terraform apply  -var-file="demo.tfvars"
+terraform destroy -var-file="demo.tfvars"
 ```
 
 Running the same commands again rebuilds exactly the same thing. That's the

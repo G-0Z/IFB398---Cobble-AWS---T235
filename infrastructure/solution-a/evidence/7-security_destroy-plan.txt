@@ -1,0 +1,262 @@
+module.management_account_baseline.aws_s3_account_public_access_block.this: Refreshing state... [id=669591255093]
+module.management_account_baseline.data.aws_caller_identity.current: Reading...
+module.management_account_baseline.aws_ebs_encryption_by_default.this: Refreshing state... [id=terraform-20261017113734869500000001]
+module.management_account_baseline.aws_iam_account_password_policy.this: Refreshing state... [id=iam-account-password-policy]
+module.management_account_baseline.aws_iam_role.config: Refreshing state... [id=cobble-management-config-recorder]
+module.management_account_baseline.data.aws_caller_identity.current: Read complete after 0s [id=669591255093]
+data.aws_region.current: Reading...
+data.aws_organizations_organization.this: Reading...
+data.aws_caller_identity.current: Reading...
+data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+data.aws_caller_identity.current: Read complete after 0s [id=100808729153]
+module.access_logs.aws_s3_bucket.this: Refreshing state... [id=cobble-security-access-logs-100808729153]
+module.config_bucket.aws_s3_bucket.this: Refreshing state... [id=cobble-config-history-100808729153]
+module.trail_bucket.aws_s3_bucket.this: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.trail_bucket.aws_s3_bucket_logging.this: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.trail_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.trail_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.management_account_baseline.aws_iam_role_policy_attachment.config: Refreshing state... [id=cobble-management-config-recorder-20261017113737625800000002]
+module.management_account_baseline.aws_config_configuration_recorder.this: Refreshing state... [id=cobble-management-recorder]
+data.aws_organizations_organization.this: Read complete after 2s [id=o-b60hme0nfl]
+aws_kms_key.security: Refreshing state... [id=bb8dd9a9-acd4-4e53-a3d7-3ff1a42c2d70]
+module.trail_bucket.aws_s3_bucket_policy.this[0]: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.trail_bucket.aws_s3_bucket_object_lock_configuration.this[0]: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.trail_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.management_account_baseline.aws_iam_role_policy.config_delivery: Refreshing state... [id=cobble-management-config-recorder:cobble-management-config-delivery]
+module.trail_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.management_account_baseline.aws_config_delivery_channel.this: Refreshing state... [id=cobble-management-delivery]
+module.management_account_baseline.aws_config_configuration_recorder_status.this: Refreshing state... [id=cobble-management-recorder]
+aws_cloudtrail.organization: Refreshing state... [id=arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_cloudtrail.organization will be destroyed
+  - resource "aws_cloudtrail" "organization" {
+      - arn                           = "arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail" -> null
+      - enable_log_file_validation    = true -> null
+      - enable_logging                = true -> null
+      - home_region                   = "ap-southeast-2" -> null
+      - id                            = "arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail" -> null
+      - include_global_service_events = true -> null
+      - is_multi_region_trail         = true -> null
+      - is_organization_trail         = true -> null
+      - kms_key_id                    = "arn:aws:kms:ap-southeast-2:100808729153:key/bb8dd9a9-acd4-4e53-a3d7-3ff1a42c2d70" -> null
+      - name                          = "cobble-organization-trail" -> null
+      - s3_bucket_name                = "cobble-audit-logs-100808729153" -> null
+      - tags                          = {} -> null
+      - tags_all                      = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "High"
+          - "DataClass"   = "Confidential"
+          - "Environment" = "security"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+        # (5 unchanged attributes hidden)
+    }
+
+  # module.management_account_baseline.aws_config_configuration_recorder.this will be destroyed
+  - resource "aws_config_configuration_recorder" "this" {
+      - id       = "cobble-management-recorder" -> null
+      - name     = "cobble-management-recorder" -> null
+      - role_arn = "arn:aws:iam::669591255093:role/cobble-management-config-recorder" -> null
+
+      - recording_group {
+          - all_supported                 = true -> null
+          - include_global_resource_types = true -> null
+          - resource_types                = [] -> null
+
+          - exclusion_by_resource_types {
+              - resource_types = [] -> null
+            }
+
+          - recording_strategy {
+              - use_only = "ALL_SUPPORTED_RESOURCE_TYPES" -> null
+            }
+        }
+
+      - recording_mode {
+          - recording_frequency = "CONTINUOUS" -> null
+        }
+    }
+
+  # module.management_account_baseline.aws_config_configuration_recorder_status.this will be destroyed
+  - resource "aws_config_configuration_recorder_status" "this" {
+      - id         = "cobble-management-recorder" -> null
+      - is_enabled = true -> null
+      - name       = "cobble-management-recorder" -> null
+    }
+
+  # module.management_account_baseline.aws_config_delivery_channel.this will be destroyed
+  - resource "aws_config_delivery_channel" "this" {
+      - id             = "cobble-management-delivery" -> null
+      - name           = "cobble-management-delivery" -> null
+      - s3_bucket_name = "cobble-config-history-100808729153" -> null
+      - s3_kms_key_arn = "arn:aws:kms:ap-southeast-2:100808729153:key/bb8dd9a9-acd4-4e53-a3d7-3ff1a42c2d70" -> null
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.management_account_baseline.aws_ebs_encryption_by_default.this will be destroyed
+  - resource "aws_ebs_encryption_by_default" "this" {
+      - enabled = true -> null
+      - id      = "terraform-20261017113734869500000001" -> null
+    }
+
+  # module.management_account_baseline.aws_iam_account_password_policy.this will be destroyed
+  - resource "aws_iam_account_password_policy" "this" {
+      - allow_users_to_change_password = true -> null
+      - expire_passwords               = true -> null
+      - hard_expiry                    = false -> null
+      - id                             = "iam-account-password-policy" -> null
+      - max_password_age               = 90 -> null
+      - minimum_password_length        = 14 -> null
+      - password_reuse_prevention      = 24 -> null
+      - require_lowercase_characters   = true -> null
+      - require_numbers                = true -> null
+      - require_symbols                = true -> null
+      - require_uppercase_characters   = true -> null
+    }
+
+  # module.management_account_baseline.aws_iam_role.config will be destroyed
+  - resource "aws_iam_role" "config" {
+      - arn                   = "arn:aws:iam::669591255093:role/cobble-management-config-recorder" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "config.amazonaws.com"
+                        }
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-10-17T11:37:35Z" -> null
+      - force_detach_policies = false -> null
+      - id                    = "cobble-management-config-recorder" -> null
+      - managed_policy_arns   = [
+          - "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole",
+        ] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "cobble-management-config-recorder" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "High"
+          - "DataClass"   = "Confidential"
+          - "Environment" = "security"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - unique_id             = "AROAZXZV7XA23H7QTVO3K" -> null
+        # (3 unchanged attributes hidden)
+
+      - inline_policy {
+          - name   = "cobble-management-config-delivery" -> null
+          - policy = jsonencode(
+                {
+                  - Statement = [
+                      - {
+                          - Action   = "s3:GetBucketAcl"
+                          - Effect   = "Allow"
+                          - Resource = "arn:aws:s3:::cobble-config-history-100808729153"
+                        },
+                      - {
+                          - Action   = "s3:PutObject"
+                          - Effect   = "Allow"
+                          - Resource = "arn:aws:s3:::cobble-config-history-100808729153/AWSLogs/669591255093/Config/*"
+                        },
+                      - {
+                          - Action   = [
+                              - "kms:GenerateDataKey",
+                              - "kms:Decrypt",
+                            ]
+                          - Effect   = "Allow"
+                          - Resource = "arn:aws:kms:ap-southeast-2:100808729153:key/bb8dd9a9-acd4-4e53-a3d7-3ff1a42c2d70"
+                        },
+                    ]
+                  - Version   = "2012-10-17"
+                }
+            ) -> null
+        }
+    }
+
+  # module.management_account_baseline.aws_iam_role_policy.config_delivery will be destroyed
+  - resource "aws_iam_role_policy" "config_delivery" {
+      - id          = "cobble-management-config-recorder:cobble-management-config-delivery" -> null
+      - name        = "cobble-management-config-delivery" -> null
+      - policy      = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action   = "s3:GetBucketAcl"
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:s3:::cobble-config-history-100808729153"
+                    },
+                  - {
+                      - Action   = "s3:PutObject"
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:s3:::cobble-config-history-100808729153/AWSLogs/669591255093/Config/*"
+                    },
+                  - {
+                      - Action   = [
+                          - "kms:GenerateDataKey",
+                          - "kms:Decrypt",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:kms:ap-southeast-2:100808729153:key/bb8dd9a9-acd4-4e53-a3d7-3ff1a42c2d70"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - role        = "cobble-management-config-recorder" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.management_account_baseline.aws_iam_role_policy_attachment.config will be destroyed
+  - resource "aws_iam_role_policy_attachment" "config" {
+      - id         = "cobble-management-config-recorder-20261017113737625800000002" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole" -> null
+      - role       = "cobble-management-config-recorder" -> null
+    }
+
+  # module.management_account_baseline.aws_s3_account_public_access_block.this will be destroyed
+  - resource "aws_s3_account_public_access_block" "this" {
+      - account_id              = "669591255093" -> null
+      - block_public_acls       = true -> null
+      - block_public_policy     = true -> null
+      - id                      = "669591255093" -> null
+      - ignore_public_acls      = true -> null
+      - restrict_public_buckets = true -> null
+    }
+
+Plan: 0 to add, 0 to change, 10 to destroy.
+
+Warning: Resource targeting is in effect
+
+You are creating a plan with the -target option, which means that the result
+of this plan may not represent all of the changes requested by the current
+configuration.
+
+The -target option is not for routine use, and is provided only for
+exceptional situations such as recovering from errors or mistakes, or when
+Terraform specifically suggests to use it as part of an error message.
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+Saved the plan to: security-destroy.tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "security-destroy.tfplan"
+Releasing state lock. This may take a few moments...

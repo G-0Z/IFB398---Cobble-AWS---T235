@@ -34,7 +34,14 @@ resource "aws_organizations_delegated_administrator" "config" {
   service_principal = "config.amazonaws.com"
 }
 
+# An organisation analyzer needs this role in the management account too.
+resource "aws_iam_service_linked_role" "access_analyzer" {
+  aws_service_name = "access-analyzer.amazonaws.com"
+}
+
 resource "aws_organizations_delegated_administrator" "access_analyzer" {
   account_id        = local.security_account_id
   service_principal = "access-analyzer.amazonaws.com"
+
+  depends_on = [aws_iam_service_linked_role.access_analyzer]
 }

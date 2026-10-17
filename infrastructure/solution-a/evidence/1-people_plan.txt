@@ -1,0 +1,86 @@
+data.aws_ssoadmin_instances.this: Reading...
+data.aws_ssoadmin_instances.this: Read complete after 0s [id=ap-southeast-2]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_identitystore_group.this["auditors"] will be created
+  + resource "aws_identitystore_group" "this" {
+      + description       = "Review security and cost: read-only everywhere"
+      + display_name      = "cobble-auditors"
+      + external_ids      = (known after apply)
+      + group_id          = (known after apply)
+      + id                = (known after apply)
+      + identity_store_id = "d-97679ebd7b"
+    }
+
+  # aws_identitystore_group.this["developers"] will be created
+  + resource "aws_identitystore_group" "this" {
+      + description       = "Build Cobble modules: change dev, look at staging and prod"
+      + display_name      = "cobble-developers"
+      + external_ids      = (known after apply)
+      + group_id          = (known after apply)
+      + id                = (known after apply)
+      + identity_store_id = "d-97679ebd7b"
+    }
+
+  # aws_identitystore_group.this["platform-admins"] will be created
+  + resource "aws_identitystore_group" "this" {
+      + description       = "Run the platform: full access to every account"
+      + display_name      = "cobble-platform-admins"
+      + external_ids      = (known after apply)
+      + group_id          = (known after apply)
+      + id                = (known after apply)
+      + identity_store_id = "d-97679ebd7b"
+    }
+
+  # aws_identitystore_group_membership.this["max.gosling/platform-admins"] will be created
+  + resource "aws_identitystore_group_membership" "this" {
+      + group_id          = (known after apply)
+      + id                = (known after apply)
+      + identity_store_id = "d-97679ebd7b"
+      + member_id         = (known after apply)
+      + membership_id     = (known after apply)
+    }
+
+  # aws_identitystore_user.this["max.gosling"] will be created
+  + resource "aws_identitystore_user" "this" {
+      + display_name      = "Max Gosling"
+      + external_ids      = (known after apply)
+      + id                = (known after apply)
+      + identity_store_id = "d-97679ebd7b"
+      + user_id           = (known after apply)
+      + user_name         = "max.gosling"
+
+      + emails {
+          + primary = true
+          + value   = "t235cobbleaws+max@gmail.com"
+        }
+
+      + name {
+          + family_name = "Gosling"
+          + given_name  = "Max"
+        }
+    }
+
+Plan: 5 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + groups = {
+      + cobble-auditors        = (known after apply)
+      + cobble-developers      = (known after apply)
+      + cobble-platform-admins = (known after apply)
+    }
+  + users  = [
+      + "max.gosling",
+    ]
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+Saved the plan to: people.tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "people.tfplan"

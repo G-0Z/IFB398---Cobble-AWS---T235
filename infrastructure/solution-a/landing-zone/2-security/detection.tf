@@ -2,6 +2,21 @@
 # organisation (including accounts added later). The Security account was
 # made the delegated administrator for each of these in step 1.
 
+# Auto-enable only covers accounts that join the organisation later. The
+# Cobble accounts already exist (step 1 made them), so GuardDuty and Security
+# Hub add them as members explicitly. The management account is left out: it
+# reports to nobody, so step 1 can switch its services off again cleanly.
+data "aws_organizations_organization" "management" {
+  provider = aws.management
+}
+
+locals {
+  member_accounts = {
+    for a in data.aws_organizations_organization.management.accounts : a.id => a.email
+    if startswith(a.name, "cobble-") && a.status == "ACTIVE" && a.id != local.security_account_id
+  }
+}
+
 # --- GuardDuty: spots suspicious behaviour --------------------------------
 # e.g. stolen credentials being used, crypto-mining, contact with known
 # malicious IP addresses.
@@ -13,6 +28,16 @@ resource "aws_guardduty_detector" "this" {
 resource "aws_guardduty_organization_configuration" "this" {
   detector_id                      = aws_guardduty_detector.this.id
   auto_enable_organization_members = "ALL"
+}
+
+resource "aws_guardduty_member" "this" {
+  for_each = local.member_accounts
+
+  detector_id = aws_guardduty_detector.this.id
+  account_id  = each.key
+  email       = each.value
+
+  depends_on = [aws_guardduty_organization_configuration.this]
 }
 
 # --- Security Hub: one place for every finding ----------------------------
@@ -29,6 +54,14 @@ resource "aws_securityhub_organization_configuration" "this" {
   auto_enable_standards = "DEFAULT"
 
   depends_on = [aws_securityhub_account.this]
+}
+
+resource "aws_securityhub_member" "this" {
+  for_each = local.member_accounts
+
+  account_id = each.key
+
+  depends_on = [aws_securityhub_organization_configuration.this]
 }
 
 resource "aws_securityhub_standards_subscription" "fsbp" {
