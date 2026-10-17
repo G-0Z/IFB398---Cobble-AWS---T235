@@ -43,6 +43,7 @@ override.tf.json
 # Saved plans (the runbooks write deploy.tfplan / destroy.tfplan). They can
 # contain sensitive values, so never commit them.
 *.tfplan
+tfplan
 
 # Ignore CLI configuration files
 .terraformrc
@@ -58,3 +59,6 @@ terraform.rc
 # Lock files belong to root configs (committed there). A module's own lock
 # file is never used by the configs that call it, so it is not committed.
 infrastructure/modules/**/.terraform.lock.hcl
+
+# Demo recordings are too big for GitHub (100 MB limit); share them separately.
+*.mp4

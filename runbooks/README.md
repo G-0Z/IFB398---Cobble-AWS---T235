@@ -13,6 +13,7 @@ can follow it from start to finish.
 | Prove a solution redeploys identically | [teardown.md](teardown.md#redeploy-the-repeatability-check) | |
 | Create the state bucket (only if it's missing) | [bootstrap.md](bootstrap.md) | A few minutes, once |
 | Build the full six-account landing zone | [deploy-solution-a.md](deploy-solution-a.md) | Half a day, plus an hour per environment |
+| Demo the landing zone with dev only, then close the accounts | [demo-landing-zone-dev.md](demo-landing-zone-dev.md) | About half a day |
 
 Runbooks for when something goes wrong (an outage, a database failure,
 stolen credentials, drift, the web firewall blocking real users, a cost

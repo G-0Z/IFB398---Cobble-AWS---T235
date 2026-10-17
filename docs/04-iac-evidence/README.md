@@ -28,6 +28,8 @@ proves the instructions work too.
 
 | Date | What | Who | Result | Evidence |
 |---|---|---|---|---|
+| 2026-10-17 | Solution A landing zone + dev: deploy → teardown, accounts closed ([runbook](../../runbooks/demo-landing-zone-dev.md)) | Max Gosling | Org 45 added; security 61 added (after retries, see logs); dev 75 added / 75 destroyed; security 10 and org 34 destroyed; 5 accounts closed | [logs](../../infrastructure/solution-a/evidence/) |
+| 2026-10-17 | Solution B: deploy | Max Gosling | 48 added | [logs](../../infrastructure/solution-b/evidence/) |
 | YYYY-MM-DD | Solution B: deploy → teardown → redeploy → `plan -detailed-exitcode` | | e.g. 48 added / 48 destroyed / 48 added / exit 0 | link to log or screenshot |
 | YYYY-MM-DD | Solution A demo: deploy → teardown → redeploy → `plan -detailed-exitcode` | | e.g. 66 added / 66 destroyed / 66 added / exit 0 | |
 | YYYY-MM-DD | CI run on `main` (all jobs green) | | | link to the Actions run |

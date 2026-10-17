@@ -35,7 +35,7 @@ account ([deploy.md](deploy.md#sign-in)). Check
 ```powershell
 cd infrastructure/solution-a/workload
 terraform init -reconfigure -backend-config="key=solution-a/workload/demo/terraform.tfstate"
-terraform plan -var-file=demo.tfvars -out demo.tfplan   # should show 66 to add
+terraform plan -var-file="demo.tfvars" -out demo.tfplan  # should show 66 to add
 terraform apply demo.tfplan          # about 10-15 minutes; the database is the slow part
 terraform output app_url             # open this address in a browser
 ```
@@ -56,7 +56,7 @@ is still starting and passing its health checks.
 ## Tear down
 
 ```powershell
-terraform plan -destroy -var-file=demo.tfvars -out destroy.tfplan
+terraform plan -destroy -var-file="demo.tfvars" -out destroy.tfplan
 terraform apply destroy.tfplan
 terraform state list                 # should print nothing
 ```

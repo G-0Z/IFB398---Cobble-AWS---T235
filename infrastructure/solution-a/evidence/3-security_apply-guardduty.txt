@@ -1,0 +1,34 @@
+aws_securityhub_member.this["614294918430"]: Destroying... [id=614294918430]
+aws_securityhub_member.this["938917087952"]: Destroying... [id=938917087952]
+aws_securityhub_member.this["793239960775"]: Destroying... [id=793239960775]
+aws_securityhub_member.this["024687770889"]: Destroying... [id=024687770889]
+aws_guardduty_member.this["938917087952"]: Creating...
+aws_guardduty_member.this["614294918430"]: Creating...
+aws_guardduty_member.this["793239960775"]: Creating...
+aws_guardduty_member.this["024687770889"]: Creating...
+aws_securityhub_member.this["938917087952"]: Destruction complete after 1s
+aws_securityhub_member.this["938917087952"]: Creating...
+aws_securityhub_member.this["614294918430"]: Destruction complete after 1s
+aws_securityhub_member.this["614294918430"]: Creating...
+aws_securityhub_member.this["024687770889"]: Destruction complete after 1s
+aws_securityhub_member.this["024687770889"]: Creating...
+aws_guardduty_member.this["793239960775"]: Creation complete after 1s [id=f01d302b69e24dbe887735cdd0e1ed6a:793239960775]
+aws_guardduty_member.this["938917087952"]: Creation complete after 1s [id=f01d302b69e24dbe887735cdd0e1ed6a:938917087952]
+aws_guardduty_member.this["024687770889"]: Creation complete after 1s [id=f01d302b69e24dbe887735cdd0e1ed6a:024687770889]
+aws_guardduty_member.this["614294918430"]: Creation complete after 1s [id=f01d302b69e24dbe887735cdd0e1ed6a:614294918430]
+aws_securityhub_member.this["938917087952"]: Creation complete after 1s [id=938917087952]
+aws_securityhub_member.this["614294918430"]: Creation complete after 1s [id=614294918430]
+aws_securityhub_member.this["793239960775"]: Destruction complete after 6s
+aws_securityhub_member.this["793239960775"]: Creating...
+aws_securityhub_member.this["024687770889"]: Creation complete after 7s [id=024687770889]
+aws_securityhub_member.this["793239960775"]: Creation complete after 2s [id=793239960775]
+
+Apply complete! Resources: 8 added, 0 changed, 4 destroyed.
+
+Outputs:
+
+audit_log_bucket_name = "cobble-audit-logs-100808729153"
+config_bucket_name = "cobble-config-history-100808729153"
+config_kms_key_arn = "arn:aws:kms:ap-southeast-2:100808729153:key/bb8dd9a9-acd4-4e53-a3d7-3ff1a42c2d70"
+organization_trail_arn = "arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail"
+security_alerts_topic_arn = "arn:aws:sns:ap-southeast-2:100808729153:cobble-security-alerts"

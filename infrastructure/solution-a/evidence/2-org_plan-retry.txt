@@ -1,0 +1,118 @@
+data.aws_ssoadmin_instances.this: Reading...
+aws_organizations_policy.guardrail["deny-root-user"]: Refreshing state... [id=p-ykgspmt4]
+aws_organizations_policy.guardrail["protect-security-services"]: Refreshing state... [id=p-ofdpy4z8]
+aws_organizations_organization.this: Refreshing state... [id=o-b60hme0nfl]
+aws_organizations_policy.guardrail["deny-leave-organization"]: Refreshing state... [id=p-zqdjf4lo]
+aws_organizations_policy.guardrail["restrict-regions"]: Refreshing state... [id=p-14bbxdbv]
+aws_securityhub_account.management: Refreshing state... [id=669591255093]
+data.aws_ssoadmin_instances.this: Read complete after 0s [id=ap-southeast-2]
+aws_ssoadmin_permission_set.this["PlatformAdmin"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_permission_set.this["Developer"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-76f5c8292291e8db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_permission_set.this["ReadOnly"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+data.aws_identitystore_group.this["platform-admins"]: Reading...
+data.aws_identitystore_group.this["auditors"]: Reading...
+data.aws_identitystore_group.this["developers"]: Reading...
+aws_ssoadmin_managed_policy_attachment.this["PlatformAdmin"]: Refreshing state... [id=arn:aws:iam::aws:policy/AdministratorAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_managed_policy_attachment.this["Developer"]: Refreshing state... [id=arn:aws:iam::aws:policy/PowerUserAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-76f5c8292291e8db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_managed_policy_attachment.this["ReadOnly"]: Refreshing state... [id=arn:aws:iam::aws:policy/ReadOnlyAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+data.aws_identitystore_group.this["developers"]: Read complete after 0s [id=d98e0418-1061-7075-4abe-d51109fcb12b]
+data.aws_identitystore_group.this["platform-admins"]: Read complete after 0s [id=e97e8468-00f1-704d-7f74-9dee91d6869e]
+data.aws_identitystore_group.this["auditors"]: Read complete after 0s [id=399e44c8-4051-7057-34cb-1fd8ceef7023]
+aws_organizations_organizational_unit.security: Refreshing state... [id=ou-m9si-astnnylp]
+aws_organizations_organizational_unit.infrastructure: Refreshing state... [id=ou-m9si-jhsi97ox]
+aws_organizations_policy_attachment.guardrail["deny-root-user"]: Refreshing state... [id=r-m9si:p-ykgspmt4]
+aws_organizations_policy_attachment.guardrail["deny-leave-organization"]: Refreshing state... [id=r-m9si:p-zqdjf4lo]
+aws_organizations_policy_attachment.guardrail["protect-security-services"]: Refreshing state... [id=r-m9si:p-ofdpy4z8]
+aws_organizations_policy_attachment.guardrail["restrict-regions"]: Refreshing state... [id=r-m9si:p-14bbxdbv]
+aws_organizations_organizational_unit.workloads: Refreshing state... [id=ou-m9si-h7yrqefz]
+aws_organizations_organizational_unit.non_production: Refreshing state... [id=ou-m9si-dkm2w3c4]
+aws_organizations_organizational_unit.production: Refreshing state... [id=ou-m9si-7qvmhlmm]
+aws_organizations_account.this["security"]: Refreshing state... [id=100808729153]
+aws_organizations_account.this["dev"]: Refreshing state... [id=614294918430]
+aws_organizations_account.this["staging"]: Refreshing state... [id=938917087952]
+aws_organizations_account.this["shared_services"]: Refreshing state... [id=793239960775]
+aws_organizations_account.this["prod"]: Refreshing state... [id=024687770889]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/management"]: Refreshing state... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GROUP,669591255093,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_organizations_delegated_administrator.access_analyzer: Refreshing state... [id=100808729153/access-analyzer.amazonaws.com]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/security"]: Refreshing state... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GROUP,100808729153,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["developers/ReadOnly/staging"]: Refreshing state... [id=d98e0418-1061-7075-4abe-d51109fcb12b,GROUP,938917087952,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/prod"]: Refreshing state... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GROUP,024687770889,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/management"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,669591255093,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_organizations_delegated_administrator.config: Refreshing state... [id=100808729153/config.amazonaws.com]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/dev"]: Refreshing state... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GROUP,614294918430,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/security"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,100808729153,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/shared_services"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,793239960775,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/shared_services"]: Refreshing state... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GROUP,793239960775,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/dev"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,614294918430,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["developers/Developer/dev"]: Refreshing state... [id=d98e0418-1061-7075-4abe-d51109fcb12b,GROUP,614294918430,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-76f5c8292291e8db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/staging"]: Refreshing state... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GROUP,938917087952,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["developers/ReadOnly/prod"]: Refreshing state... [id=d98e0418-1061-7075-4abe-d51109fcb12b,GROUP,024687770889,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/prod"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,024687770889,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/staging"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,938917087952,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_guardduty_detector.management will be created
+  + resource "aws_guardduty_detector" "management" {
+      + account_id                   = (known after apply)
+      + arn                          = (known after apply)
+      + enable                       = true
+      + finding_publishing_frequency = (known after apply)
+      + id                           = (known after apply)
+      + tags_all                     = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Internal"
+          + "Environment" = "organization"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+
+      + datasources (known after apply)
+    }
+
+  # aws_guardduty_organization_admin_account.this will be created
+  + resource "aws_guardduty_organization_admin_account" "this" {
+      + admin_account_id = "100808729153"
+      + id               = (known after apply)
+    }
+
+  # aws_iam_service_linked_role.access_analyzer will be created
+  + resource "aws_iam_service_linked_role" "access_analyzer" {
+      + arn              = (known after apply)
+      + aws_service_name = "access-analyzer.amazonaws.com"
+      + create_date      = (known after apply)
+      + id               = (known after apply)
+      + name             = (known after apply)
+      + path             = (known after apply)
+      + tags_all         = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Internal"
+          + "Environment" = "organization"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + unique_id        = (known after apply)
+    }
+
+  # aws_securityhub_organization_admin_account.this will be created
+  + resource "aws_securityhub_organization_admin_account" "this" {
+      + admin_account_id = "100808729153"
+      + id               = (known after apply)
+    }
+
+Plan: 4 to add, 0 to change, 0 to destroy.
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+Saved the plan to: org.tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "org.tfplan"

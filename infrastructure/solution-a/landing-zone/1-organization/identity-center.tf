@@ -41,9 +41,13 @@ locals {
     { for k, a in aws_organizations_account.this : k => a.id },
   )
 
+  # Keys come from local.accounts (static), not the account resources, so
+  # for_each below is known at plan and import time.
+  account_names = concat(["management"], keys(local.accounts))
+
   assignments = concat(
-    [for acct in keys(local.account_ids) : { group = "platform-admins", permission_set = "PlatformAdmin", account = acct }],
-    [for acct in keys(local.account_ids) : { group = "auditors", permission_set = "ReadOnly", account = acct }],
+    [for acct in local.account_names : { group = "platform-admins", permission_set = "PlatformAdmin", account = acct }],
+    [for acct in local.account_names : { group = "auditors", permission_set = "ReadOnly", account = acct }],
     [
       { group = "developers", permission_set = "Developer", account = "dev" },
       { group = "developers", permission_set = "ReadOnly", account = "staging" },
