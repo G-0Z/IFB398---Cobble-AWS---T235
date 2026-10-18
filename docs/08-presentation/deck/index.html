@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Cobble AWS Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; font-weight: 400; src: url(https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.woff2) format("woff2"); }
+      @font-face { font-family: "Inter"; font-weight: 600; src: url(https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-600-normal.woff2) format("woff2"); }
+      @font-face { font-family: "Inter"; font-weight: 700; src: url(https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.woff2) format("woff2"); }
+      @font-face { font-family: "JetBrains Mono"; font-weight: 500; src: url(https://cdn.jsdelivr.net/fontsource/fonts/jetbrains-mono@latest/latin-500-normal.woff2) format("woff2"); }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #ffffff; }
+      body { color: #16212c; font-family: "Inter", system-ui, sans-serif; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      /* sections: one colour per presenter */
+      .scene { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; background: #ffffff; }
+      .def { --acc: #0b7f8a; --tint: #e6f4f5; }
+      .des { --acc: #b85a14; --tint: #fdf0e6; }
+      .dem { --acc: #1e6fa8; --tint: #e8f2fa; }
+      .ops { --acc: #c23b50; --tint: #fbecee; }
+      .scene > .clip { position: absolute; inset: 0; padding: 120px 112px 104px; display: flex; flex-direction: column; gap: 22px; }
+
+      .hdr, .ftr { position: absolute; left: 112px; right: 112px; display: flex; justify-content: space-between; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 22px; font-weight: 500; color: #4f5f6f; }
+      .hdr { top: 40px; }
+      .ftr { bottom: 36px; }
+      .hdr b, .ftr b { color: var(--acc); font-weight: 500; }
+      .tag { align-self: flex-start; font-size: 22px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #ffffff; background: var(--acc); padding: 8px 22px; border-radius: 999px; }
+      .title { font-size: 64px; font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; max-width: 1600px; }
+      .lede { font-size: 30px; line-height: 1.4; color: #4f5f6f; max-width: 1500px; }
+      .stage { position: relative; flex: 1; }
+
+      .card { background: #f6f9fa; border: 1px solid #e1e8ed; border-radius: 16px; padding: 28px 32px; display: flex; flex-direction: column; gap: 12px; }
+      .card.edge { border-left: 8px solid var(--acc); }
+      .card h3 { font-size: 34px; font-weight: 700; line-height: 1.15; }
+      .card p, .card li { font-size: 27px; line-height: 1.4; color: #4f5f6f; }
+      .card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+      .chip { align-self: flex-start; font-size: 20px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 14px; border-radius: 8px; color: #ffffff; background: var(--acc); }
+      .key { background: var(--acc); color: #ffffff; border-radius: 14px; padding: 22px 32px; font-size: 28px; font-weight: 600; text-align: center; }
+      .stat { border-radius: 16px; padding: 26px 30px; color: #ffffff; background: var(--acc); display: flex; flex-direction: column; gap: 6px; }
+      .stat .n { font-size: 96px; font-weight: 700; line-height: 1; letter-spacing: -0.03em; }
+      .stat .l { font-size: 26px; }
+      .acc-t { color: var(--acc); }
+      .soft { color: #4f5f6f; }
+
+      table.t { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 26px; }
+      table.t th { background: var(--acc); color: #ffffff; text-align: left; font-weight: 600; padding: 16px 22px; }
+      table.t th:first-child { border-radius: 12px 0 0 0; }
+      table.t th:last-child { border-radius: 0 12px 0 0; }
+      table.t td { padding: 16px 22px; border-bottom: 1px solid #e1e8ed; color: #2b3947; vertical-align: top; line-height: 1.35; }
+      table.t td:first-child { font-weight: 600; color: #16212c; }
+      .pill-e, .pill-c { font-size: 22px; font-weight: 700; padding: 6px 16px; border-radius: 999px; white-space: nowrap; }
+      .pill-e { background: #b85a14; color: #ffffff; }
+      .pill-c { border: 2px solid #1e6fa8; color: #1e6fa8; }
+
+      .frame { position: absolute; overflow: hidden; border-radius: 14px; background: #ffffff; border: 1px solid #d6dee5; box-shadow: 0 18px 50px rgba(22, 33, 44, 0.16); }
+      .frame img { position: absolute; display: block; }
+      .hl { position: absolute; border: 5px solid #e8702a; border-radius: 10px; }
+      .cap { font-size: 30px; line-height: 1.35; }
+      .pill { display: inline-block; font-size: 32px; line-height: 1.2; padding: 16px 26px; border-radius: 12px; background: #16212c; border: 3px solid #e8702a; color: #ffffff; }
+      .urlbar { position: absolute; left: 0; top: 0; right: 0; height: 64px; background: #eef1f5; display: flex; align-items: center; gap: 14px; padding: 0 22px; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 21px; color: #2b3947; white-space: nowrap; border-bottom: 3px solid #e8702a; }
+      .urlbar span { background: #ffffff; border-radius: 999px; padding: 6px 16px; }
+      svg text { font-family: "Inter", system-ui, sans-serif; }
+    </style>
+  </head>
+  <body>
+    <script type="application/hyperframes-slideshow+json">
+      {
+        "slides": [
+          { "sceneId": "cover", "notes": "Introduce the team and the four sections: definition, design, demo and plans, operations. About 15 minutes plus the demo." },
+          { "sceneId": "problem", "notes": "Cobble will host many tenants on one platform. The brief asks for eight deliverables, covering ten control areas and five risk themes. A weak foundation would expose every tenant at once, so the base has to be right before the application is built." },
+          { "sceneId": "what", "notes": "What we are building: the AWS foundation only. The Cobble application is out of scope; a standard web server stands in for it to prove the platform works." },
+          { "sceneId": "solutions", "notes": "Solution B is the minimum viable product: one account, near zero cost, working today. Solution A is the full design the Cyber Security Centre would run. Both are built from the same Terraform modules, and both deploy and tear down from code.", "fragments": [25.6, 27.2] },
+          { "sceneId": "themes", "notes": "The brief names five risk themes. These drove every design choice that follows, and the threat model is organised around them." },
+          { "sceneId": "org", "notes": "Six accounts following the AWS Security Reference Architecture, simplified: one Security account does the job of AWS’s separate Log Archive and Security Tooling accounts, which halves the fixed cost." },
+          { "sceneId": "network", "notes": "Click through the layers. The web firewall (staging, prod) and the load balancer are the only public pieces. Web servers sit in private subnets with no public IP. The database has no route to the internet at all.", "fragments": [49.5, 50.2, 50.9, 51.6] },
+          { "sceneId": "guardrails", "notes": "Service control policies at the root of the organisation. They apply to every member account whoever signs in, administrators included. The demo shows the region guardrail refusing an admin." },
+          { "sceneId": "access", "notes": "People sign in once through IAM Identity Center with MFA. Admin sessions end after 4 hours. GitHub signs in with OIDC: one role can only look, the other deploys after a reviewer approves." },
+          { "sceneId": "controls", "notes": "Enforced means a guardrail stops anyone turning it off; configured means the code builds it but an admin could change it. The biggest gap is backups." },
+          { "sceneId": "departures", "notes": "Each departure from the Implementation Guide is a recorded decision with what would make us change it. Each is a swap of one building block, so the security controls stay the same." },
+          { "sceneId": "demo-intro", "notes": "Live demo. If it fails, the next slides are the evidence from the run on 17 October." },
+          { "sceneId": "demo-app", "notes": "terraform output app_url. nginx stands in for the Cobble app. What matters is the path: through the load balancer, from containers in private subnets." },
+          { "sceneId": "demo-guardrail", "notes": "Signed in with full admin rights in cobble-dev, creating a bucket in London is refused with an explicit deny from a service control policy.", "fragments": [105.4, 107.0, 108.6] },
+          { "sceneId": "demo-data", "notes": "No internet access gateway on the database. AWS generated the password and keeps it in Secrets Manager. Storage is encrypted with the account’s own key." },
+          { "sceneId": "demo-detect", "notes": "A sample GuardDuty finding appears in the Security account. The Config aggregator lists all six accounts reporting OK." },
+          { "sceneId": "teardown", "notes": "Teardown in reverse order: workload, security pieces, organisation, then closing the member accounts. The same commands rebuild it." },
+          { "sceneId": "stand", "notes": "Where we stand: both solutions deploy and tear down from code. Some evidence is still to capture, and four Phase 2 items close the biggest gaps." },
+          { "sceneId": "cost", "notes": "Estimates for Sydney at A$1.44 per US dollar. Turning dev and staging off when idle brings Solution A to about A$475.", "fragments": [145.6, 147.2] },
+          { "sceneId": "team", "notes": "Design and build ran in parallel. Every deliverable is a GitHub issue; every change is a pull request that is checked and reviewed before it merges." },
+          { "sceneId": "pipeline", "notes": "Every pull request is formatted, validated, tested and security-scanned. Automatic deploys are Phase 2; until then an admin deploys by runbook. A nightly drift check flags anything changed outside the code." },
+          { "sceneId": "decisions", "notes": "The decisions that shaped the design, and what would make us revisit each one." },
+          { "sceneId": "risks", "notes": "Thirteen threats rated with STRIDE; three are High. Each has a clear next step, and all three must be fixed before real tenant data arrives." },
+          { "sceneId": "compliance", "notes": "Support, not certification. Essential Eight Maturity Level 1 is realistic once Solution A is deployed and a restore is tested." },
+          { "sceneId": "reflection", "notes": "Be honest about what we would do differently, then show what is ready to hand over.", "fragments": [193.6, 195.2] },
+          { "sceneId": "close", "notes": "Questions. Likely: deploy time (about 15 minutes for Solution A), what keeps tenants apart today (the application), why one Security account (half the fixed cost)." }
+        ],
+        "slideSequences": []
+      }
+    </script>
+
+    <!-- The runtime only treats compositions inside one root as slides, so the root spans the whole deck. -->
+    <div id="root" data-composition-id="deck" data-start="0" data-duration="208" data-width="1920" data-height="1080">
+
+    <!-- ===================== DEFINITION · Jacob Hardcastle ===================== -->
+
+    <div class="scene def" data-composition-id="cover" data-start="0" data-duration="8" data-label="Cover" data-presenter="Jacob Hardcastle" data-section="Definition" data-bare data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1" style="padding: 0; flex-direction: row; gap: 0">
+        <div style="width: 820px; background: #0b7f8a; color: #ffffff; padding: 120px 96px; display: flex; flex-direction: column; justify-content: space-between">
+          <p class="rise" style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 24px; letter-spacing: 0.12em">COBBLE AWS PLATFORM</p>
+          <div class="rise" style="display: flex; flex-direction: column; gap: 28px">
+            <h1 style="font-size: 104px; font-weight: 700; line-height: 1.02; letter-spacing: -0.03em">Secure foundation. Rebuilt from code.</h1>
+            <p style="font-size: 30px; line-height: 1.4; color: #d6f0f2">A multi-account AWS landing zone and proof of concept for the Cyber Security Centre</p>
+          </div>
+          <p class="rise" style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 22px; color: #d6f0f2">QUT · IFB398 · P608 / R014.1</p>
+        </div>
+        <div style="flex: 1; padding: 120px 96px; display: flex; flex-direction: column; justify-content: center; gap: 40px">
+          <div class="rise"><p style="font-size: 44px; font-weight: 700">Team T235</p><p class="soft" style="font-size: 26px; margin-top: 8px">Industry partner: Cyber Security Centre</p></div>
+          <div class="rise" style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px 40px">
+            <div style="display: flex; gap: 20px; align-items: center"><span class="av" style="background: #0b7f8a">JH</span><div><p class="nm">Jacob Hardcastle</p><p class="rl">Definition</p></div></div>
+            <div style="display: flex; gap: 20px; align-items: center"><span class="av" style="background: #b85a14">TH</span><div><p class="nm">Tim Hartmann</p><p class="rl">Design</p></div></div>
+            <div style="display: flex; gap: 20px; align-items: center"><span class="av" style="background: #1e6fa8">MG</span><div><p class="nm">Max Gosling</p><p class="rl">Demo and plans</p></div></div>
+            <div style="display: flex; gap: 20px; align-items: center"><span class="av" style="background: #c23b50">KD</span><div><p class="nm">Khai Do</p><p class="rl">Operations</p></div></div>
+          </div>
+        </div>
+        <style>
+          .av { width: 84px; height: 84px; border-radius: 50%; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; flex: none; }
+          .nm { font-size: 30px; font-weight: 600; }
+          .rl { font-size: 24px; color: #4f5f6f; }
+        </style>
+      </section>
+    </div>
+
+    <div class="scene def" data-composition-id="problem" data-start="8" data-duration="8" data-label="The problem" data-presenter="Jacob Hardcastle" data-section="Definition" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Cobble needs a foundation before it needs features</h2>
+        <div class="stage" style="display: flex; flex-direction: column; gap: 36px; margin-top: 14px">
+          <div class="rise" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px">
+            <div class="stat"><span class="n">8</span><span class="l">deliverables in the brief</span></div>
+            <div class="stat" style="background: #086069"><span class="n">10</span><span class="l">control areas to design</span></div>
+            <div class="stat" style="background: #e6f4f5; color: #0b4f56"><span class="n">5</span><span class="l">risk themes to answer</span></div>
+          </div>
+          <div class="rise" style="display: flex; flex-direction: column; gap: 18px">
+            <p class="pain"><i></i>Many tenants share one platform, so a weak base exposes all of them at once</p>
+            <p class="pain"><i></i>The Implementation Guide sets the target: 17 sections, from landing zone to runbooks</p>
+            <p class="pain"><i></i>It has to be repeatable: deployed, torn down and rebuilt the same way every time</p>
+          </div>
+        </div>
+        <style>
+          .pain { display: flex; gap: 22px; align-items: center; font-size: 30px; color: #2b3947; }
+          .pain i { width: 26px; height: 26px; border-radius: 6px; background: #e4566a; flex: none; }
+        </style>
+      </section>
+    </div>
+
+    <div class="scene def" data-composition-id="what" data-start="16" data-duration="8" data-label="What we built" data-presenter="Jacob Hardcastle" data-section="Definition" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">What is the Cobble AWS platform?</h2>
+        <p class="lede rise">The secure AWS base Cobble runs on: accounts, network, sign-in, logging and security controls, all written as Terraform.</p>
+        <div class="stage" style="display: flex; gap: 40px; margin-top: 10px">
+          <div class="rise" style="flex: 1; display: flex; flex-direction: column; gap: 14px">
+            <div class="def-row"><b>Partner</b><span>Cyber Security Centre</span></div>
+            <div class="def-row"><b>Project</b><span>P608 / R014.1, tutorial group T235</span></div>
+            <div class="def-row"><b>Scope</b><span>The AWS foundation; the Cobble app is out of scope</span></div>
+            <div class="def-row"><b>Scale</b><span>6 accounts · 3 environments · 2 solutions</span></div>
+            <div class="def-row"><b>Built as</b><span>Terraform modules, checked on every change</span></div>
+          </div>
+          <div class="rise" style="width: 600px; background: #0b7f8a; color: #ffffff; border-radius: 20px; padding: 44px; display: flex; flex-direction: column; justify-content: space-between">
+            <p style="font-size: 110px; font-weight: 700; line-height: 0.6">“</p>
+            <p style="font-size: 36px; font-weight: 600; line-height: 1.3">A platform you can deploy and redeploy with confidence.</p>
+            <p style="font-size: 24px; color: #d6f0f2">The project goal, from our README</p>
+          </div>
+        </div>
+        <style>
+          .def-row { display: grid; grid-template-columns: 200px 1fr; align-items: center; border-left: 6px solid #0b7f8a; padding: 14px 24px; font-size: 28px; background: #f6f9fa; border-radius: 0 12px 12px 0; }
+          .def-row b { color: #0b7f8a; font-weight: 700; }
+        </style>
+      </section>
+    </div>
+
+    <div class="scene def" data-composition-id="solutions" data-start="24" data-duration="8" data-label="Two solutions" data-presenter="Jacob Hardcastle" data-section="Definition" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Two solutions. One set of building blocks.</h2>
+        <div class="stage" style="display: flex; gap: 32px; margin-top: 14px">
+          <div id="sol-b" class="card" style="flex: 1; gap: 18px">
+            <div style="display: flex; gap: 20px; align-items: center"><span class="av2" style="background: #1e6fa8">B</span><div><h3>Minimum viable product</h3><p style="font-size: 24px">Working today</p></div></div>
+            <p class="big" style="color: #1e6fa8">≈ A$0</p>
+            <ul><li>One account, 48 resources</li><li>Encryption, audit trail, threat detection, budget alert</li><li>Torn down between demos</li></ul>
+          </div>
+          <div id="sol-a" class="card" style="flex: 1; gap: 18px; border: 3px solid #0b7f8a">
+            <div style="display: flex; gap: 20px; align-items: center"><span class="av2" style="background: #0b7f8a">A</span><div><h3>Full landing zone</h3><p style="font-size: 24px">What the Cyber Security Centre would run</p></div></div>
+            <p class="big" style="color: #0b7f8a">≈ A$790 <span style="font-size: 32px">/ month</span></p>
+            <ul><li>Six accounts with guardrails and single sign-on</li><li>Locked central logs and security monitoring</li><li>dev, staging and prod from one workload folder</li></ul>
+          </div>
+        </div>
+        <div class="key rise">Same modules: B is a working slice of A, not a throwaway prototype</div>
+        <style>
+          .av2 { width: 76px; height: 76px; border-radius: 50%; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; flex: none; }
+          .card p.big { font-size: 84px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+        </style>
+      </section>
+    </div>
+
+    <div class="scene def" data-composition-id="themes" data-start="32" data-duration="8" data-label="Key considerations" data-presenter="Jacob Hardcastle" data-section="Definition" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Five risk themes shaped every decision</h2>
+        <div class="stage" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px; align-content: start; margin-top: 10px">
+          <div class="card th rise" style="grid-column: span 2"><span class="ic" style="background: #0b7f8a">MT</span><h3>Multi-tenancy</h3><p>Every tenant shares the servers, database and storage</p></div>
+          <div class="card th rise" style="grid-column: span 2"><span class="ic" style="background: #b85a14">PA</span><h3>Privileged access</h3><p>A stolen admin session could change anything</p></div>
+          <div class="card th rise" style="grid-column: span 2"><span class="ic" style="background: #1e6fa8">AE</span><h3>API exposure</h3><p>Anything public can be attacked or flooded</p></div>
+          <div class="card th rise" style="grid-column: span 3"><span class="ic" style="background: #c23b50">DP</span><h3>Data protection</h3><p>Tenant data must stay encrypted and in Australia</p></div>
+          <div class="card th rise" style="grid-column: span 3"><span class="ic" style="background: #5b6b7b">AV</span><h3>Availability</h3><p>Losing a zone, an account or a backup must not lose data</p></div>
+        </div>
+        <style>
+          .th { gap: 14px; }
+          .ic { align-self: flex-start; width: 64px; height: 64px; border-radius: 12px; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; }
+        </style>
+      </section>
+    </div>
+
+    <!-- ===================== DESIGN · Tim Hartmann ===================== -->
+
+    <div class="scene des" data-composition-id="org" data-start="40" data-duration="8" data-label="Landing zone" data-presenter="Tim Hartmann" data-section="Design" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Six accounts, each with one job</h2>
+        <div class="stage">
+          <svg viewBox="0 0 1696 640" width="1696" height="640" style="position: absolute; left: 0; top: 16px">
+            <g stroke="#9aa8b5" stroke-width="3" fill="none">
+              <path class="draw" pathLength="1" stroke-dasharray="1" d="M848 100 V140 H186 V185" />
+              <path class="draw" pathLength="1" stroke-dasharray="1" d="M848 140 H516 V185" />
+              <path class="draw" pathLength="1" stroke-dasharray="1" d="M848 140 H1186 V185" />
+              <path class="draw" pathLength="1" stroke-dasharray="1" d="M186 260 V515" />
+              <path class="draw" pathLength="1" stroke-dasharray="1" d="M516 260 V515" />
+              <path class="draw" pathLength="1" stroke-dasharray="1" d="M1186 260 V300 H1031 V340" />
+              <path class="draw" pathLength="1" stroke-dasharray="1" d="M1186 300 H1496 V340" />
+              <path class="draw" pathLength="1" stroke-dasharray="1" d="M1031 415 V465 H876 V515" />
+              <path class="draw" pathLength="1" stroke-dasharray="1" d="M1031 465 H1186 V515" />
+              <path class="draw" pathLength="1" stroke-dasharray="1" d="M1496 415 V515" />
+            </g>
+            <g class="pop"><rect x="518" y="0" width="660" height="100" rx="16" fill="#16212c" /><text x="848" y="44" text-anchor="middle" font-size="34" font-weight="700" fill="#ffffff">Management</text><text x="848" y="80" text-anchor="middle" font-size="24" fill="#c9d3dd">runs the organisation, sign-in and billing</text></g>
+            <g class="pop" font-family="JetBrains Mono" font-size="24" fill="#2b3947">
+              <rect x="36" y="185" width="300" height="75" rx="38" fill="#ffffff" stroke="#9aa8b5" stroke-width="2" /><text x="186" y="231" text-anchor="middle">Security OU</text>
+              <rect x="351" y="185" width="330" height="75" rx="38" fill="#ffffff" stroke="#9aa8b5" stroke-width="2" /><text x="516" y="231" text-anchor="middle">Infrastructure OU</text>
+              <rect x="1036" y="185" width="300" height="75" rx="38" fill="#ffffff" stroke="#9aa8b5" stroke-width="2" /><text x="1186" y="231" text-anchor="middle">Workloads OU</text>
+              <rect x="881" y="340" width="300" height="75" rx="38" fill="#ffffff" stroke="#9aa8b5" stroke-width="2" /><text x="1031" y="386" text-anchor="middle">NonProduction</text>
+              <rect x="1346" y="340" width="300" height="75" rx="38" fill="#ffffff" stroke="#9aa8b5" stroke-width="2" /><text x="1496" y="386" text-anchor="middle">Production</text>
+            </g>
+            <g class="pop"><rect x="41" y="515" width="290" height="120" rx="16" fill="#b85a14" /><text x="186" y="566" text-anchor="middle" font-size="34" font-weight="700" fill="#ffffff">security</text><text x="186" y="606" text-anchor="middle" font-size="24" fill="#ffffff">locked logs, detection</text></g>
+            <g class="pop"><rect x="371" y="515" width="290" height="120" rx="16" fill="#fdf0e6" stroke="#b85a14" stroke-width="2" /><text x="516" y="566" text-anchor="middle" font-size="34" font-weight="700" fill="#16212c">shared</text><text x="516" y="606" text-anchor="middle" font-size="24" fill="#4f5f6f">image registry</text></g>
+            <g class="pop"><rect x="731" y="515" width="290" height="120" rx="16" fill="#fdf0e6" stroke="#b85a14" stroke-width="2" /><text x="876" y="566" text-anchor="middle" font-size="34" font-weight="700" fill="#16212c">dev</text><text x="876" y="606" text-anchor="middle" font-size="24" fill="#4f5f6f">try changes</text></g>
+            <g class="pop"><rect x="1041" y="515" width="290" height="120" rx="16" fill="#fdf0e6" stroke="#b85a14" stroke-width="2" /><text x="1186" y="566" text-anchor="middle" font-size="34" font-weight="700" fill="#16212c">staging</text><text x="1186" y="606" text-anchor="middle" font-size="24" fill="#4f5f6f">dress rehearsal</text></g>
+            <g class="pop"><rect x="1351" y="515" width="290" height="120" rx="16" fill="#fdf0e6" stroke="#b85a14" stroke-width="2" /><text x="1496" y="566" text-anchor="middle" font-size="34" font-weight="700" fill="#16212c">prod</text><text x="1496" y="606" text-anchor="middle" font-size="24" fill="#4f5f6f">what tenants use</text></g>
+          </svg>
+        </div>
+      </section>
+    </div>
+
+    <div class="scene des" data-composition-id="network" data-start="48" data-duration="8" data-label="Network layers" data-presenter="Tim Hartmann" data-section="Design" data-bare data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1" style="padding: 0">
+        <div
+          data-composition-id="exploded-stack"
+          data-composition-src="compositions/exploded-stack.html"
+          data-variable-values='{"title":"Only the edge faces the internet","layer_1":"Web firewall","layer_2":"Load balancer","layer_3":"Web servers, private","layer_4":"Database, no way out","accent":"#e8702a","background":"#ffffff"}'
+          data-start="0"
+          data-duration="8"
+          data-track-index="2"
+          data-width="1920"
+          data-height="1080"
+          style="position: absolute; inset: 0"
+        ></div>
+      </section>
+    </div>
+
+    <div class="scene des" data-composition-id="guardrails" data-start="56" data-duration="8" data-label="Guardrails" data-presenter="Tim Hartmann" data-section="Design" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Four guardrails hold, even for administrators</h2>
+        <div class="stage" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-content: start; margin-top: 10px">
+          <div class="card edge rise"><h3>Stay in Australia</h3><p>Sydney only, plus us-east-1 for global services</p></div>
+          <div class="card edge rise"><h3>No root user</h3><p>Member accounts’ root users are blocked</p></div>
+          <div class="card edge rise"><h3>Security stays on</h3><p>CloudTrail, GuardDuty, Config, Security Hub and Access Analyzer can’t be turned off</p></div>
+          <div class="card edge rise"><h3>No leaving</h3><p>No account can remove itself from the organisation</p></div>
+        </div>
+        <div class="key rise">Service control policies at the organisation root: no admin in a member account can override them</div>
+      </section>
+    </div>
+
+    <div class="scene des" data-composition-id="access" data-start="64" data-duration="8" data-label="Who can do what" data-presenter="Tim Hartmann" data-section="Design" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">No one has a standing password or key to AWS</h2>
+        <div class="stage rise" style="margin-top: 10px">
+          <table class="t">
+            <tr><th style="width: 22%">Group</th><th>Mgmt</th><th>Security</th><th>Shared</th><th>dev</th><th>staging</th><th>prod</th></tr>
+            <tr><td>Platform admins</td><td class="m-a">Admin</td><td class="m-a">Admin</td><td class="m-a">Admin</td><td class="m-a">Admin</td><td class="m-a">Admin</td><td class="m-a">Admin</td></tr>
+            <tr><td>Developers</td><td class="m-n">None</td><td class="m-n">None</td><td class="m-n">None</td><td class="m-d">Developer</td><td>Read-only</td><td>Read-only</td></tr>
+            <tr><td>Auditors</td><td>Read-only</td><td>Read-only</td><td>Read-only</td><td>Read-only</td><td>Read-only</td><td>Read-only</td></tr>
+          </table>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 32px">
+            <div class="card edge"><h3>Single sign-on + MFA</h3><p>No IAM users in Solution A</p></div>
+            <div class="card edge"><h3>4-hour admin sessions</h3><p>Developer and read-only last 8 hours</p></div>
+            <div class="card edge"><h3>GitHub: short-lived roles</h3><p>One can only look; one deploys after review</p></div>
+          </div>
+        </div>
+        <style>
+          .m-a { color: #b85a14 !important; font-weight: 700; }
+          .m-d { color: #1e6fa8 !important; font-weight: 700; }
+          .m-n { color: #8a97a3 !important; }
+        </style>
+      </section>
+    </div>
+
+    <div class="scene des" data-composition-id="controls" data-start="72" data-duration="8" data-label="Security controls" data-presenter="Tim Hartmann" data-section="Design" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">All ten control areas are built in code</h2>
+        <div class="stage rise" style="display: grid; grid-template-columns: 1fr 1fr; column-gap: 56px; align-content: start; margin-top: 4px">
+          <div class="ctl"><span>Access</span><b class="pill-e">Enforced</b></div>
+          <div class="ctl"><span>Encryption</span><b class="pill-c">Configured</b></div>
+          <div class="ctl"><span>Logging</span><b class="pill-e">Enforced</b></div>
+          <div class="ctl"><span>Network separation</span><b class="pill-c">Configured</b></div>
+          <div class="ctl"><span>Monitoring</span><b class="pill-e">Enforced</b></div>
+          <div class="ctl"><span>Vulnerability management</span><b class="pill-c">Configured</b></div>
+          <div class="ctl"><span>MFA</span><b class="pill-c">Configured</b></div>
+          <div class="ctl"><span>Incident response</span><b class="pill-c">Configured</b></div>
+          <div class="ctl"><span>Secrets</span><b class="pill-c">Configured</b></div>
+          <div class="ctl"><span>Backup and recovery</span><b class="pill-c">Configured</b></div>
+        </div>
+        <p class="soft rise" style="font-size: 24px"><b>Enforced</b>: a guardrail stops anyone turning it off. <b>Configured</b>: built by the code; an admin could still change it.</p>
+        <div class="key rise" style="background: #b85a14">Biggest gap: backups have no copy outside the account they protect</div>
+        <style>
+          .ctl { display: flex; justify-content: space-between; align-items: center; font-size: 30px; padding: 13px 0; border-bottom: 1px solid #e1e8ed; }
+        </style>
+      </section>
+    </div>
+
+    <div class="scene des" data-composition-id="departures" data-start="80" data-duration="8" data-label="Departures from the Guide" data-presenter="Tim Hartmann" data-section="Design" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Where we differ from the Implementation Guide</h2>
+        <div class="stage rise" style="margin-top: 10px">
+          <table class="t">
+            <tr><th style="width: 22%">The Guide says</th><th style="width: 22%">We built</th><th style="width: 30%">Why</th><th>Revisit when</th></tr>
+            <tr><td>SQL Server</td><td>PostgreSQL</td><td>Far cheaper at small sizes; same security controls</td><td>The client confirms the edition</td></tr>
+            <tr><td>CloudFront + API Gateway</td><td>Load balancer + web firewall</td><td>No domain name or API routes exist yet</td><td>The domain and routes exist</td></tr>
+            <tr><td>Kubernetes (EKS)</td><td>ECS on Fargate</td><td>No servers or cluster upgrades for a small team</td><td>Cobble needs something only Kubernetes offers</td></tr>
+            <tr><td>Log Archive + Security Tooling accounts</td><td>One Security account</td><td>Half the fixed cost, same separation</td><td>Production scale, or an auditor asks</td></tr>
+          </table>
+        </div>
+        <div class="key rise" style="background: #b85a14">Each is a swap of one building block, not a redesign</div>
+      </section>
+    </div>
+
+    <!-- ===================== DEMO AND PLANS · Max Gosling ===================== -->
+
+    <div class="scene dem" data-composition-id="demo-intro" data-start="88" data-duration="8" data-label="Demo" data-presenter="Max Gosling" data-section="Demo" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Live demo: Solution A, deployed into dev</h2>
+        <p class="lede rise">Deployed from code, shown in the console, torn down the same day. Fallback: the evidence from our run on 17 October.</p>
+        <div class="stage rise" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; align-content: start; margin-top: 18px">
+          <div class="card edge"><span class="chip">Step 1</span><h3>Landing zone</h3><p>Organisation, five accounts, guardrails, sign-in</p></div>
+          <div class="card edge"><span class="chip">Step 2</span><h3>Security</h3><p>Org trail, GuardDuty, Config, Security Hub</p></div>
+          <div class="card edge"><span class="chip">Step 3</span><h3>dev workload</h3><p>Network, containers, database, data bucket</p></div>
+          <div class="card edge"><span class="chip">Step 4</span><h3>Tear down</h3><p>Destroyed from code, accounts closed</p></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="scene dem" data-composition-id="demo-app" data-start="96" data-duration="8" data-label="Demo: the app" data-presenter="Max Gosling" data-section="Demo" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">The page is served by containers the internet can’t reach</h2>
+        <div class="stage">
+          <div class="frame rise" style="left: 0; top: 16px; width: 1040px; height: 520px">
+            <!-- cropped below the browser's bookmarks bar; the address is the one in the screenshot -->
+            <img src="assets/27-app-url.png" alt="The nginx welcome page served through the cobble-dev load balancer" style="left: -434px; top: -48px; width: 1833px; height: 600px" />
+            <div class="urlbar">Not secure <span>cobble-dev-alb-229548621.ap-southeast-2.elb.amazonaws.com</span></div>
+          </div>
+          <div style="position: absolute; left: 1100px; top: 16px; width: 596px; display: flex; flex-direction: column; gap: 22px">
+            <div class="card edge rise"><h3>Load balancer</h3><p>The only thing on the public internet</p></div>
+            <div class="card edge rise"><h3>Containers</h3><p>Private subnets, no public IP</p></div>
+            <div class="card edge rise"><h3>nginx</h3><p>Stands in until the Cobble app exists</p></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="scene dem" data-composition-id="demo-guardrail" data-start="104" data-duration="8" data-label="Demo: a guardrail" data-presenter="Max Gosling" data-section="Demo" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Even an administrator is refused outside Australia</h2>
+        <div class="stage">
+          <div id="gz-frame" class="frame" style="left: 0; top: 10px; width: 1696px; height: 610px; background: #eef1f5">
+            <div id="gz-inner" style="position: absolute; left: 0; top: 0; width: 1690px; height: 1228px">
+              <img src="assets/08-scp-deny.png" alt="S3 Create bucket in Europe (London) as CobblePlatformAdmin fails with an explicit deny in a service control policy" style="left: 0; top: 0; width: 1690px; height: 1228px" />
+              <div id="gz-hl-a" class="hl" style="left: 1350px; top: 2px; width: 340px; height: 58px; opacity: 0"></div>
+              <div id="gz-hl-b" class="hl" style="left: 62px; top: 1076px; width: 320px; height: 50px; opacity: 0"></div>
+            </div>
+            <p id="gz-cap-0" class="pill" style="position: absolute; left: 24px; bottom: 24px">Signed in as <b>CobblePlatformAdmin</b> in cobble-dev</p>
+            <p id="gz-cap-1" class="pill" style="position: absolute; left: 24px; bottom: 24px; opacity: 0">Creating a bucket in <b>Europe (London)</b></p>
+            <p id="gz-cap-2" class="pill" style="position: absolute; left: 24px; bottom: 24px; opacity: 0">Refused: <b style="color: #ffa463">explicit deny in a service control policy</b></p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="scene dem" data-composition-id="demo-data" data-start="112" data-duration="8" data-label="Demo: the data" data-presenter="Max Gosling" data-section="Demo" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">The database is private, and its storage is encrypted</h2>
+        <div class="stage" style="display: flex; gap: 40px; margin-top: 16px">
+          <div class="rise" style="flex: 1; display: flex; flex-direction: column; gap: 22px">
+            <div class="frame" style="position: relative; width: 828px; height: 400px">
+              <img src="assets/21-rds-connectivity.png" alt="RDS connectivity: Internet access gateway Disabled" style="left: -540px; top: -820px; width: 3368px; height: 2306px" />
+              <div class="hl dd-hl" style="left: 6px; top: 10px; width: 340px; height: 112px"></div>
+            </div>
+            <div class="card edge"><h3>No internet access gateway</h3><p>Password kept by AWS in Secrets Manager</p></div>
+          </div>
+          <div class="rise" style="flex: 1; display: flex; flex-direction: column; gap: 22px">
+            <div class="frame" style="position: relative; width: 828px; height: 400px">
+              <img src="assets/22-rds-encryption.png" alt="RDS configuration: storage encryption enabled with the cobble-dev KMS key" style="left: -1450px; top: -680px; width: 2676px; height: 1998px" />
+              <div class="hl dd-hl" style="left: 10px; top: 46px; width: 250px; height: 180px"></div>
+            </div>
+            <div class="card edge"><h3>Encryption enabled</h3><p>With the account’s own cobble-dev key</p></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="scene dem" data-composition-id="demo-detect" data-start="120" data-duration="8" data-label="Demo: detection" data-presenter="Max Gosling" data-section="Demo" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">A threat in any account surfaces in the Security account</h2>
+        <div class="stage">
+          <div class="frame rise" style="left: 0; top: 16px; width: 1100px; height: 290px">
+            <img src="assets/15-sample-finding.png" alt="GuardDuty findings in the Security account, including sample threat findings" style="left: -300px; top: -165px; width: 1699px; height: 502px" />
+          </div>
+          <div class="frame rise" style="left: 0; top: 330px; width: 1100px; height: 290px">
+            <img src="assets/14-config-aggregator.png" alt="AWS Config aggregator: six accounts with authorization status OK" style="left: -296px; top: -380px; width: 1707px; height: 685px" />
+          </div>
+          <div class="card edge rise" style="position: absolute; left: 1150px; top: 16px; width: 546px"><h3>GuardDuty</h3><p>A sample threat finding, raised and seen centrally</p></div>
+          <div class="card edge rise" style="position: absolute; left: 1150px; top: 330px; width: 546px"><h3>Config</h3><p>All six accounts reporting OK</p></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="scene dem" data-composition-id="teardown" data-start="128" data-duration="8" data-label="Teardown" data-presenter="Max Gosling" data-section="Demo" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Everything came down from code the same day</h2>
+        <div class="stage" style="display: flex; flex-direction: column; gap: 32px; margin-top: 14px">
+          <div class="rise" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px">
+            <div class="stat"><span class="n">75</span><span class="l">workload resources</span></div>
+            <div class="stat"><span class="n">10</span><span class="l">security resources</span></div>
+            <div class="stat"><span class="n">34</span><span class="l">organisation resources</span></div>
+            <div class="stat" style="background: #e8f2fa; color: #174f78"><span class="n">5</span><span class="l">accounts closed</span></div>
+          </div>
+          <div class="rise" style="background: #16212c; border-radius: 16px; padding: 28px 36px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 26px; line-height: 1.55; color: #c9d3dd">
+            <p><span style="color: #7cc4f5">$</span> terraform apply org-destroy.tfplan</p>
+            <p style="color: #ffffff">Apply complete! Resources: 0 added, 0 changed, <span style="color: #ffa463">34 destroyed</span>.</p>
+            <p><span style="color: #7cc4f5">$</span> aws organizations list-accounts</p>
+            <p style="color: #ffffff">cobble-dev · staging · prod · security · shared-services &#160;→&#160; <span style="color: #ffa463">SUSPENDED</span></p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="scene dem" data-composition-id="stand" data-start="136" data-duration="8" data-label="Where we stand" data-presenter="Max Gosling" data-section="Plans" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Where we stand</h2>
+        <div class="stage" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-content: start; margin-top: 10px">
+          <div class="card rise col" style="background: #e9f6ef; border-color: #bfe3cc"><span class="chip" style="background: #1d7a46">Done</span><h3>Built and proven</h3><ul><li>Both solutions deploy and tear down</li><li>Landing zone, guardrails, sign-in</li><li>Central logging and detection</li><li>CI checks and nightly drift</li></ul></div>
+          <div class="card rise col" style="background: #fff7e0; border-color: #f1dfa3"><span class="chip" style="background: #8a6400">In progress</span><h3>Evidence and fixes</h3><ul><li>Evidence log and screenshots</li><li>GuardDuty and Security Hub membership</li><li>Security Hub standard scores</li><li>First backup restore test</li></ul></div>
+          <div class="card rise col"><span class="chip" style="background: #5b6b7b">Phase 2</span><h3>Close the gaps</h3><ul><li>Backups outside the account</li><li>Application alarms, dashboards</li><li>Break-glass, narrower admin roles</li><li>Automatic deploys with approvals</li></ul></div>
+        </div>
+        <style>
+          .col ul li::before { content: "– "; }
+        </style>
+      </section>
+    </div>
+
+    <div class="scene dem" data-composition-id="cost" data-start="144" data-duration="8" data-label="Cost" data-presenter="Max Gosling" data-section="Plans" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">About A$790 a month to run everything</h2>
+        <div class="stage" style="display: flex; flex-direction: column; gap: 26px; margin-top: 18px">
+          <div style="position: relative; height: 120px">
+            <p id="cost-790" style="position: absolute; left: 0; top: 0; font-size: 112px; font-weight: 700; letter-spacing: -0.03em; color: #1e6fa8; line-height: 1">A$790<span style="font-size: 40px; color: #4f5f6f"> / month, all environments</span></p>
+            <p id="cost-475" style="position: absolute; left: 0; top: 0; font-size: 112px; font-weight: 700; letter-spacing: -0.03em; color: #1d7a46; line-height: 1; opacity: 0">A$475<span style="font-size: 40px; color: #4f5f6f"> / month, dev and staging off when idle</span></p>
+          </div>
+          <div id="cost-bar" style="display: flex; gap: 6px; height: 130px; transform-origin: 0 50%">
+            <div class="seg" style="flex: 108; background: #c9d3dd; color: #16212c">Central</div>
+            <div class="seg idle" style="flex: 160; background: #7cb3dc; color: #16212c">dev</div>
+            <div class="seg idle" style="flex: 175; background: #3d84bd">staging</div>
+            <div class="seg" style="flex: 375; background: #1e6fa8">prod</div>
+          </div>
+          <div style="display: flex; gap: 6px; font-size: 28px; color: #4f5f6f">
+            <span style="flex: 108">A$70–145</span><span style="flex: 160">≈ A$160</span><span style="flex: 175">≈ A$175</span><span style="flex: 375">≈ A$375</span>
+          </div>
+          <div class="key" style="margin-top: 12px">Solution B costs about A$0 between demos · a Solution A demo is about A$5 a day</div>
+        </div>
+        <style>
+          .seg { border-radius: 12px; display: flex; align-items: center; padding: 0 26px; font-size: 32px; font-weight: 700; color: #ffffff; }
+        </style>
+      </section>
+    </div>
+
+    <!-- ===================== OPERATIONS · Khai Do ===================== -->
+
+    <div class="scene ops" data-composition-id="team" data-start="152" data-duration="8" data-label="How the team operated" data-presenter="Khai Do" data-section="Operations" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">How the team operated</h2>
+        <div class="stage" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-content: start; margin-top: 10px">
+          <div class="card rise" style="grid-row: span 2; gap: 20px">
+            <h3>Parallel work streams</h3>
+            <div style="border-left: 6px solid #0b7f8a; padding-left: 22px"><p style="font-weight: 700; color: #0b7f8a">Design and documents</p><p>Architecture, landing zone, controls, operations, threat model, compliance</p></div>
+            <div style="border-left: 6px solid #c23b50; padding-left: 22px"><p style="font-weight: 700; color: #c23b50">Technical build</p><p>Terraform modules, both solutions, CI checks, runbooks and evidence</p></div>
+          </div>
+          <div class="card rise"><h3>Tracked in GitHub</h3><p>Every deliverable is an issue: 17 issues, 18 pull requests, 76 commits</p></div>
+          <div class="card rise"><h3>Every change reviewed</h3><p>Branch → pull request → automatic checks → one approving review → merge</p></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="scene ops" data-composition-id="pipeline" data-start="160" data-duration="8" data-label="Change pipeline" data-presenter="Khai Do" data-section="Operations" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Every change is checked before it reaches AWS</h2>
+        <div class="stage">
+          <svg viewBox="0 0 1696 520" width="1696" height="520" style="position: absolute; left: 0; top: 20px">
+            <defs><marker id="pl-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#c23b50" /></marker></defs>
+            <g stroke="#c23b50" stroke-width="4" fill="none" marker-end="url(#pl-arrow)">
+              <path class="draw" pathLength="1" stroke-dasharray="1" d="M246 110 H286" />
+              <path class="draw" pathLength="1" stroke-dasharray="1" d="M536 110 H576" />
+            </g>
+            <g stroke="#9aa8b5" stroke-width="4" fill="none" stroke-dasharray="8 8">
+              <path class="fade" d="M826 110 H866" /><path class="fade" d="M1116 110 H1156" /><path class="fade" d="M1406 110 H1446" />
+            </g>
+            <g class="pop"><rect x="0" y="20" width="246" height="180" rx="16" fill="#fbecee" stroke="#c23b50" stroke-width="3" /><text x="123" y="92" text-anchor="middle" font-size="32" font-weight="700" fill="#16212c">Pull request</text><text x="123" y="138" text-anchor="middle" font-size="24" fill="#4f5f6f">format, validate,</text><text x="123" y="170" text-anchor="middle" font-size="24" fill="#4f5f6f">test, scan</text></g>
+            <g class="pop"><rect x="290" y="20" width="246" height="180" rx="16" fill="#fbecee" stroke="#c23b50" stroke-width="3" /><text x="413" y="100" text-anchor="middle" font-size="32" font-weight="700" fill="#16212c">Review</text><text x="413" y="144" text-anchor="middle" font-size="24" fill="#4f5f6f">one approval</text></g>
+            <g class="pop"><rect x="580" y="20" width="246" height="180" rx="16" fill="#fbecee" stroke="#c23b50" stroke-width="3" /><text x="703" y="100" text-anchor="middle" font-size="32" font-weight="700" fill="#16212c">Merge</text><text x="703" y="144" text-anchor="middle" font-size="24" fill="#4f5f6f">into main</text></g>
+            <g class="fade" fill="#ffffff" stroke="#9aa8b5" stroke-width="3" stroke-dasharray="10 8"><rect x="870" y="20" width="246" height="180" rx="16" /><rect x="1160" y="20" width="246" height="180" rx="16" /><rect x="1450" y="20" width="246" height="180" rx="16" /></g>
+            <g class="fade" text-anchor="middle">
+              <text x="993" y="100" font-size="32" font-weight="700" fill="#4f5f6f">dev</text><text x="993" y="144" font-size="24" fill="#6b7a89">auto deploy</text>
+              <text x="1283" y="100" font-size="32" font-weight="700" fill="#4f5f6f">staging</text><text x="1283" y="144" font-size="24" fill="#6b7a89">1 approval</text>
+              <text x="1573" y="100" font-size="32" font-weight="700" fill="#4f5f6f">prod</text><text x="1573" y="144" font-size="24" fill="#6b7a89">2nd approver</text>
+            </g>
+            <path class="draw" pathLength="1" stroke-dasharray="1" d="M703 200 V290 H1573 V214" fill="none" stroke="#1e6fa8" stroke-width="4" />
+            <text class="fade" x="1138" y="345" text-anchor="middle" font-size="30" font-weight="600" fill="#1e6fa8">Nightly drift check flags anything changed outside the code</text>
+            <g class="fade" font-size="26" fill="#4f5f6f">
+              <rect x="0" y="430" width="60" height="38" rx="8" fill="#fbecee" stroke="#c23b50" stroke-width="3" /><text x="78" y="459">Built today</text>
+              <rect x="300" y="430" width="60" height="38" rx="8" fill="#ffffff" stroke="#9aa8b5" stroke-width="3" stroke-dasharray="8 6" /><text x="378" y="459">Phase 2: until then, an admin deploys by runbook</text>
+            </g>
+          </svg>
+        </div>
+      </section>
+    </div>
+
+    <div class="scene ops" data-composition-id="decisions" data-start="168" data-duration="8" data-label="Key decisions" data-presenter="Khai Do" data-section="Operations" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Key decisions and the reasoning behind them</h2>
+        <div class="stage" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-content: start; margin-top: 10px">
+          <div class="card edge rise"><div class="dh"><h3>Two solutions, one codebase</h3><span class="chip">Avoids drift</span></div><p>Copies of the same code would drift apart, so B is built from A’s modules</p></div>
+          <div class="card edge rise"><div class="dh"><h3>One Security account</h3><span class="chip">Cost</span></div><p>Half the fixed cost of AWS’s two-account split, with the same separation</p></div>
+          <div class="card edge rise"><div class="dh"><h3>ECS Fargate, not Kubernetes</h3><span class="chip">From the Guide</span></div><p>The Guide recommends EKS only when the team can run Kubernetes day to day</p></div>
+          <div class="card edge rise"><div class="dh"><h3>Everything can be torn down</h3><span class="chip">Cost + proof</span></div><p>Rebuilding from code proves it’s repeatable, and keeps the bill near zero</p></div>
+        </div>
+        <style>
+          .dh { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+        </style>
+      </section>
+    </div>
+
+    <div class="scene ops" data-composition-id="risks" data-start="176" data-duration="8" data-label="Top risks" data-presenter="Khai Do" data-section="Operations" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Three risks to fix before real tenant data arrives</h2>
+        <div class="stage" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-content: start; margin-top: 10px">
+          <div class="card edge rise"><span class="chip">High · T1</span><h3>Tenant isolation</h3><p>Tenants are kept apart only by the application</p><p class="fx">Fix: a database user and role per module</p></div>
+          <div class="card edge rise"><span class="chip">High · T2</span><h3>Admin access</h3><p>One stolen admin session can change anything</p><p class="fx">Fix: narrower roles and a break-glass role</p></div>
+          <div class="card edge rise"><span class="chip">High · T9</span><h3>Backups</h3><p>No copy outside the account they protect</p><p class="fx">Fix: AWS Backup to another account and region</p></div>
+        </div>
+        <div class="key rise">13 threats rated with STRIDE: the other ten are Medium or Low, acceptable for a proof of concept</div>
+        <style>
+          .fx { color: #16212c !important; font-weight: 600; border-top: 1px solid #e1e8ed; padding-top: 14px; }
+        </style>
+      </section>
+    </div>
+
+    <div class="scene ops" data-composition-id="compliance" data-start="184" data-duration="8" data-label="Compliance" data-presenter="Khai Do" data-section="Operations" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Mapped to four frameworks: support, not certification</h2>
+        <div class="stage rise" style="margin-top: 10px">
+          <table class="t">
+            <tr><th style="width: 26%">Framework</th><th style="width: 38%">Where the design helps</th><th>Not covered</th></tr>
+            <tr><td>NIST CSF 2.0</td><td>Strong on Protect and Detect</td><td>Policy, training, supplier risk</td></tr>
+            <tr><td>Essential Eight</td><td>Maturity Level 1 within reach</td><td>Staff devices, owned by client IT</td></tr>
+            <tr><td>ISO/IEC 27001:2022</td><td>Technical controls covered</td><td>People, physical, supplier controls</td></tr>
+            <tr><td>SOCI Act</td><td>Locked trail supports 12/72-hour reporting</td><td>No written reporting procedure yet</td></tr>
+          </table>
+        </div>
+        <div class="key rise">The gaps are mostly organisational, or depend on the Cobble application</div>
+      </section>
+    </div>
+
+    <div class="scene ops" data-composition-id="reflection" data-start="192" data-duration="8" data-label="Reflection" data-presenter="Khai Do" data-section="Operations" data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1">
+        <h2 class="title rise">Reflection and what’s next</h2>
+        <div class="stage" style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 10px">
+          <div id="rf-a" class="card" style="background: #ffffff; border: 3px solid #c23b50; gap: 16px">
+            <h3 style="color: #c23b50">Honest reflection</h3>
+            <p>Evidence was captured late. Screenshots taken after the demo showed setup gaps we hadn’t checked: GuardDuty and Security Hub membership.</p>
+            <p>The landing zone needed retries to deploy in order. A scripted, tested run-through earlier would have caught both.</p>
+            <p style="color: #16212c; font-weight: 600">Next time: capture evidence as each step runs.</p>
+          </div>
+          <div id="rf-b" class="card" style="background: #ffffff; border: 3px solid #0b7f8a; gap: 14px">
+            <h3 style="color: #0b7f8a">Ready to hand over</h3>
+            <p class="ok"><i></i>Both solutions deploy and tear down from code</p>
+            <p class="ok"><i></i>Every change checked and reviewed</p>
+            <p class="ok"><i></i>Eight deliverables drafted</p>
+            <p class="ok"><i></i>Phase 2 gaps named and sequenced</p>
+            <p style="color: #16212c; font-weight: 600">Decisions needed: recovery region, SQL Server edition, recovery targets</p>
+          </div>
+        </div>
+        <style>
+          .ok { display: flex; gap: 16px; align-items: center; }
+          .ok i { width: 30px; height: 30px; border-radius: 50%; background: #0b7f8a; flex: none; }
+        </style>
+      </section>
+    </div>
+
+    <div class="scene ops" data-composition-id="close" data-start="200" data-duration="8" data-label="Questions" data-presenter="Khai Do" data-section="Operations" data-bare data-width="1920" data-height="1080">
+      <section class="clip" data-start="0" data-duration="8" data-track-index="1" style="padding: 0; flex-direction: row; gap: 0">
+        <div style="width: 820px; background: #0b7f8a; color: #ffffff; padding: 120px 96px; display: flex; flex-direction: column; justify-content: center; gap: 28px">
+          <h1 class="rise" style="font-size: 116px; font-weight: 700; letter-spacing: -0.03em; line-height: 1">Questions?</h1>
+          <p class="rise" style="font-size: 30px; color: #d6f0f2">Thank you</p>
+        </div>
+        <div style="flex: 1; padding: 120px 96px; display: flex; flex-direction: column; justify-content: center; gap: 22px">
+          <p class="rise" style="font-size: 30px; font-weight: 600">Everything shown is in the repository</p>
+          <p class="rise soft" style="font-size: 26px">Terraform, runbooks, the eight deliverables and the demo evidence</p>
+          <p class="rise" style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 24px; color: #0b7f8a">github.com/G-0Z/IFB398---Cobble-AWS---T235</p>
+        </div>
+      </section>
+    </div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {}; // present mode runs this before the runtime creates it
+
+      // Header, section tag and footer on every slide, from its data-presenter / data-section.
+      const scenes = [...document.querySelectorAll(".scene")];
+      scenes.forEach((s, i) => {
+        const clip = s.querySelector(".clip");
+        const who = s.dataset.presenter, sec = s.dataset.section;
+        const num = String(i + 1).padStart(2, "0") + " of " + scenes.length;
+        if (!s.hasAttribute("data-bare")) {
+          const tag = document.createElement("p");
+          tag.className = "tag rise";
+          tag.textContent = sec;
+          clip.prepend(tag);
+        }
+        const hdr = document.createElement("div");
+        hdr.className = "hdr";
+        hdr.innerHTML = "<span>T235 | " + who + "</span><b>Cobble AWS Platform</b><span>" + sec + "</span>";
+        const ftr = document.createElement("div");
+        ftr.className = "ftr";
+        ftr.innerHTML = "<span>QUT | IFB398 | P608</span><b>" + who + "</b><span>" + num + "</span>";
+        if (i > 0 && i < scenes.length - 1) clip.append(hdr, ftr);
+      });
+
+      // One paused timeline per slide, in the slide's own local time.
+      function slide(id, build) {
+        const tl = gsap.timeline({ paused: true });
+        const q = (sel) => document.querySelectorAll('[data-composition-id="' + id + '"] ' + sel);
+        const rise = q(".rise");
+        if (rise.length) tl.fromTo(rise, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.07, ease: "power3.out" }, 0.15);
+        const draw = q(".draw");
+        if (draw.length) tl.fromTo(draw, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.8, stagger: 0.05, ease: "power2.inOut" }, 0.5);
+        const pop = q(".pop");
+        if (pop.length) tl.fromTo(pop, { opacity: 0 }, { opacity: 1, duration: 0.45, stagger: 0.06, ease: "power2.out" }, 0.3);
+        const fade = q(".fade");
+        if (fade.length) tl.fromTo(fade, { opacity: 0 }, { opacity: 1, duration: 0.5, stagger: 0.05 }, 1.0);
+        if (build) build(tl, q);
+        window.__timelines[id] = tl;
+      }
+
+      scenes.forEach((s) => {
+        const id = s.dataset.compositionId;
+        if (id === "solutions") return slide(id, (tl) => {
+          tl.fromTo("#sol-b", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.9);
+          tl.fromTo("#sol-a", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 2.3);
+        });
+        if (id === "demo-guardrail") return slide(id, (tl) => {
+          // Zoom: focus a rect of the 1690×1228 screenshot inside the 1696×610 frame.
+          const W = 1696, H = 610;
+          const focus = (x, y, w, h, pad) => {
+            const k = Math.min(W / w, H / h) * pad;
+            return { x: W / 2 - k * (x + w / 2), y: H / 2 - k * (y + h / 2), scale: k };
+          };
+          tl.set("#gz-inner", { transformOrigin: "0 0", x: (W - 1690 * (H / 1228)) / 2, y: 0, scale: H / 1228 }, 0);
+          tl.to("#gz-inner", { ...focus(1240, 0, 450, 110, 0.9), duration: 0.7, ease: "power3.inOut" }, 2.2);
+          tl.to("#gz-hl-a", { opacity: 1, duration: 0.3 }, 2.7);
+          tl.to("#gz-cap-0", { opacity: 0, duration: 0.3 }, 2.2);
+          tl.to("#gz-cap-1", { opacity: 1, duration: 0.3 }, 2.6);
+          tl.to("#gz-inner", { ...focus(40, 930, 1100, 210, 0.95), duration: 0.8, ease: "power3.inOut" }, 3.8);
+          tl.to("#gz-hl-b", { opacity: 1, duration: 0.3 }, 4.4);
+          tl.to("#gz-cap-1", { opacity: 0, duration: 0.3 }, 3.8);
+          tl.to("#gz-cap-2", { opacity: 1, duration: 0.3 }, 4.2);
+        });
+        if (id === "demo-data") return slide(id, (tl, q) => {
+          tl.fromTo(q(".dd-hl"), { opacity: 0 }, { opacity: 1, duration: 0.4, stagger: 0.2 }, 1.2);
+        });
+        if (id === "cost") return slide(id, (tl, q) => {
+          tl.fromTo("#cost-bar", { scaleX: 0 }, { scaleX: 1, duration: 1.0, ease: "power3.out" }, 0.6);
+          tl.to(q(".idle"), { opacity: 0.2, duration: 0.5 }, 2.4);
+          tl.to("#cost-790", { opacity: 0, duration: 0.3 }, 2.4);
+          tl.to("#cost-475", { opacity: 1, duration: 0.4 }, 2.6);
+        });
+        if (id === "reflection") return slide(id, (tl) => {
+          tl.fromTo("#rf-a", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.9);
+          tl.fromTo("#rf-b", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 2.3);
+        });
+        slide(id);
+      });
+      window.__timelines["deck"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>
