@@ -22,7 +22,7 @@ deployed into AWS, shown in the console, and torn down again.
 | AWS accounts | 1 | 6: management, security, shared services, dev, staging, prod |
 | What you can see running | Encryption, audit logging, threat detection, a private network, a budget alert | All of B, plus web servers in private subnets behind a load balancer, a private database, auto scaling and a web firewall |
 | Extra security | | Guardrails no one can switch off, single sign-on, tamper-proof audit logs, central security monitoring |
-| Cost (AUD) | About A$0 (deployed only for demos) | Demo: about A$0.22 an hour. Everything running: about A$790 a month |
+| Cost (AUD) | About A$0 (deployed only for demos) | Demo: about A$0.35 an hour with the landing zone and dev (A$0.22 for the workload alone). Everything running: about A$790 a month |
 | Code | [`infrastructure/solution-b/`](infrastructure/solution-b/) | [`infrastructure/solution-a/`](infrastructure/solution-a/) |
 
 Solution B can be shown working today for almost nothing. Solution A is what
@@ -34,6 +34,19 @@ prototype.
 
 You need Terraform, the AWS CLI and a sign-in to the team's AWS account.
 [runbooks/README.md](runbooks/README.md) has the full steps.
+
+**The demo we show is Solution A's landing zone with a dev environment**,
+built and removed with one command each way
+([quickstart](runbooks/demo-landing-zone-quickstart.md)):
+
+```powershell
+cd infrastructure/solution-a
+.\lz-dev.ps1 up       # about 15 minutes: security services + dev, in the existing accounts
+.\lz-dev.ps1 status   # what's running in each account
+.\lz-dev.ps1 down     # about 10 minutes: back to A$0 an hour. Accounts and guardrails stay
+```
+
+Solution B, and Solution A's workload on its own, run straight from Terraform:
 
 ```powershell
 # Solution B: about 5 minutes, 48 resources
@@ -90,8 +103,11 @@ deliberate, and Solution A shows the full answer.
 
 ## Status
 
-In progress. Solution B and Solution A's workload both deploy, tear down and
-redeploy in the team's AWS account, and every change is checked
-automatically. Solution A's multi-account landing zone is complete as code
-and passes the same checks. The status of each deliverable is in
-[docs/README.md](docs/README.md).
+In progress. Both solutions deploy, tear down and redeploy in AWS, and every
+change is checked automatically.
+
+- **Solution A, landing zone + dev:** deployed and removed twice on 18 October 2026, and the second cycle was recorded. Each `up` adds 68 security resources and 75 in dev; each `down` removes the same 143. The 4 Cobble accounts, sign-in and guardrails stay between runs. [Logs](infrastructure/solution-a/evidence/)
+- **Solution A, workload only:** 66 resources in one account.
+- **Solution B:** 48 resources in one account.
+
+The status of each deliverable is in [docs/README.md](docs/README.md).

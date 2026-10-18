@@ -1,0 +1,404 @@
+
+>> terraform init -input=false -no-color   (1-organization)
+Initializing the backend...
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/aws v5.100.0
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+>> terraform init -input=false -no-color   (2-security)
+Initializing the backend...
+
+Initializing modules...
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/aws v5.100.0
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+>> terraform init -input=false -no-color -reconfigure -backend-config=key=solution-a/workload/dev/terraform.tfstate   (workload)
+Initializing the backend...
+
+Successfully configured the backend "s3"! Terraform will automatically
+use this backend unless the backend configuration changes.
+
+Initializing modules...
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/tls from the dependency lock file
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/aws v5.100.0
+- Using previously-installed hashicorp/tls v4.4.1
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+>> terraform init -input=false -no-color   (identity)
+Initializing the backend...
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/aws v5.100.0
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+>> terraform apply -auto-approve -input=false -no-color   (identity)
+data.aws_ssoadmin_instances.this: Reading...
+data.aws_ssoadmin_instances.this: Read complete after 1s [id=ap-southeast-2]
+aws_identitystore_group.this["developers"]: Refreshing state... [id=d-97679ebd7b/29ae6498-2041-702b-0152-149489ee3834]
+aws_identitystore_group.this["auditors"]: Refreshing state... [id=d-97679ebd7b/49ae6448-6051-70f0-fe22-8c2ff5efabad]
+aws_identitystore_group.this["platform-admins"]: Refreshing state... [id=d-97679ebd7b/e97e8468-00f1-704d-7f74-9dee91d6869e]
+aws_identitystore_user.this["max.gosling"]: Refreshing state... [id=d-97679ebd7b/f95e7498-1091-700e-87de-6576e6dc146d]
+aws_identitystore_group_membership.this["max.gosling/platform-admins"]: Refreshing state... [id=d-97679ebd7b/f9eeb408-10a1-708c-c3bb-c5abac9824c9]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+
+Terraform will perform the following actions:
+
+  # aws_identitystore_user.this["max.gosling"] will be updated in-place
+  ~ resource "aws_identitystore_user" "this" {
+        id                 = "d-97679ebd7b/f95e7498-1091-700e-87de-6576e6dc146d"
+        # (12 unchanged attributes hidden)
+
+      ~ emails {
+          ~ value   = "n11543027@qut.edu.au" -> "t235cobbleaws+max@gmail.com"
+            # (2 unchanged attributes hidden)
+        }
+
+        # (1 unchanged block hidden)
+    }
+
+Plan: 0 to add, 1 to change, 0 to destroy.
+aws_identitystore_user.this["max.gosling"]: Modifying... [id=d-97679ebd7b/f95e7498-1091-700e-87de-6576e6dc146d]
+aws_identitystore_user.this["max.gosling"]: Modifications complete after 0s [id=d-97679ebd7b/f95e7498-1091-700e-87de-6576e6dc146d]
+
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+
+Outputs:
+
+groups = {
+  "cobble-auditors" = "49ae6448-6051-70f0-fe22-8c2ff5efabad"
+  "cobble-developers" = "29ae6498-2041-702b-0152-149489ee3834"
+  "cobble-platform-admins" = "e97e8468-00f1-704d-7f74-9dee91d6869e"
+}
+users = [
+  "max.gosling",
+]
+
+>> terraform plan -input=false -no-color -out=org.tfplan   (1-organization)
+data.aws_ssoadmin_instances.this: Reading...
+aws_organizations_policy.guardrail["deny-root-user"]: Refreshing state... [id=p-xhrtz3qk]
+aws_iam_service_linked_role.access_analyzer: Refreshing state... [id=arn:aws:iam::669591255093:role/aws-service-role/access-analyzer.amazonaws.com/AWSServiceRoleForAccessAnalyzer]
+aws_organizations_policy.guardrail["deny-leave-organization"]: Refreshing state... [id=p-vryb86vj]
+aws_organizations_policy.guardrail["protect-security-services"]: Refreshing state... [id=p-qgiiqyfx]
+aws_organizations_policy.guardrail["restrict-regions"]: Refreshing state... [id=p-qrnup5yu]
+aws_organizations_organization.this: Refreshing state... [id=o-b60hme0nfl]
+data.aws_ssoadmin_instances.this: Read complete after 0s [id=ap-southeast-2]
+aws_ssoadmin_permission_set.this["ReadOnly"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_permission_set.this["Developer"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3ef1aafd2fbb3fdd,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+data.aws_identitystore_group.this["developers"]: Reading...
+data.aws_identitystore_group.this["auditors"]: Reading...
+data.aws_identitystore_group.this["platform-admins"]: Reading...
+aws_ssoadmin_permission_set.this["PlatformAdmin"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+data.aws_identitystore_group.this["auditors"]: Read complete after 0s [id=49ae6448-6051-70f0-fe22-8c2ff5efabad]
+data.aws_identitystore_group.this["developers"]: Read complete after 0s [id=29ae6498-2041-702b-0152-149489ee3834]
+data.aws_identitystore_group.this["platform-admins"]: Read complete after 0s [id=e97e8468-00f1-704d-7f74-9dee91d6869e]
+aws_ssoadmin_managed_policy_attachment.this["PlatformAdmin"]: Refreshing state... [id=arn:aws:iam::aws:policy/AdministratorAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_managed_policy_attachment.this["ReadOnly"]: Refreshing state... [id=arn:aws:iam::aws:policy/ReadOnlyAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_managed_policy_attachment.this["Developer"]: Refreshing state... [id=arn:aws:iam::aws:policy/PowerUserAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3ef1aafd2fbb3fdd,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_organizations_policy_attachment.guardrail["deny-root-user"]: Refreshing state... [id=r-m9si:p-xhrtz3qk]
+aws_organizations_policy_attachment.guardrail["restrict-regions"]: Refreshing state... [id=r-m9si:p-qrnup5yu]
+aws_organizations_policy_attachment.guardrail["protect-security-services"]: Refreshing state... [id=r-m9si:p-qgiiqyfx]
+aws_organizations_policy_attachment.guardrail["deny-leave-organization"]: Refreshing state... [id=r-m9si:p-vryb86vj]
+aws_organizations_organizational_unit.infrastructure: Refreshing state... [id=ou-m9si-jhsi97ox]
+aws_organizations_organizational_unit.workloads: Refreshing state... [id=ou-m9si-h7yrqefz]
+aws_organizations_organizational_unit.security: Refreshing state... [id=ou-m9si-astnnylp]
+aws_organizations_organizational_unit.production: Refreshing state... [id=ou-m9si-7qvmhlmm]
+aws_organizations_organizational_unit.non_production: Refreshing state... [id=ou-m9si-dkm2w3c4]
+aws_organizations_account.this["prod"]: Refreshing state... [id=483598626480]
+aws_organizations_account.this["security"]: Refreshing state... [id=021407434891]
+aws_organizations_account.this["staging"]: Refreshing state... [id=231217915029]
+aws_organizations_account.this["dev"]: Refreshing state... [id=740667376104]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/staging"]: Refreshing state... [id=49ae6448-6051-70f0-fe22-8c2ff5efabad,GROUP,231217915029,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["developers/ReadOnly/staging"]: Refreshing state... [id=29ae6498-2041-702b-0152-149489ee3834,GROUP,231217915029,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/management"]: Refreshing state... [id=49ae6448-6051-70f0-fe22-8c2ff5efabad,GROUP,669591255093,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/dev"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,740667376104,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/security"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,021407434891,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["developers/ReadOnly/prod"]: Refreshing state... [id=29ae6498-2041-702b-0152-149489ee3834,GROUP,483598626480,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/management"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,669591255093,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/prod"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,483598626480,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/security"]: Refreshing state... [id=49ae6448-6051-70f0-fe22-8c2ff5efabad,GROUP,021407434891,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/prod"]: Refreshing state... [id=49ae6448-6051-70f0-fe22-8c2ff5efabad,GROUP,483598626480,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/dev"]: Refreshing state... [id=49ae6448-6051-70f0-fe22-8c2ff5efabad,GROUP,740667376104,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/staging"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,231217915029,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["developers/Developer/dev"]: Refreshing state... [id=29ae6498-2041-702b-0152-149489ee3834,GROUP,740667376104,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3ef1aafd2fbb3fdd,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+
+>> terraform apply -input=false -no-color org.tfplan   (1-organization)
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+account_ids = {
+  "dev" = "740667376104"
+  "prod" = "483598626480"
+  "security" = "021407434891"
+  "staging" = "231217915029"
+}
+guardrails = [
+  "deny-leave-organization",
+  "deny-root-user",
+  "protect-security-services",
+  "restrict-regions",
+]
+organization_id = "o-b60hme0nfl"
+
+>> terraform apply -auto-approve -input=false -no-color -var security_account_id=021407434891   (2-security)
+data.aws_organizations_organization.management: Reading...
+module.management_account_baseline.data.aws_caller_identity.current: Reading...
+module.management_account_baseline.aws_s3_account_public_access_block.this: Refreshing state... [id=669591255093]
+aws_securityhub_account.management: Refreshing state... [id=669591255093]
+module.management_account_baseline.aws_ebs_encryption_by_default.this: Refreshing state... [id=terraform-20261018103108138700000001]
+module.management_account_baseline.aws_iam_account_password_policy.this: Refreshing state... [id=iam-account-password-policy]
+module.management_account_baseline.aws_iam_role.config: Refreshing state... [id=cobble-management-config-recorder]
+module.management_account_baseline.data.aws_caller_identity.current: Read complete after 0s [id=669591255093]
+data.aws_caller_identity.current: Reading...
+data.aws_organizations_organization.this: Reading...
+data.aws_region.current: Reading...
+module.access_logs.data.aws_caller_identity.current: Reading...
+aws_securityhub_account.this: Refreshing state... [id=021407434891]
+aws_guardduty_detector.this: Refreshing state... [id=90c4ecb9baa34128a8fbd3a12f399e43]
+data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.access_logs.data.aws_elb_service_account.current: Reading...
+module.access_logs.data.aws_elb_service_account.current: Read complete after 0s [id=783225319266]
+aws_cloudwatch_event_rule.high_severity_findings: Refreshing state... [id=cobble-high-severity-findings]
+data.aws_caller_identity.current: Read complete after 0s [id=021407434891]
+module.account_baseline.data.aws_caller_identity.current: Reading...
+module.access_logs.data.aws_caller_identity.current: Read complete after 0s [id=021407434891]
+aws_iam_role.config_aggregator: Refreshing state... [id=cobble-config-aggregator]
+module.account_baseline.data.aws_caller_identity.current: Read complete after 0s [id=021407434891]
+module.account_baseline.aws_s3_account_public_access_block.this: Refreshing state... [id=021407434891]
+module.account_baseline.aws_iam_account_password_policy.this: Refreshing state... [id=iam-account-password-policy]
+module.account_baseline.aws_iam_role.config: Refreshing state... [id=cobble-security-config-recorder]
+module.account_baseline.aws_ebs_encryption_by_default.this: Refreshing state... [id=terraform-20261018103108364900000001]
+aws_securityhub_standards_subscription.cis: Refreshing state... [id=arn:aws:securityhub:ap-southeast-2:021407434891:subscription/cis-aws-foundations-benchmark/v/3.0.0]
+aws_securityhub_standards_subscription.fsbp: Refreshing state... [id=arn:aws:securityhub:ap-southeast-2:021407434891:subscription/aws-foundational-security-best-practices/v/1.0.0]
+aws_organizations_delegated_administrator.config: Refreshing state... [id=021407434891/config.amazonaws.com]
+aws_securityhub_organization_admin_account.this: Refreshing state... [id=021407434891]
+aws_organizations_delegated_administrator.access_analyzer: Refreshing state... [id=021407434891/access-analyzer.amazonaws.com]
+aws_guardduty_organization_admin_account.this: Refreshing state... [id=021407434891]
+module.access_logs.aws_s3_bucket.this: Refreshing state... [id=cobble-security-access-logs-021407434891]
+aws_securityhub_organization_configuration.this: Refreshing state... [id=021407434891]
+module.trail_bucket.aws_s3_bucket.this: Refreshing state... [id=cobble-audit-logs-021407434891]
+aws_accessanalyzer_analyzer.organization: Refreshing state... [id=cobble-organization]
+module.config_bucket.aws_s3_bucket.this: Refreshing state... [id=cobble-config-history-021407434891]
+aws_guardduty_organization_configuration.this: Refreshing state... [id=90c4ecb9baa34128a8fbd3a12f399e43]
+module.access_logs.aws_s3_bucket_public_access_block.this: Refreshing state... [id=cobble-security-access-logs-021407434891]
+module.access_logs.aws_s3_bucket_versioning.this: Refreshing state... [id=cobble-security-access-logs-021407434891]
+module.access_logs.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cobble-security-access-logs-021407434891]
+module.access_logs.aws_s3_bucket_policy.this: Refreshing state... [id=cobble-security-access-logs-021407434891]
+aws_iam_role_policy_attachment.config_aggregator: Refreshing state... [id=cobble-config-aggregator-20261018103111530000000004]
+data.aws_organizations_organization.management: Read complete after 2s [id=o-b60hme0nfl]
+aws_guardduty_member.this["231217915029"]: Refreshing state... [id=90c4ecb9baa34128a8fbd3a12f399e43:231217915029]
+aws_guardduty_member.this["740667376104"]: Refreshing state... [id=90c4ecb9baa34128a8fbd3a12f399e43:740667376104]
+aws_guardduty_member.this["483598626480"]: Refreshing state... [id=90c4ecb9baa34128a8fbd3a12f399e43:483598626480]
+data.aws_organizations_organization.this: Read complete after 2s [id=o-b60hme0nfl]
+aws_securityhub_member.this["231217915029"]: Refreshing state... [id=231217915029]
+aws_securityhub_member.this["740667376104"]: Refreshing state... [id=740667376104]
+aws_securityhub_member.this["483598626480"]: Refreshing state... [id=483598626480]
+module.trail_bucket.aws_s3_bucket_logging.this: Refreshing state... [id=cobble-audit-logs-021407434891]
+module.trail_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=cobble-audit-logs-021407434891]
+module.trail_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=cobble-audit-logs-021407434891]
+aws_kms_key.security: Refreshing state... [id=ff87e8c6-6eea-4f82-89aa-44190e8bfee4]
+module.account_baseline.aws_iam_role_policy_attachment.config: Refreshing state... [id=cobble-security-config-recorder-20261018103111229200000003]
+module.account_baseline.aws_config_configuration_recorder.this: Refreshing state... [id=cobble-security-recorder]
+aws_config_configuration_aggregator.organization: Refreshing state... [id=cobble-organization]
+module.config_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=cobble-config-history-021407434891]
+module.config_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=cobble-config-history-021407434891]
+module.config_bucket.aws_s3_bucket_logging.this: Refreshing state... [id=cobble-config-history-021407434891]
+module.trail_bucket.aws_s3_bucket_policy.this[0]: Refreshing state... [id=cobble-audit-logs-021407434891]
+module.management_account_baseline.aws_iam_role_policy_attachment.config: Refreshing state... [id=cobble-management-config-recorder-20261018103110614000000002]
+module.management_account_baseline.aws_config_configuration_recorder.this: Refreshing state... [id=cobble-management-recorder]
+module.config_bucket.aws_s3_bucket_policy.this[0]: Refreshing state... [id=cobble-config-history-021407434891]
+aws_sns_topic.security_alerts: Refreshing state... [id=arn:aws:sns:ap-southeast-2:021407434891:cobble-security-alerts]
+aws_kms_alias.security: Refreshing state... [id=alias/cobble-security]
+module.account_baseline.aws_config_delivery_channel.this: Refreshing state... [id=cobble-security-delivery]
+module.account_baseline.aws_iam_role_policy.config_delivery: Refreshing state... [id=cobble-security-config-recorder:cobble-security-config-delivery]
+module.trail_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cobble-audit-logs-021407434891]
+module.config_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cobble-config-history-021407434891]
+module.management_account_baseline.aws_iam_role_policy.config_delivery: Refreshing state... [id=cobble-management-config-recorder:cobble-management-config-delivery]
+module.management_account_baseline.aws_config_delivery_channel.this: Refreshing state... [id=cobble-management-delivery]
+module.account_baseline.aws_config_configuration_recorder_status.this: Refreshing state... [id=cobble-security-recorder]
+module.management_account_baseline.aws_config_configuration_recorder_status.this: Refreshing state... [id=cobble-management-recorder]
+aws_sns_topic_policy.security_alerts: Refreshing state... [id=arn:aws:sns:ap-southeast-2:021407434891:cobble-security-alerts]
+aws_sns_topic_subscription.security_alerts_email: Refreshing state... [id=arn:aws:sns:ap-southeast-2:021407434891:cobble-security-alerts:4d5e22fe-d027-4e18-8ff5-2ed85e651976]
+aws_cloudwatch_event_target.email_security_team: Refreshing state... [id=cobble-high-severity-findings-terraform-20261018103123834000000005]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Refreshing state... [id=cobble-security-access-logs-021407434891]
+module.trail_bucket.aws_s3_bucket_object_lock_configuration.this[0]: Refreshing state... [id=cobble-audit-logs-021407434891]
+module.trail_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Refreshing state... [id=cobble-audit-logs-021407434891]
+module.config_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Refreshing state... [id=cobble-config-history-021407434891]
+aws_cloudtrail.organization: Refreshing state... [id=arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail]
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+audit_log_bucket_name = "cobble-audit-logs-021407434891"
+config_bucket_name = "cobble-config-history-021407434891"
+config_kms_key_arn = "arn:aws:kms:ap-southeast-2:021407434891:key/ff87e8c6-6eea-4f82-89aa-44190e8bfee4"
+organization_trail_arn = "arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail"
+security_alerts_topic_arn = "arn:aws:sns:ap-southeast-2:021407434891:cobble-security-alerts"
+
+>> terraform apply -auto-approve -input=false -no-color -var-file=dev.tfvars -var account_id=740667376104 -var assume_role_name=OrganizationAccountAccessRole -var container_image=public.ecr.aws/nginx/nginx:stable -var read_only_root_filesystem=false -var enable_github_deploy=false -var app_max_count=2 -var alert_email=n11543027@qut.edu.au -var config_bucket_name=cobble-config-history-021407434891 -var config_kms_key_arn=arn:aws:kms:ap-southeast-2:021407434891:key/ff87e8c6-6eea-4f82-89aa-44190e8bfee4   (workload)
+module.app.data.aws_region.current: Reading...
+module.access_logs.data.aws_elb_service_account.current: Reading...
+module.access_logs.data.aws_caller_identity.current: Reading...
+module.account_baseline[0].data.aws_caller_identity.current: Reading...
+module.app.aws_ecs_cluster.this: Refreshing state... [id=arn:aws:ecs:ap-southeast-2:740667376104:cluster/cobble-dev]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Refreshing state... [id=740667376104]
+module.account_baseline[0].aws_iam_account_password_policy.this: Refreshing state... [id=iam-account-password-policy]
+module.account_baseline[0].aws_iam_role.config: Refreshing state... [id=cobble-dev-config-recorder]
+module.network.module.flow_log_destination.aws_iam_role.this: Refreshing state... [id=cobble-dev-vpc-flow-logs]
+module.app.aws_iam_role.execution: Refreshing state... [id=cobble-dev-task-execution]
+module.access_logs.data.aws_elb_service_account.current: Read complete after 0s [id=783225319266]
+module.app.data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.network.data.aws_region.current: Reading...
+module.network.data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.database.aws_db_parameter_group.this: Refreshing state... [id=cobble-dev-postgres16]
+data.aws_region.current: Reading...
+data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.account_baseline[0].data.aws_caller_identity.current: Read complete after 0s [id=740667376104]
+module.network.aws_eip.nat[0]: Refreshing state... [id=eipalloc-0455c1c1ec27e674b]
+aws_budgets_budget.monthly: Refreshing state... [id=740667376104:cobble-dev-monthly-cost]
+module.access_logs.data.aws_caller_identity.current: Read complete after 0s [id=740667376104]
+module.app.aws_iam_role.task: Refreshing state... [id=cobble-dev-task]
+module.account_baseline[0].aws_ebs_encryption_by_default.this: Refreshing state... [id=terraform-20261018103300020400000001]
+module.network.aws_vpc.this: Refreshing state... [id=vpc-0e36a159119eaa3cc]
+module.network.data.aws_availability_zones.available: Reading...
+data.aws_caller_identity.current: Reading...
+module.network.data.aws_availability_zones.available: Read complete after 0s [id=ap-southeast-2]
+data.aws_caller_identity.current: Read complete after 0s [id=740667376104]
+aws_kms_key.this: Refreshing state... [id=1e1394ad-2ea5-4200-bd28-db160f8bea80]
+module.data_bucket.aws_s3_bucket.this: Refreshing state... [id=cobble-dev-data-740667376104]
+module.access_logs.aws_s3_bucket.this: Refreshing state... [id=cobble-dev-access-logs-740667376104]
+aws_kms_alias.this: Refreshing state... [id=alias/cobble-dev]
+module.app.aws_cloudwatch_log_group.this: Refreshing state... [id=/cobble-dev/app]
+module.network.aws_route_table.database[0]: Refreshing state... [id=rtb-08066669b8eefdf24]
+module.network.aws_internet_gateway.this: Refreshing state... [id=igw-0e280329259cfcedb]
+module.network.aws_subnet.database[1]: Refreshing state... [id=subnet-0797c31b47ebcd4d6]
+module.network.aws_subnet.database[0]: Refreshing state... [id=subnet-0e03a1f4e0bdd34c3]
+module.network.aws_route_table.private: Refreshing state... [id=rtb-0508268e5a7444c11]
+module.network.aws_subnet.private[0]: Refreshing state... [id=subnet-076cbd989c6d78eaf]
+module.network.aws_subnet.private[1]: Refreshing state... [id=subnet-024896ee5edd3cfa8]
+module.network.aws_default_security_group.this[0]: Refreshing state... [id=sg-02aa9fd9decd74ca7]
+module.network.module.flow_log_destination.aws_cloudwatch_log_group.this: Refreshing state... [id=/cobble-dev/vpc-flow-logs]
+module.network.aws_subnet.public[0]: Refreshing state... [id=subnet-041809c7284e17b21]
+module.network.aws_subnet.public[1]: Refreshing state... [id=subnet-0fb6071ce9d96651f]
+module.network.aws_route_table.public: Refreshing state... [id=rtb-05cde5fe029757d4b]
+module.database.aws_security_group.this: Refreshing state... [id=sg-0a0f40386841e3438]
+module.app.aws_security_group.tasks: Refreshing state... [id=sg-0736699780ab9f2a3]
+module.app.aws_security_group.load_balancer: Refreshing state... [id=sg-0401c5f8099aa791b]
+module.network.aws_route_table_association.database[1]: Refreshing state... [id=rtbassoc-02a33c76eaa0e8af8]
+module.network.aws_route_table_association.database[0]: Refreshing state... [id=rtbassoc-03487c04f156f1932]
+module.app.aws_lb_target_group.this: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:targetgroup/cobble-dev-tg/4eb7d4d8e9400060]
+module.network.aws_vpc_endpoint.s3[0]: Refreshing state... [id=vpce-07b4a40dc658dfcab]
+module.data_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cobble-dev-data-740667376104]
+module.data_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=cobble-dev-data-740667376104]
+module.data_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=cobble-dev-data-740667376104]
+module.access_logs.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cobble-dev-access-logs-740667376104]
+module.access_logs.aws_s3_bucket_public_access_block.this: Refreshing state... [id=cobble-dev-access-logs-740667376104]
+module.access_logs.aws_s3_bucket_versioning.this: Refreshing state... [id=cobble-dev-access-logs-740667376104]
+module.network.aws_nat_gateway.this[0]: Refreshing state... [id=nat-07f40606964d961cb]
+module.network.aws_route_table_association.public[0]: Refreshing state... [id=rtbassoc-0adfe52eb51203acc]
+module.network.aws_route_table_association.public[1]: Refreshing state... [id=rtbassoc-05df8b46a7fb57c14]
+module.app.aws_vpc_security_group_egress_rule.tasks_https_out: Refreshing state... [id=sgr-0b1a061773fb0699f]
+module.network.aws_route_table_association.private[1]: Refreshing state... [id=rtbassoc-0b9918b0436e892c3]
+module.network.aws_route_table_association.private[0]: Refreshing state... [id=rtbassoc-0a4669c897c7338c5]
+module.app.aws_vpc_security_group_egress_rule.load_balancer_to_tasks: Refreshing state... [id=sgr-0849e3a17a9fa2c09]
+module.app.aws_vpc_security_group_ingress_rule.tasks_from_load_balancer: Refreshing state... [id=sgr-005e7e9c2acb201e9]
+module.app.aws_vpc_security_group_ingress_rule.load_balancer_http: Refreshing state... [id=sgr-044fa97683d0e34c2]
+module.access_logs.aws_s3_bucket_policy.this: Refreshing state... [id=cobble-dev-access-logs-740667376104]
+module.network.aws_route.private_to_nat[0]: Refreshing state... [id=r-rtb-0508268e5a7444c111080289494]
+module.database.aws_db_subnet_group.this: Refreshing state... [id=cobble-dev]
+module.app.aws_iam_role_policy_attachment.execution: Refreshing state... [id=cobble-dev-task-execution-20261018103302403200000003]
+module.account_baseline[0].aws_config_configuration_recorder.this: Refreshing state... [id=cobble-dev-recorder]
+module.account_baseline[0].aws_iam_role_policy_attachment.config: Refreshing state... [id=cobble-dev-config-recorder-20261018103302231800000002]
+module.account_baseline[0].aws_iam_role_policy.config_delivery: Refreshing state... [id=cobble-dev-config-recorder:cobble-dev-config-delivery]
+module.network.module.flow_log_destination.aws_iam_role_policy.this: Refreshing state... [id=cobble-dev-vpc-flow-logs:cobble-dev-vpc-flow-logs]
+module.data_bucket.aws_s3_bucket_logging.this: Refreshing state... [id=cobble-dev-data-740667376104]
+module.app.aws_lb.this: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:loadbalancer/app/cobble-dev-alb/851103d451d0726b]
+module.database.aws_vpc_security_group_ingress_rule.from_allowed[0]: Refreshing state... [id=sgr-0d65654a57dc448ea]
+module.network.aws_flow_log.this: Refreshing state... [id=fl-03c19905a47175cbc]
+module.database.aws_db_instance.this: Refreshing state... [id=db-OKDJTQ57A3XOB2CGKVJAW7GEMA]
+module.account_baseline[0].aws_config_delivery_channel.this: Refreshing state... [id=cobble-dev-delivery]
+module.app.aws_iam_role_policy.task[0]: Refreshing state... [id=cobble-dev-task:cobble-dev-app-permissions]
+module.account_baseline[0].aws_config_configuration_recorder_status.this: Refreshing state... [id=cobble-dev-recorder]
+module.app.aws_lb_listener.http_forward[0]: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:listener/app/cobble-dev-alb/851103d451d0726b/a36ec09d1f632c3f]
+module.app.aws_iam_role_policy.execution_secrets[0]: Refreshing state... [id=cobble-dev-task-execution:cobble-dev-read-secrets]
+module.app.aws_ecs_task_definition.this: Refreshing state... [id=cobble-dev]
+module.app.aws_ecs_service.this: Refreshing state... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev]
+module.app.aws_appautoscaling_target.this[0]: Refreshing state... [id=service/cobble-dev/cobble-dev]
+module.data_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Refreshing state... [id=cobble-dev-data-740667376104]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Refreshing state... [id=cobble-dev-access-logs-740667376104]
+module.app.aws_appautoscaling_policy.cpu[0]: Refreshing state... [id=cobble-dev-cpu]
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+app_url = "http://cobble-dev-alb-990692954.ap-southeast-2.elb.amazonaws.com"
+data_bucket_name = "cobble-dev-data-740667376104"
+database_endpoint = "cobble-dev.c5g44imkq062.ap-southeast-2.rds.amazonaws.com"
+kms_key_arn = "arn:aws:kms:ap-southeast-2:740667376104:key/1e1394ad-2ea5-4200-bd28-db160f8bea80"
+load_balancer_dns_name = "cobble-dev-alb-990692954.ap-southeast-2.elb.amazonaws.com"

@@ -8,7 +8,7 @@ environment's settings fit in one file.
 | Environment | Values | Runs in | Used for |
 |---|---|---|---|
 | demo | [`demo.tfvars`](demo.tfvars) | The Solution B account | Showing Solution A working, then tearing it down ([runbook](../../../runbooks/demo-solution-a.md)) |
-| dev | [`dev.tfvars`](dev.tfvars) | The dev account | Developers trying changes |
+| dev | [`dev.tfvars`](dev.tfvars) | The dev account | Developers trying changes, and the landing zone demo ([`lz-dev.ps1`](../lz-dev.ps1)) |
 | staging | [`staging.tfvars`](staging.tfvars) | The staging account | Rehearsing a prod release |
 | prod | [`prod.tfvars`](prod.tfvars) | The prod account | Tenants |
 

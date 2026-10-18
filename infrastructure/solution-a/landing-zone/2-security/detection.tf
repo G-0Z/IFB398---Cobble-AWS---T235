@@ -39,6 +39,13 @@ resource "aws_guardduty_member" "this" {
   account_id  = each.key
   email       = each.value
 
+  # AWS doesn't return an organisation member's email and reports it as
+  # invited, so without this every re-apply replaces the member, which
+  # auto-enable ALL then refuses.
+  lifecycle {
+    ignore_changes = [email, invite]
+  }
+
   depends_on = [aws_guardduty_organization_configuration.this]
 }
 
@@ -62,6 +69,11 @@ resource "aws_securityhub_member" "this" {
   for_each = local.member_accounts
 
   account_id = each.key
+
+  # AWS reports organisation members as invited; ignore it or every re-apply replaces them.
+  lifecycle {
+    ignore_changes = [invite]
+  }
 
   depends_on = [aws_securityhub_organization_configuration.this]
 }

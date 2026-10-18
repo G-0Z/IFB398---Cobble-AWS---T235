@@ -9,7 +9,7 @@ It comes in two parts, and you don't need the whole thing to see it working:
 | Part | What it is | How to see it |
 |---|---|---|
 | [`workload/`](workload/) | One Cobble environment: the network, web servers, database and data bucket. The same code builds every environment; only the settings file differs (`demo`, `dev`, `staging` or `prod.tfvars`) | **Demo:** deploy it into the team's account for a few hours (about A$0.22 an hour), then tear it down. [runbooks/demo-solution-a.md](../../runbooks/demo-solution-a.md) |
-| [`landing-zone/`](landing-zone/) | The organisation around the environments: people, accounts and guardrails, central security, the container registry. Set up once and left running | [runbooks/deploy-solution-a.md](../../runbooks/deploy-solution-a.md) |
+| [`landing-zone/`](landing-zone/) | The organisation around the environments: people, accounts and guardrails, central security, the container registry. Set up once and left running | **Demo (what we show):** [`lz-dev.ps1`](lz-dev.ps1) `up` adds the security services and a dev environment to the existing accounts in about 15 minutes, and `down` removes them in about 10. [Quickstart](../../runbooks/demo-landing-zone-quickstart.md). Full build: [runbooks/deploy-solution-a.md](../../runbooks/deploy-solution-a.md) |
 
 Why it's designed this way is explained in
 [deliverable 2's key decisions](../../docs/02-landing-zone-design/README.md#key-decisions).

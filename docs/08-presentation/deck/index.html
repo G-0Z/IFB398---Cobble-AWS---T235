@@ -81,12 +81,12 @@
           { "sceneId": "access", "notes": "People sign in once through IAM Identity Center with MFA. Admin sessions end after 4 hours. GitHub signs in with OIDC: one role can only look, the other deploys after a reviewer approves." },
           { "sceneId": "controls", "notes": "Enforced means a guardrail stops anyone turning it off; configured means the code builds it but an admin could change it. The biggest gap is backups." },
           { "sceneId": "departures", "notes": "Each departure from the Implementation Guide is a recorded decision with what would make us change it. Each is a swap of one building block, so the security controls stay the same." },
-          { "sceneId": "demo-intro", "notes": "Live demo. If it fails, the next slides are the evidence from the run on 17 October." },
+          { "sceneId": "demo-intro", "notes": "Live demo: lz-dev.ps1 up was run before the session (about 15 minutes). If it fails, play the recording of the 18 October run; the next slides are screenshots from the earlier run on 17 October." },
           { "sceneId": "demo-app", "notes": "terraform output app_url. nginx stands in for the Cobble app. What matters is the path: through the load balancer, from containers in private subnets." },
           { "sceneId": "demo-guardrail", "notes": "Signed in with full admin rights in cobble-dev, creating a bucket in London is refused with an explicit deny from a service control policy.", "fragments": [105.4, 107.0, 108.6] },
           { "sceneId": "demo-data", "notes": "No internet access gateway on the database. AWS generated the password and keeps it in Secrets Manager. Storage is encrypted with the account’s own key." },
           { "sceneId": "demo-detect", "notes": "A sample GuardDuty finding appears in the Security account. The Config aggregator lists all six accounts reporting OK." },
-          { "sceneId": "teardown", "notes": "Teardown in reverse order: workload, security pieces, organisation, then closing the member accounts. The same commands rebuild it." },
+          { "sceneId": "teardown", "notes": "lz-dev.ps1 down removes dev, then the security services, in about 10 minutes. The accounts, sign-in and guardrails are free, so they stay, and the next lz-dev.ps1 up reuses them. The status table proves nothing is left running." },
           { "sceneId": "stand", "notes": "Where we stand: both solutions deploy and tear down from code. Some evidence is still to capture, and four Phase 2 items close the biggest gaps." },
           { "sceneId": "cost", "notes": "Estimates for Sydney at A$1.44 per US dollar. Turning dev and staging off when idle brings Solution A to about A$475.", "fragments": [145.6, 147.2] },
           { "sceneId": "team", "notes": "Design and build ran in parallel. Every deliverable is a GitHub issue; every change is a pull request that is checked and reviewed before it merges." },
@@ -354,12 +354,12 @@
     <div class="scene dem" data-composition-id="demo-intro" data-start="88" data-duration="8" data-label="Demo" data-presenter="Max Gosling" data-section="Demo" data-width="1920" data-height="1080">
       <section class="clip" data-start="0" data-duration="8" data-track-index="1">
         <h2 class="title rise">Live demo: Solution A, deployed into dev</h2>
-        <p class="lede rise">Deployed from code, shown in the console, torn down the same day. Fallback: the evidence from our run on 17 October.</p>
+        <p class="lede rise">One command up, one command down. Fallback: the recording of our run on 18 October.</p>
         <div class="stage rise" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; align-content: start; margin-top: 18px">
-          <div class="card edge"><span class="chip">Step 1</span><h3>Landing zone</h3><p>Organisation, five accounts, guardrails, sign-in</p></div>
+          <div class="card edge"><span class="chip">Step 1</span><h3>Landing zone</h3><p>Organisation, accounts, guardrails, sign-in. Built once, kept</p></div>
           <div class="card edge"><span class="chip">Step 2</span><h3>Security</h3><p>Org trail, GuardDuty, Config, Security Hub</p></div>
           <div class="card edge"><span class="chip">Step 3</span><h3>dev workload</h3><p>Network, containers, database, data bucket</p></div>
-          <div class="card edge"><span class="chip">Step 4</span><h3>Tear down</h3><p>Destroyed from code, accounts closed</p></div>
+          <div class="card edge"><span class="chip">Step 4</span><h3>Tear down</h3><p>Security and dev destroyed from code. Accounts kept for next time</p></div>
         </div>
       </section>
     </div>
@@ -440,19 +440,19 @@
 
     <div class="scene dem" data-composition-id="teardown" data-start="128" data-duration="8" data-label="Teardown" data-presenter="Max Gosling" data-section="Demo" data-width="1920" data-height="1080">
       <section class="clip" data-start="0" data-duration="8" data-track-index="1">
-        <h2 class="title rise">Everything came down from code the same day</h2>
+        <h2 class="title rise">Everything that costs money came down with one command</h2>
         <div class="stage" style="display: flex; flex-direction: column; gap: 32px; margin-top: 14px">
           <div class="rise" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px">
-            <div class="stat"><span class="n">75</span><span class="l">workload resources</span></div>
-            <div class="stat"><span class="n">10</span><span class="l">security resources</span></div>
-            <div class="stat"><span class="n">34</span><span class="l">organisation resources</span></div>
-            <div class="stat" style="background: #fef3c7; color: #78350f"><span class="n">5</span><span class="l">accounts closed</span></div>
+            <div class="stat"><span class="n">75</span><span class="l">dev resources</span></div>
+            <div class="stat"><span class="n">68</span><span class="l">security resources</span></div>
+            <div class="stat"><span class="n">10</span><span class="l">minutes</span></div>
+            <div class="stat" style="background: #fef3c7; color: #78350f"><span class="n">A$0</span><span class="l">an hour afterwards</span></div>
           </div>
           <div class="rise" style="background: #16212c; border-radius: 16px; padding: 28px 36px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 26px; line-height: 1.55; color: #c9d3dd">
-            <p><span style="color: #fbbf24">$</span> terraform apply org-destroy.tfplan</p>
-            <p style="color: #ffffff">Apply complete! Resources: 0 added, 0 changed, <span style="color: #fbbf24">34 destroyed</span>.</p>
-            <p><span style="color: #fbbf24">$</span> aws organizations list-accounts</p>
-            <p style="color: #ffffff">cobble-dev · staging · prod · security · shared-services &#160;→&#160; <span style="color: #fbbf24">SUSPENDED</span></p>
+            <p><span style="color: #fbbf24">$</span> .\lz-dev.ps1 down</p>
+            <p style="color: #ffffff">Destroy complete! Resources: <span style="color: #fbbf24">68 destroyed</span>.</p>
+            <p><span style="color: #fbbf24">$</span> .\lz-dev.ps1 status</p>
+            <p style="color: #ffffff">dev · staging · prod · security &#160;→&#160; GuardDuty, Security Hub, Config: <span style="color: #fbbf24">False</span></p>
           </div>
         </div>
       </section>

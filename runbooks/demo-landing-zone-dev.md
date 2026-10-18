@@ -10,6 +10,49 @@ Unlike the [single-account demo](demo-solution-a.md), this shows the parts
 that need an organisation: separate accounts, guardrails that block even an
 administrator, single sign-on, and central security.
 
+## The demo cycle: deploy, destroy, redeploy
+
+The accounts are built once and kept. Each demo only builds and removes
+what costs money (security services and the dev environment).
+
+```text
+   ┌──────────────── kept between demos (free) ─────────────────┐
+   │  people and sign-in · 4 accounts · folders · 4 guardrails   │
+   └─────────────────────────────────────────────────────────────┘
+              ▲ reused, never recreated
+   ┌──────────────┐  .\lz-dev.ps1 up   ┌──────────────┐
+   │   Removed    │ ─────────────────► │   Running    │  about A$0.35/hr
+   │  (A$0/hr)    │ ◄───────────────── │ security+dev │
+   └──────────────┘  .\lz-dev.ps1 down └──────────────┘
+```
+
+Every time, in one PowerShell window:
+
+```powershell
+aws sso login --profile AdministratorAccess-669591255093
+cd C:\Users\maxgo\dev\IFB398---Cobble-AWS---T235\infrastructure\solution-a
+Set-ExecutionPolicy -Scope Process Bypass     # once per window, lets it run the script
+```
+
+| To... | Run | Takes | Done when |
+|---|---|---|---|
+| **Deploy** | `.\lz-dev.ps1 up` | About 15 minutes from removed, a few minutes if already up | It prints `Up. App: http://…` and that page loads |
+| **See what's running** | `.\lz-dev.ps1 status` | A minute | Running: GuardDuty and SecurityHub `True` in every account, plus a `Dev app:` address |
+| **Destroy** | `.\lz-dev.ps1 down` | About 10 minutes | Its final table reads `False` in every column |
+| **Redeploy** | `.\lz-dev.ps1 up` again | About 15 minutes | As for deploy. The same 4 accounts are reused |
+
+- **Safe to repeat.** Running `up` twice changes nothing the second time. If either command stops partway, fix the cause and run the same command again: it carries on from where it stopped.
+- **After each `up`:** click **Confirm subscription** in the AWS email in the `n11543027@qut.edu.au` inbox, or no security alerts arrive. `down` deletes the subscription.
+- **Never closes or creates accounts.** `up` refuses to apply an organisation change that deletes anything. Accounts are only closed by hand at the end of the project ([Decommission](#decommission-end-of-project-only)).
+- **Logs:** each run saves its output to `infrastructure/solution-a/evidence/lz-dev-<up|down>-<time>.txt`.
+- **Stuck?** See the [quickstart's error table](demo-landing-zone-quickstart.md#if-it-stops). Setting up a new computer is covered in the [quickstart](demo-landing-zone-quickstart.md#1-set-up-your-computer-once).
+
+The rest of this runbook is the same thing step by step by hand, plus what
+to show while it's up ([step 5](#5-what-to-record)) and the screenshots to
+take ([step 6](#6-evidence)).
+
+---
+
 > [!IMPORTANT]
 > **This creates 5 real AWS accounts, once.** They are permanent: the teardown empties them but never closes them. Closing an account burns its email address for good and keeps it counted against the organisation's 10-account limit for 90 days, which is what broke earlier re-runs. Close them only when the project ends ([Decommission](#decommission-end-of-project-only)).
 
@@ -20,7 +63,7 @@ administrator, single sign-on, and central security.
 |---|---|
 | **Builds** | Single sign-on for one person, 5 member accounts in their folders, 4 guardrails, central audit trail, GuardDuty, Security Hub, Config, alerts, and the dev environment (network, web server, database, data bucket) |
 | **Skips** | Step 3 (container registry): dev runs a stock nginx image instead. Staging and prod environments: their accounts are created, but nothing is deployed in them |
-| **Time** | First run: about half a day, mostly waiting for AWS. Re-runs: about an hour (steps 3 and 4 only) |
+| **Time** | First run, when the accounts didn't exist yet: about half a day, mostly waiting for AWS. Every run since: about 15 minutes up, 10 minutes down (13 and 10 on 18 October 2026) |
 | **Cost** | About A$0.30 to A$0.40 an hour while it's up, so roughly A$10 to A$15 for the session. Nothing after the teardown |
 
 **Which parts stay, which come and go:**
@@ -106,6 +149,7 @@ New-Item -ItemType Directory -Force $ev | Out-Null
 # Runs a block of commands inside a member account, then switches back to the management account.
 function Invoke-InAccount($account, [scriptblock]$do) {
   $c = aws sts assume-role --role-arn "arn:aws:iam::${account}:role/OrganizationAccountAccessRole" --role-session-name runbook --query Credentials --output json | ConvertFrom-Json
+  if (-not $c) { throw "Can't assume OrganizationAccountAccessRole in $account" }   # else the block would run in the management account
   $env:AWS_ACCESS_KEY_ID = $c.AccessKeyId; $env:AWS_SECRET_ACCESS_KEY = $c.SecretAccessKey; $env:AWS_SESSION_TOKEN = $c.SessionToken
   try { & $do } finally { Remove-Item Env:AWS_ACCESS_KEY_ID, Env:AWS_SECRET_ACCESS_KEY, Env:AWS_SESSION_TOKEN }
 }
@@ -297,9 +341,13 @@ username, not the email, and the password and MFA device set in
 password** on the sign-in page, or IAM Identity Center > Users >
 `max.gosling` > **Reset password** as the management admin.
 
-In the portal, expand an account and click a role to open its console. Use
-**CobbleReadOnly** for the tour and **CobblePlatformAdmin** only where a
-row says so. Keep the region on Sydney unless told otherwise.
+In the portal, expand an account and click a role to open its console.
+`max.gosling` is only in `cobble-platform-admins`, so use
+**CobblePlatformAdmin** for the tour. **CobbleReadOnly** is for the auditors
+group: clicking it without being an auditor gives "Account sign in error …
+No access", which is worth showing as access control working. Keep the
+region on Sydney unless told otherwise: in another region S3 says the bucket
+"can't be found" and the other services look empty.
 
 | Where | Show | What it proves |
 |---|---|---|
@@ -374,8 +422,8 @@ possible:
 
 | Portal sign-in | File | Where | Must be visible |
 |---|---|---|---|
-| Portal home | `01-portal-accounts.png` | After signing in | All 6 accounts, one expanded to show its roles |
-| Management, ReadOnly | `02-idc-groups.png` | IAM Identity Center > Groups | The 3 `cobble-` groups |
+| Portal home | `01-portal-accounts.png` | After signing in | All 5 accounts, one expanded to show its roles |
+| Management, PlatformAdmin | `02-idc-groups.png` | IAM Identity Center > Groups | The 3 `cobble-` groups |
 | | `02b-idc-users.png` | IAM Identity Center > Users | The `max.gosling` user |
 | | `03-idc-permission-sets.png` | IAM Identity Center > Permission sets | The 3 `Cobble` permission sets |
 | | `04-idc-mfa.png` | IAM Identity Center > Settings > Authentication | MFA required, email OTP on |
@@ -384,7 +432,7 @@ possible:
 | | `06b-org-policy-types.png` | Organizations > Policies | Service control policies enabled |
 | | `07-scps-root-targets.png` | Root > Policies tab | All 4 attached to Root |
 | `cobble-dev`, **PlatformAdmin** | `08-scp-deny.png` | Region US West (Oregon) > S3 > Create bucket | The SCP explicit-deny error, with role and region in view |
-| `cobble-security`, ReadOnly | `09-cloudtrail-org-trail.png` | CloudTrail > Trails | Organisation trail, multi-region, log file validation on |
+| `cobble-security`, PlatformAdmin | `09-cloudtrail-org-trail.png` | CloudTrail > Trails | Organisation trail, multi-region, log file validation on |
 | | `10-s3-object-lock.png` | S3 > `cobble-audit-logs-…` > Properties | Object Lock enabled, with retention |
 | | `11-guardduty-accounts.png` | GuardDuty > Accounts | The 4 other Cobble accounts, Enabled |
 | | `12-securityhub-standards.png` | Security Hub > Security standards | Both standards enabled |
@@ -394,7 +442,7 @@ possible:
 | | `15-sample-finding.png` | GuardDuty > Findings | The `[SAMPLE]` finding (optional) |
 | | `15b-sample-finding-cli.png` | PowerShell or CloudShell | The `create-sample-findings` command (optional) |
 | Email | `16-alert-email.png` | `n11543027@qut.edu.au` inbox | The alert for that finding (optional) |
-| `cobble-dev`, ReadOnly | `17-vpc-subnets.png` | VPC > Subnets | 6 subnets in 3 layers |
+| `cobble-dev`, PlatformAdmin | `17-vpc-subnets.png` | VPC > Subnets | 6 subnets in 3 layers |
 | | `18-vpc-flow-logs.png` | VPC > dev VPC > Flow logs | Flow log active |
 | | `19-ecs-cluster-tasks.png` | ECS > cluster > service > Tasks, then a task's Networking | Tasks running, private IP only |
 | | `20-ecs-autoscaling.png` | ECS > service > auto scaling | Max 2 tasks |
@@ -406,11 +454,11 @@ possible:
 | | `26-budget.png` | Billing > Budgets | The dev budget and its alert |
 | Browser | `27-app-url.png` | `terraform output app_url` | The page, with the load balancer address visible |
 | GitHub | `28-ci-green.png` | Actions | A green run on `main` |
-| Management, ReadOnly | `29-cost-explorer.png` | Cost Explorer, the next day ([7.4](#7-tear-down-same-day)) | Cost of the demo day |
-| Terminal | `31-teardown-dev.png`, `32-teardown-security.png` | After [7.1](#7-tear-down-same-day) and 7.2 | Each `Apply complete! ... destroyed` line |
+| Management, PlatformAdmin | `29-cost-explorer.png` | Cost Explorer, the next day ([7.4](#7-tear-down-same-day)) | Cost of the demo day |
+| Terminal | `31-teardown-dev.png`, `32-teardown-security.png` | After [7.1](#7-tear-down-same-day) and 7.2 | Each `Destroy complete! Resources: … destroyed.` line |
 
-If Budgets or Cost Explorer refuse access under ReadOnly, use PlatformAdmin
-for that shot.
+Auditors (`cobble-auditors`) can take every shot except `08-scp-deny.png`
+with **CobbleReadOnly** instead.
 
 ---
 
@@ -484,7 +532,7 @@ demo day as cost evidence.
 
 ## Running it again
 
-Steps 1 and 2 are already in place, so a re-run is:
+`.\lz-dev.ps1 up` does all of this. By hand: steps 1 and 2 are already in place, so a re-run is:
 
 1. [Step 0](#0-before-you-start): sign in, run the checklist, and run the
    values block.
