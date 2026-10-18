@@ -24,7 +24,7 @@ module.
 | Setting | Meaning | Default |
 |---|---|---|
 | `project_name` | Name prefix | required |
-| `enable_guardduty` | Turn on threat detection. Set `false` once Solution A's landing zone runs in the same account, because it then owns the one detector AWS allows | `true` |
+| `enable_guardduty` | Turn on threat detection. AWS allows one detector per account and region, so set `false` if something else (e.g. Solution A's landing zone) owns it | `true` |
 
 **Outputs:** `kms_key_arn`, `access_log_bucket_id`, `trail_arn`, `trail_bucket_name`, `guardduty_detector_id`
 

@@ -7,7 +7,10 @@
 # halve the fixed cost; splitting them later is a Phase 2 option.
 
 locals {
-  accounts = {
+  # An account whose email is left out (null) isn't created.
+  accounts = { for k, a in local.all_accounts : k => a if a.email != null }
+
+  all_accounts = {
     security = {
       name  = "cobble-security"
       email = var.account_emails.security

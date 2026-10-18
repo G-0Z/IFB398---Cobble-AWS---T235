@@ -5,7 +5,7 @@ people and groups, guardrails, central security, the container registry,
 and then the dev, staging and prod environments.
 
 > [!IMPORTANT]
-> **Most of this can't simply be torn down.** It creates five new AWS accounts, and those have to be closed by hand (see [Tear down](#tear-down)). Running everything costs about A$790 a month. **To show Solution A working without any of that, use [demo-solution-a.md](demo-solution-a.md) instead.**
+> **The five AWS accounts it creates are permanent.** Everything inside them can be torn down and rebuilt, but the accounts themselves are only closed by hand at the end of the project (see [Tear down](#tear-down)). Running everything costs about A$790 a month. **To show Solution A working without any of that, use [demo-solution-a.md](demo-solution-a.md) instead.**
 
 | | |
 |---|---|
@@ -62,7 +62,7 @@ State bucket → Organisation, accounts, → Security   → Shared Services → 
 - [ ] [Terraform](https://developer.hashicorp.com/terraform/install) 1.10 or later, and the [AWS CLI](https://aws.amazon.com/cli/)
 - [ ] Signed in to the **management account** with administrator rights, never as root
 - [ ] A monitored email address for each of the 5 new accounts, plus one for security alerts. Gmail-style plus addresses work, for example `t235cobbleaws+dev@gmail.com`
-- [ ] If Solution B is deployed in the management account: set `enable_guardduty = false` in its `poc.auto.tfvars` and apply it first. Step 1 takes over threat detection there, and AWS allows only one detector
+- [ ] If Solution B is deployed in the management account, it already owns that account's GuardDuty detector, and AWS allows only one. Either leave it there and set `enable_management_guardduty = false` in `2-security/settings.auto.tfvars` (what the demo does), or set `enable_guardduty = false` in Solution B's `poc.auto.tfvars` and apply it first
 - [ ] IAM Identity Center enabled for the organisation (console: IAM Identity Center > Enable), with **MFA required** and **Send email OTP** turned on (Settings > Authentication)
 - [ ] The costs in [infrastructure/README.md](../infrastructure/README.md#what-it-costs) agreed with the client
 
@@ -313,7 +313,8 @@ terraform plan -var-file="$e.tfvars" -var "assume_role_name=OrganizationAccountA
 |---|---|
 | dev or staging (to save cost) | `terraform destroy -var-file="$e.tfvars" -var "assume_role_name=OrganizationAccountAccessRole"` in `solution-a/workload`, after `init` with that environment's key. Run by a person: GitHub's roles can't, because a guardrail stops them switching off configuration history. Rebuild later with apply |
 | prod | Set `protect_from_deletion = false` in `prod.tfvars`, apply, then destroy. Deliberately two steps |
-| The landing zone | Not torn down routinely. The member accounts are protected and must be closed by hand in AWS Organizations. Audit logs stay locked for `audit_log_retention_days` |
+| Step 2 (security) | `terraform destroy` in `landing-zone/2-security`, after the environments. It hands the security services back from the Security account, then switches them off. The log buckets only go if `force_destroy_buckets = true`, and audit logs under a COMPLIANCE lock never do |
+| Steps 1 and 3, people, accounts | Not torn down. They cost little or nothing. The member accounts are protected and are closed by hand in AWS Organizations only at the end of the project: see [demo-landing-zone-dev.md, Decommission](demo-landing-zone-dev.md#decommission-end-of-project-only) |
 
 ---
 
@@ -325,12 +326,12 @@ terraform plan -var-file="$e.tfvars" -var "assume_role_name=OrganizationAccountA
 | Error | Usually in | Cause | Fix |
 |---|---|---|---|
 | `AWS account ID not allowed` | Any step | Wrong account, or wrong ID in the settings | `aws sts get-caller-identity`; check `settings.auto.tfvars` or the `.tfvars` file |
-| GuardDuty detector already exists | Step 1 | Solution B's threat detection is still on in the management account | Set `enable_guardduty = false` in Solution B and apply it, then retry |
+| GuardDuty detector already exists | Step 2 | Solution B's threat detection is still on in the management account | Set `enable_management_guardduty = false` in step 2, or `enable_guardduty = false` in Solution B and apply it, then retry |
 | Account limit reached creating accounts | Step 1 | A new organisation may start with a low account limit | Request an increase in Service Quotas (AWS Organizations), then retry |
 | `AlreadyInOrganizationException` / organisation already exists | Step 1 | The organisation predates Terraform | Import it (see [step 1](#step-1-organisation-accounts-guardrails-sign-in)) |
 | `AccessDenied` assuming `OrganizationAccountAccessRole` | Steps 2 to 4 | Account still being created, or not signed in to management | Wait a few minutes; check sign-in |
 | `aws_ssoadmin_instances` returns nothing | Step 1 | Identity Center not enabled | Enable it in the console first |
-| Security Hub or GuardDuty "not a delegated administrator" | Step 2 | Step 1 not applied, or still propagating | Apply step 1; wait a few minutes; retry step 2 |
+| Security Hub or GuardDuty "not a delegated administrator" | Step 2 | Delegation still propagating, or an old Security account is still registered | Wait a few minutes and retry. If it persists, see the delegated administrator row in [demo-landing-zone-dev.md](demo-landing-zone-dev.md#if-something-goes-wrong) |
 | Denied by an SCP (`explicit deny in a service control policy`) | Any step | A guardrail blocked the action | Expected for other regions and for turning off security services. Check `1-organization/policies/` |
 | `email address must be real` | Steps 1 to 4 | `@example.com` placeholders left in | Replace them |
 | `The term 'aws' is not recognized` | Before you start | AWS CLI not installed, or the terminal was opened before installing it | Install the AWS CLI, then restart the terminal or IDE |

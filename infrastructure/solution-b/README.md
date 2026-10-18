@@ -72,7 +72,7 @@ records or trust. Cylinders are S3 buckets.
 | Setting | What it does |
 |---|---|
 | `enable_demo_app` | `true` adds a load balancer and a small web server, so the MVP can show a web page. Leave it `false` except during demos |
-| `enable_guardduty` | Set to `false` once Solution A's landing zone runs in this account. It then owns the account's threat detection, and AWS allows only one |
+| `enable_guardduty` | Set to `false` if Solution A's landing zone should own this account's threat detection (AWS allows one detector). The demo leaves it `true` and sets the landing zone's `enable_management_guardduty = false` instead |
 
 ## How it differs from Solution A
 
