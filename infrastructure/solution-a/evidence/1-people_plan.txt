@@ -1,31 +1,14 @@
 data.aws_ssoadmin_instances.this: Reading...
 data.aws_ssoadmin_instances.this: Read complete after 0s [id=ap-southeast-2]
+aws_identitystore_group.this["auditors"]: Refreshing state... [id=d-97679ebd7b/399e44c8-4051-7057-34cb-1fd8ceef7023]
+aws_identitystore_group.this["developers"]: Refreshing state... [id=d-97679ebd7b/d98e0418-1061-7075-4abe-d51109fcb12b]
+aws_identitystore_user.this["max.gosling"]: Refreshing state... [id=d-97679ebd7b/99aee458-00e1-7021-2e03-82333dc281b4]
 
 Terraform used the selected providers to generate the following execution
 plan. Resource actions are indicated with the following symbols:
   + create
 
 Terraform will perform the following actions:
-
-  # aws_identitystore_group.this["auditors"] will be created
-  + resource "aws_identitystore_group" "this" {
-      + description       = "Review security and cost: read-only everywhere"
-      + display_name      = "cobble-auditors"
-      + external_ids      = (known after apply)
-      + group_id          = (known after apply)
-      + id                = (known after apply)
-      + identity_store_id = "d-97679ebd7b"
-    }
-
-  # aws_identitystore_group.this["developers"] will be created
-  + resource "aws_identitystore_group" "this" {
-      + description       = "Build Cobble modules: change dev, look at staging and prod"
-      + display_name      = "cobble-developers"
-      + external_ids      = (known after apply)
-      + group_id          = (known after apply)
-      + id                = (known after apply)
-      + identity_store_id = "d-97679ebd7b"
-    }
 
   # aws_identitystore_group.this["platform-admins"] will be created
   + resource "aws_identitystore_group" "this" {
@@ -42,41 +25,18 @@ Terraform will perform the following actions:
       + group_id          = (known after apply)
       + id                = (known after apply)
       + identity_store_id = "d-97679ebd7b"
-      + member_id         = (known after apply)
+      + member_id         = "99aee458-00e1-7021-2e03-82333dc281b4"
       + membership_id     = (known after apply)
     }
 
-  # aws_identitystore_user.this["max.gosling"] will be created
-  + resource "aws_identitystore_user" "this" {
-      + display_name      = "Max Gosling"
-      + external_ids      = (known after apply)
-      + id                = (known after apply)
-      + identity_store_id = "d-97679ebd7b"
-      + user_id           = (known after apply)
-      + user_name         = "max.gosling"
-
-      + emails {
-          + primary = true
-          + value   = "t235cobbleaws+max@gmail.com"
-        }
-
-      + name {
-          + family_name = "Gosling"
-          + given_name  = "Max"
-        }
-    }
-
-Plan: 5 to add, 0 to change, 0 to destroy.
+Plan: 2 to add, 0 to change, 0 to destroy.
 
 Changes to Outputs:
   + groups = {
-      + cobble-auditors        = (known after apply)
-      + cobble-developers      = (known after apply)
+      + cobble-auditors        = "399e44c8-4051-7057-34cb-1fd8ceef7023"
+      + cobble-developers      = "d98e0418-1061-7075-4abe-d51109fcb12b"
       + cobble-platform-admins = (known after apply)
     }
-  + users  = [
-      + "max.gosling",
-    ]
 
 ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 

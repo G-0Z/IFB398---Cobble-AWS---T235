@@ -1,29 +1,29 @@
-module.management_account_baseline.aws_s3_account_public_access_block.this: Refreshing state... [id=669591255093]
-module.management_account_baseline.data.aws_caller_identity.current: Reading...
-module.management_account_baseline.aws_ebs_encryption_by_default.this: Refreshing state... [id=terraform-20261017113734869500000001]
-module.management_account_baseline.aws_iam_account_password_policy.this: Refreshing state... [id=iam-account-password-policy]
+module.management_account_baseline.aws_ebs_encryption_by_default.this: Refreshing state... [id=terraform-20261017140822522200000001]
 module.management_account_baseline.aws_iam_role.config: Refreshing state... [id=cobble-management-config-recorder]
+module.management_account_baseline.data.aws_caller_identity.current: Reading...
+module.management_account_baseline.aws_s3_account_public_access_block.this: Refreshing state... [id=669591255093]
+module.management_account_baseline.aws_iam_account_password_policy.this: Refreshing state... [id=iam-account-password-policy]
 module.management_account_baseline.data.aws_caller_identity.current: Read complete after 0s [id=669591255093]
-data.aws_region.current: Reading...
 data.aws_organizations_organization.this: Reading...
+data.aws_region.current: Reading...
 data.aws_caller_identity.current: Reading...
 data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
-data.aws_caller_identity.current: Read complete after 0s [id=100808729153]
-module.access_logs.aws_s3_bucket.this: Refreshing state... [id=cobble-security-access-logs-100808729153]
-module.config_bucket.aws_s3_bucket.this: Refreshing state... [id=cobble-config-history-100808729153]
-module.trail_bucket.aws_s3_bucket.this: Refreshing state... [id=cobble-audit-logs-100808729153]
-module.trail_bucket.aws_s3_bucket_logging.this: Refreshing state... [id=cobble-audit-logs-100808729153]
-module.trail_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=cobble-audit-logs-100808729153]
-module.trail_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=cobble-audit-logs-100808729153]
-module.management_account_baseline.aws_iam_role_policy_attachment.config: Refreshing state... [id=cobble-management-config-recorder-20261017113737625800000002]
-module.management_account_baseline.aws_config_configuration_recorder.this: Refreshing state... [id=cobble-management-recorder]
+data.aws_caller_identity.current: Read complete after 0s [id=021407434891]
+module.config_bucket.aws_s3_bucket.this: Refreshing state... [id=cobble-config-history-021407434891]
+module.trail_bucket.aws_s3_bucket.this: Refreshing state... [id=cobble-audit-logs-021407434891]
+module.access_logs.aws_s3_bucket.this: Refreshing state... [id=cobble-security-access-logs-021407434891]
+module.trail_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=cobble-audit-logs-021407434891]
+module.trail_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=cobble-audit-logs-021407434891]
+module.trail_bucket.aws_s3_bucket_logging.this: Refreshing state... [id=cobble-audit-logs-021407434891]
 data.aws_organizations_organization.this: Read complete after 2s [id=o-b60hme0nfl]
-aws_kms_key.security: Refreshing state... [id=bb8dd9a9-acd4-4e53-a3d7-3ff1a42c2d70]
-module.trail_bucket.aws_s3_bucket_policy.this[0]: Refreshing state... [id=cobble-audit-logs-100808729153]
-module.trail_bucket.aws_s3_bucket_object_lock_configuration.this[0]: Refreshing state... [id=cobble-audit-logs-100808729153]
-module.trail_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.trail_bucket.aws_s3_bucket_policy.this[0]: Refreshing state... [id=cobble-audit-logs-021407434891]
+aws_kms_key.security: Refreshing state... [id=82020cf2-2699-49e4-bb36-6f8c6ae73f86]
+module.management_account_baseline.aws_iam_role_policy_attachment.config: Refreshing state... [id=cobble-management-config-recorder-20261017140824975300000002]
+module.management_account_baseline.aws_config_configuration_recorder.this: Refreshing state... [id=cobble-management-recorder]
 module.management_account_baseline.aws_iam_role_policy.config_delivery: Refreshing state... [id=cobble-management-config-recorder:cobble-management-config-delivery]
-module.trail_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.trail_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cobble-audit-logs-021407434891]
+module.trail_bucket.aws_s3_bucket_object_lock_configuration.this[0]: Refreshing state... [id=cobble-audit-logs-021407434891]
+module.trail_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Refreshing state... [id=cobble-audit-logs-021407434891]
 module.management_account_baseline.aws_config_delivery_channel.this: Refreshing state... [id=cobble-management-delivery]
 module.management_account_baseline.aws_config_configuration_recorder_status.this: Refreshing state... [id=cobble-management-recorder]
 aws_cloudtrail.organization: Refreshing state... [id=arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail]
@@ -44,9 +44,9 @@ Terraform will perform the following actions:
       - include_global_service_events = true -> null
       - is_multi_region_trail         = true -> null
       - is_organization_trail         = true -> null
-      - kms_key_id                    = "arn:aws:kms:ap-southeast-2:100808729153:key/bb8dd9a9-acd4-4e53-a3d7-3ff1a42c2d70" -> null
+      - kms_key_id                    = "arn:aws:kms:ap-southeast-2:021407434891:key/82020cf2-2699-49e4-bb36-6f8c6ae73f86" -> null
       - name                          = "cobble-organization-trail" -> null
-      - s3_bucket_name                = "cobble-audit-logs-100808729153" -> null
+      - s3_bucket_name                = "cobble-audit-logs-021407434891" -> null
       - tags                          = {} -> null
       - tags_all                      = {
           - "Application" = "Cobbled"
@@ -96,15 +96,15 @@ Terraform will perform the following actions:
   - resource "aws_config_delivery_channel" "this" {
       - id             = "cobble-management-delivery" -> null
       - name           = "cobble-management-delivery" -> null
-      - s3_bucket_name = "cobble-config-history-100808729153" -> null
-      - s3_kms_key_arn = "arn:aws:kms:ap-southeast-2:100808729153:key/bb8dd9a9-acd4-4e53-a3d7-3ff1a42c2d70" -> null
+      - s3_bucket_name = "cobble-config-history-021407434891" -> null
+      - s3_kms_key_arn = "arn:aws:kms:ap-southeast-2:021407434891:key/82020cf2-2699-49e4-bb36-6f8c6ae73f86" -> null
         # (2 unchanged attributes hidden)
     }
 
   # module.management_account_baseline.aws_ebs_encryption_by_default.this will be destroyed
   - resource "aws_ebs_encryption_by_default" "this" {
       - enabled = true -> null
-      - id      = "terraform-20261017113734869500000001" -> null
+      - id      = "terraform-20261017140822522200000001" -> null
     }
 
   # module.management_account_baseline.aws_iam_account_password_policy.this will be destroyed
@@ -139,7 +139,7 @@ Terraform will perform the following actions:
               - Version   = "2012-10-17"
             }
         ) -> null
-      - create_date           = "2026-10-17T11:37:35Z" -> null
+      - create_date           = "2026-10-17T14:08:23Z" -> null
       - force_detach_policies = false -> null
       - id                    = "cobble-management-config-recorder" -> null
       - managed_policy_arns   = [
@@ -158,7 +158,7 @@ Terraform will perform the following actions:
           - "ManagedBy"   = "IaC"
           - "Owner"       = "Cyber Security Centre"
         } -> null
-      - unique_id             = "AROAZXZV7XA23H7QTVO3K" -> null
+      - unique_id             = "AROAZXZV7XA2UWKITXNHZ" -> null
         # (3 unchanged attributes hidden)
 
       - inline_policy {
@@ -169,12 +169,12 @@ Terraform will perform the following actions:
                       - {
                           - Action   = "s3:GetBucketAcl"
                           - Effect   = "Allow"
-                          - Resource = "arn:aws:s3:::cobble-config-history-100808729153"
+                          - Resource = "arn:aws:s3:::cobble-config-history-021407434891"
                         },
                       - {
                           - Action   = "s3:PutObject"
                           - Effect   = "Allow"
-                          - Resource = "arn:aws:s3:::cobble-config-history-100808729153/AWSLogs/669591255093/Config/*"
+                          - Resource = "arn:aws:s3:::cobble-config-history-021407434891/AWSLogs/669591255093/Config/*"
                         },
                       - {
                           - Action   = [
@@ -182,7 +182,7 @@ Terraform will perform the following actions:
                               - "kms:Decrypt",
                             ]
                           - Effect   = "Allow"
-                          - Resource = "arn:aws:kms:ap-southeast-2:100808729153:key/bb8dd9a9-acd4-4e53-a3d7-3ff1a42c2d70"
+                          - Resource = "arn:aws:kms:ap-southeast-2:021407434891:key/82020cf2-2699-49e4-bb36-6f8c6ae73f86"
                         },
                     ]
                   - Version   = "2012-10-17"
@@ -201,12 +201,12 @@ Terraform will perform the following actions:
                   - {
                       - Action   = "s3:GetBucketAcl"
                       - Effect   = "Allow"
-                      - Resource = "arn:aws:s3:::cobble-config-history-100808729153"
+                      - Resource = "arn:aws:s3:::cobble-config-history-021407434891"
                     },
                   - {
                       - Action   = "s3:PutObject"
                       - Effect   = "Allow"
-                      - Resource = "arn:aws:s3:::cobble-config-history-100808729153/AWSLogs/669591255093/Config/*"
+                      - Resource = "arn:aws:s3:::cobble-config-history-021407434891/AWSLogs/669591255093/Config/*"
                     },
                   - {
                       - Action   = [
@@ -214,7 +214,7 @@ Terraform will perform the following actions:
                           - "kms:Decrypt",
                         ]
                       - Effect   = "Allow"
-                      - Resource = "arn:aws:kms:ap-southeast-2:100808729153:key/bb8dd9a9-acd4-4e53-a3d7-3ff1a42c2d70"
+                      - Resource = "arn:aws:kms:ap-southeast-2:021407434891:key/82020cf2-2699-49e4-bb36-6f8c6ae73f86"
                     },
                 ]
               - Version   = "2012-10-17"
@@ -226,7 +226,7 @@ Terraform will perform the following actions:
 
   # module.management_account_baseline.aws_iam_role_policy_attachment.config will be destroyed
   - resource "aws_iam_role_policy_attachment" "config" {
-      - id         = "cobble-management-config-recorder-20261017113737625800000002" -> null
+      - id         = "cobble-management-config-recorder-20261017140824975300000002" -> null
       - policy_arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole" -> null
       - role       = "cobble-management-config-recorder" -> null
     }
@@ -259,4 +259,3 @@ Saved the plan to: security-destroy.tfplan
 
 To perform exactly these actions, run the following command to apply:
     terraform apply "security-destroy.tfplan"
-Releasing state lock. This may take a few moments...

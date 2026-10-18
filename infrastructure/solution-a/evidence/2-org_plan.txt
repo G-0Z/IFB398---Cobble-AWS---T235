@@ -1,118 +1,88 @@
-data.aws_ssoadmin_instances.this: Reading...
+aws_iam_service_linked_role.access_analyzer: Refreshing state... [id=arn:aws:iam::669591255093:role/aws-service-role/access-analyzer.amazonaws.com/AWSServiceRoleForAccessAnalyzer]
+aws_organizations_policy.guardrail["restrict-regions"]: Refreshing state... [id=p-x4te7baa]
+aws_securityhub_account.management: Refreshing state... [id=669591255093]
+aws_organizations_policy.guardrail["protect-security-services"]: Refreshing state... [id=p-dem0nc2o]
+aws_organizations_delegated_administrator.config: Refreshing state... [id=021407434891/config.amazonaws.com]
+aws_organizations_policy.guardrail["deny-root-user"]: Refreshing state... [id=p-uh8oewnh]
+aws_guardduty_detector.management: Refreshing state... [id=1cff7a4ae0734e3abfeb0f88df8bda61]
+aws_organizations_policy.guardrail["deny-leave-organization"]: Refreshing state... [id=p-nvepczjy]
+aws_organizations_delegated_administrator.access_analyzer: Refreshing state... [id=021407434891/access-analyzer.amazonaws.com]
 aws_organizations_organization.this: Refreshing state... [id=o-b60hme0nfl]
+data.aws_ssoadmin_instances.this: Reading...
 data.aws_ssoadmin_instances.this: Read complete after 0s [id=ap-southeast-2]
-data.aws_identitystore_group.this["platform-admins"]: Reading...
-data.aws_identitystore_group.this["developers"]: Reading...
+aws_ssoadmin_permission_set.this["PlatformAdmin"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_permission_set.this["ReadOnly"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_permission_set.this["Developer"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-cffe08bd7be182da,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
 data.aws_identitystore_group.this["auditors"]: Reading...
-data.aws_identitystore_group.this["developers"]: Read complete after 0s [id=d98e0418-1061-7075-4abe-d51109fcb12b]
+data.aws_identitystore_group.this["platform-admins"]: Reading...
 data.aws_identitystore_group.this["auditors"]: Read complete after 0s [id=399e44c8-4051-7057-34cb-1fd8ceef7023]
+data.aws_identitystore_group.this["developers"]: Reading...
 data.aws_identitystore_group.this["platform-admins"]: Read complete after 0s [id=e97e8468-00f1-704d-7f74-9dee91d6869e]
+aws_ssoadmin_managed_policy_attachment.this["Developer"]: Refreshing state... [id=arn:aws:iam::aws:policy/PowerUserAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-cffe08bd7be182da,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_managed_policy_attachment.this["PlatformAdmin"]: Refreshing state... [id=arn:aws:iam::aws:policy/AdministratorAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_managed_policy_attachment.this["ReadOnly"]: Refreshing state... [id=arn:aws:iam::aws:policy/ReadOnlyAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+data.aws_identitystore_group.this["developers"]: Read complete after 1s [id=d98e0418-1061-7075-4abe-d51109fcb12b]
+aws_organizations_organizational_unit.workloads: Refreshing state... [id=ou-m9si-h7yrqefz]
+aws_organizations_policy_attachment.guardrail["deny-root-user"]: Refreshing state... [id=r-m9si:p-uh8oewnh]
+aws_organizations_organizational_unit.security: Refreshing state... [id=ou-m9si-astnnylp]
+aws_organizations_policy_attachment.guardrail["protect-security-services"]: Refreshing state... [id=r-m9si:p-dem0nc2o]
+aws_organizations_policy_attachment.guardrail["restrict-regions"]: Refreshing state... [id=r-m9si:p-x4te7baa]
+aws_organizations_organizational_unit.infrastructure: Refreshing state... [id=ou-m9si-jhsi97ox]
+aws_organizations_policy_attachment.guardrail["deny-leave-organization"]: Refreshing state... [id=r-m9si:p-nvepczjy]
+aws_organizations_organizational_unit.production: Refreshing state... [id=ou-m9si-7qvmhlmm]
+aws_organizations_organizational_unit.non_production: Refreshing state... [id=ou-m9si-dkm2w3c4]
+aws_organizations_account.this["security"]: Refreshing state... [id=021407434891]
+aws_organizations_account.this["prod"]: Refreshing state... [id=483598626480]
+aws_organizations_account.this["dev"]: Refreshing state... [id=740667376104]
+aws_organizations_account.this["staging"]: Refreshing state... [id=231217915029]
 
 Terraform used the selected providers to generate the following execution
 plan. Resource actions are indicated with the following symbols:
   + create
-  ~ update in-place
+  - destroy
 
 Terraform will perform the following actions:
 
-  # aws_guardduty_detector.management will be created
-  + resource "aws_guardduty_detector" "management" {
-      + account_id                   = (known after apply)
-      + arn                          = (known after apply)
-      + enable                       = true
-      + finding_publishing_frequency = (known after apply)
-      + id                           = (known after apply)
-      + tags_all                     = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
+  # aws_guardduty_detector.management will be destroyed
+  # (because aws_guardduty_detector.management is not in configuration)
+  - resource "aws_guardduty_detector" "management" {
+      - account_id                   = "669591255093" -> null
+      - arn                          = "arn:aws:guardduty:ap-southeast-2:669591255093:detector/1cff7a4ae0734e3abfeb0f88df8bda61" -> null
+      - enable                       = true -> null
+      - finding_publishing_frequency = "SIX_HOURS" -> null
+      - id                           = "1cff7a4ae0734e3abfeb0f88df8bda61" -> null
+      - tags                         = {
+          - "CostCentre"  = "IFB398-capstone"
+          - "Criticality" = "Low"
+          - "Environment" = "poc"
+          - "Owner"       = "IFB398-T235"
+        } -> null
+      - tags_all                     = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "IFB398-capstone"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "poc"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "IFB398-T235"
+        } -> null
 
-      + datasources (known after apply)
-    }
-
-  # aws_guardduty_organization_admin_account.this will be created
-  + resource "aws_guardduty_organization_admin_account" "this" {
-      + admin_account_id = (known after apply)
-      + id               = (known after apply)
-    }
-
-  # aws_organizations_account.this["dev"] will be created
-  + resource "aws_organizations_account" "this" {
-      + arn               = (known after apply)
-      + close_on_deletion = false
-      + create_govcloud   = false
-      + email             = "t235cobbleaws+dev@gmail.com"
-      + govcloud_id       = (known after apply)
-      + id                = (known after apply)
-      + joined_method     = (known after apply)
-      + joined_timestamp  = (known after apply)
-      + name              = "cobble-dev"
-      + parent_id         = (known after apply)
-      + role_name         = "OrganizationAccountAccessRole"
-      + status            = (known after apply)
-      + tags_all          = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-    }
-
-  # aws_organizations_account.this["prod"] will be created
-  + resource "aws_organizations_account" "this" {
-      + arn               = (known after apply)
-      + close_on_deletion = false
-      + create_govcloud   = false
-      + email             = "t235cobbleaws+prod@gmail.com"
-      + govcloud_id       = (known after apply)
-      + id                = (known after apply)
-      + joined_method     = (known after apply)
-      + joined_timestamp  = (known after apply)
-      + name              = "cobble-prod"
-      + parent_id         = (known after apply)
-      + role_name         = "OrganizationAccountAccessRole"
-      + status            = (known after apply)
-      + tags_all          = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-    }
-
-  # aws_organizations_account.this["security"] will be created
-  + resource "aws_organizations_account" "this" {
-      + arn               = (known after apply)
-      + close_on_deletion = false
-      + create_govcloud   = false
-      + email             = "t235cobbleaws+security@gmail.com"
-      + govcloud_id       = (known after apply)
-      + id                = (known after apply)
-      + joined_method     = (known after apply)
-      + joined_timestamp  = (known after apply)
-      + name              = "cobble-security"
-      + parent_id         = (known after apply)
-      + role_name         = "OrganizationAccountAccessRole"
-      + status            = (known after apply)
-      + tags_all          = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
+      - datasources {
+          - kubernetes {
+              - audit_logs {
+                  - enable = true -> null
+                }
+            }
+          - malware_protection {
+              - scan_ec2_instance_with_findings {
+                  - ebs_volumes {
+                      - enable = true -> null
+                    }
+                }
+            }
+          - s3_logs {
+              - enable = true -> null
+            }
         }
     }
 
@@ -121,13 +91,13 @@ Terraform will perform the following actions:
       + arn               = (known after apply)
       + close_on_deletion = false
       + create_govcloud   = false
-      + email             = "t235cobbleaws+shared@gmail.com"
+      + email             = "t235cobbleaws+shared2@gmail.com"
       + govcloud_id       = (known after apply)
       + id                = (known after apply)
       + joined_method     = (known after apply)
       + joined_timestamp  = (known after apply)
       + name              = "cobble-shared-services"
-      + parent_id         = (known after apply)
+      + parent_id         = "ou-m9si-jhsi97ox"
       + role_name         = "OrganizationAccountAccessRole"
       + status            = (known after apply)
       + tags_all          = {
@@ -141,449 +111,54 @@ Terraform will perform the following actions:
         }
     }
 
-  # aws_organizations_account.this["staging"] will be created
-  + resource "aws_organizations_account" "this" {
-      + arn               = (known after apply)
-      + close_on_deletion = false
-      + create_govcloud   = false
-      + email             = "t235cobbleaws+staging@gmail.com"
-      + govcloud_id       = (known after apply)
-      + id                = (known after apply)
-      + joined_method     = (known after apply)
-      + joined_timestamp  = (known after apply)
-      + name              = "cobble-staging"
-      + parent_id         = (known after apply)
-      + role_name         = "OrganizationAccountAccessRole"
-      + status            = (known after apply)
-      + tags_all          = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
+  # aws_organizations_delegated_administrator.access_analyzer will be destroyed
+  # (because aws_organizations_delegated_administrator.access_analyzer is not in configuration)
+  - resource "aws_organizations_delegated_administrator" "access_analyzer" {
+      - account_id              = "021407434891" -> null
+      - arn                     = "arn:aws:organizations::669591255093:account/o-b60hme0nfl/021407434891" -> null
+      - delegation_enabled_date = "2026-10-17T13:36:14Z" -> null
+      - email                   = "t235cobbleaws+security2@gmail.com" -> null
+      - id                      = "021407434891/access-analyzer.amazonaws.com" -> null
+      - joined_method           = "CREATED" -> null
+      - joined_timestamp        = "2026-10-17T13:36:05Z" -> null
+      - name                    = "cobble-security" -> null
+      - service_principal       = "access-analyzer.amazonaws.com" -> null
+      - status                  = "ACTIVE" -> null
     }
 
-  # aws_organizations_delegated_administrator.access_analyzer will be created
-  + resource "aws_organizations_delegated_administrator" "access_analyzer" {
-      + account_id              = (known after apply)
-      + arn                     = (known after apply)
-      + delegation_enabled_date = (known after apply)
-      + email                   = (known after apply)
-      + id                      = (known after apply)
-      + joined_method           = (known after apply)
-      + joined_timestamp        = (known after apply)
-      + name                    = (known after apply)
-      + service_principal       = "access-analyzer.amazonaws.com"
-      + status                  = (known after apply)
+  # aws_organizations_delegated_administrator.config will be destroyed
+  # (because aws_organizations_delegated_administrator.config is not in configuration)
+  - resource "aws_organizations_delegated_administrator" "config" {
+      - account_id              = "021407434891" -> null
+      - arn                     = "arn:aws:organizations::669591255093:account/o-b60hme0nfl/021407434891" -> null
+      - delegation_enabled_date = "2026-10-17T13:36:13Z" -> null
+      - email                   = "t235cobbleaws+security2@gmail.com" -> null
+      - id                      = "021407434891/config.amazonaws.com" -> null
+      - joined_method           = "CREATED" -> null
+      - joined_timestamp        = "2026-10-17T13:36:05Z" -> null
+      - name                    = "cobble-security" -> null
+      - service_principal       = "config.amazonaws.com" -> null
+      - status                  = "ACTIVE" -> null
     }
 
-  # aws_organizations_delegated_administrator.config will be created
-  + resource "aws_organizations_delegated_administrator" "config" {
-      + account_id              = (known after apply)
-      + arn                     = (known after apply)
-      + delegation_enabled_date = (known after apply)
-      + email                   = (known after apply)
-      + id                      = (known after apply)
-      + joined_method           = (known after apply)
-      + joined_timestamp        = (known after apply)
-      + name                    = (known after apply)
-      + service_principal       = "config.amazonaws.com"
-      + status                  = (known after apply)
-    }
-
-  # aws_organizations_organization.this will be updated in-place
-  ~ resource "aws_organizations_organization" "this" {
-      ~ aws_service_access_principals = [
-          + "access-analyzer.amazonaws.com",
-          + "cloudtrail.amazonaws.com",
-          + "config.amazonaws.com",
-          + "guardduty.amazonaws.com",
-          + "securityhub.amazonaws.com",
-            # (1 unchanged element hidden)
-        ]
-        id                            = "o-b60hme0nfl"
-        # (10 unchanged attributes hidden)
-    }
-
-  # aws_organizations_organizational_unit.infrastructure will be created
-  + resource "aws_organizations_organizational_unit" "infrastructure" {
-      + accounts  = (known after apply)
-      + arn       = (known after apply)
-      + id        = (known after apply)
-      + name      = "Infrastructure"
-      + parent_id = "r-m9si"
-      + tags_all  = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-    }
-
-  # aws_organizations_organizational_unit.non_production will be created
-  + resource "aws_organizations_organizational_unit" "non_production" {
-      + accounts  = (known after apply)
-      + arn       = (known after apply)
-      + id        = (known after apply)
-      + name      = "NonProduction"
-      + parent_id = (known after apply)
-      + tags_all  = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-    }
-
-  # aws_organizations_organizational_unit.production will be created
-  + resource "aws_organizations_organizational_unit" "production" {
-      + accounts  = (known after apply)
-      + arn       = (known after apply)
-      + id        = (known after apply)
-      + name      = "Production"
-      + parent_id = (known after apply)
-      + tags_all  = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-    }
-
-  # aws_organizations_organizational_unit.security will be created
-  + resource "aws_organizations_organizational_unit" "security" {
-      + accounts  = (known after apply)
-      + arn       = (known after apply)
-      + id        = (known after apply)
-      + name      = "Security"
-      + parent_id = "r-m9si"
-      + tags_all  = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-    }
-
-  # aws_organizations_organizational_unit.workloads will be created
-  + resource "aws_organizations_organizational_unit" "workloads" {
-      + accounts  = (known after apply)
-      + arn       = (known after apply)
-      + id        = (known after apply)
-      + name      = "Workloads"
-      + parent_id = "r-m9si"
-      + tags_all  = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-    }
-
-  # aws_organizations_policy.guardrail["deny-leave-organization"] will be created
-  + resource "aws_organizations_policy" "guardrail" {
-      + arn         = (known after apply)
-      + content     = jsonencode(
-            {
-              + Statement = [
-                  + {
-                      + Action   = "organizations:LeaveOrganization"
-                      + Effect   = "Deny"
-                      + Resource = "*"
-                      + Sid      = "DenyLeavingTheOrganization"
-                    },
-                ]
-              + Version   = "2012-10-17"
-            }
-        )
-      + description = "Accounts cannot remove themselves from the organisation"
-      + id          = (known after apply)
-      + name        = "deny-leave-organization"
-      + tags_all    = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-      + type        = "SERVICE_CONTROL_POLICY"
-    }
-
-  # aws_organizations_policy.guardrail["deny-root-user"] will be created
-  + resource "aws_organizations_policy" "guardrail" {
-      + arn         = (known after apply)
-      + content     = jsonencode(
-            {
-              + Statement = [
-                  + {
-                      + Action    = "*"
-                      + Condition = {
-                          + StringLike = {
-                              + "aws:PrincipalArn" = "arn:aws:iam::*:root"
-                            }
-                        }
-                      + Effect    = "Deny"
-                      + Resource  = "*"
-                      + Sid       = "DenyRootUser"
-                    },
-                ]
-              + Version   = "2012-10-17"
-            }
-        )
-      + description = "The root user of member accounts cannot be used"
-      + id          = (known after apply)
-      + name        = "deny-root-user"
-      + tags_all    = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-      + type        = "SERVICE_CONTROL_POLICY"
-    }
-
-  # aws_organizations_policy.guardrail["protect-security-services"] will be created
-  + resource "aws_organizations_policy" "guardrail" {
-      + arn         = (known after apply)
-      + content     = jsonencode(
-            {
-              + Statement = [
-                  + {
-                      + Action    = [
-                          + "cloudtrail:DeleteTrail",
-                          + "cloudtrail:StopLogging",
-                          + "cloudtrail:UpdateTrail",
-                          + "cloudtrail:PutEventSelectors",
-                          + "guardduty:DeleteDetector",
-                          + "guardduty:DisassociateFromAdministratorAccount",
-                          + "guardduty:DisassociateFromMasterAccount",
-                          + "guardduty:UpdateDetector",
-                          + "config:DeleteConfigurationRecorder",
-                          + "config:DeleteDeliveryChannel",
-                          + "config:StopConfigurationRecorder",
-                          + "securityhub:DisableSecurityHub",
-                          + "securityhub:DisassociateFromAdministratorAccount",
-                          + "securityhub:DisassociateFromMasterAccount",
-                          + "access-analyzer:DeleteAnalyzer",
-                          + "access-analyzer:CreateArchiveRule",
-                          + "access-analyzer:UpdateArchiveRule",
-                          + "config:PutConfigurationRecorder",
-                          + "config:PutDeliveryChannel",
-                          + "ec2:DeleteFlowLogs",
-                          + "guardduty:CreateFilter",
-                          + "guardduty:UpdateFilter",
-                          + "guardduty:DeleteMembers",
-                          + "guardduty:DisassociateMembers",
-                          + "guardduty:StopMonitoringMembers",
-                          + "securityhub:BatchUpdateFindings",
-                        ]
-                      + Condition = {
-                          + ArnNotLike = {
-                              + "aws:PrincipalArn" = "arn:aws:iam::*:role/OrganizationAccountAccessRole"
-                            }
-                        }
-                      + Effect    = "Deny"
-                      + Resource  = "*"
-                      + Sid       = "ProtectSecurityServices"
-                    },
-                  + {
-                      + Action    = [
-                          + "iam:AttachRolePolicy",
-                          + "iam:DeleteRole",
-                          + "iam:DeleteRolePolicy",
-                          + "iam:DetachRolePolicy",
-                          + "iam:PutRolePolicy",
-                          + "iam:UpdateAssumeRolePolicy",
-                          + "iam:UpdateRole",
-                        ]
-                      + Condition = {
-                          + ArnNotLike = {
-                              + "aws:PrincipalArn" = "arn:aws:iam::*:role/OrganizationAccountAccessRole"
-                            }
-                        }
-                      + Effect    = "Deny"
-                      + Resource  = "arn:aws:iam::*:role/OrganizationAccountAccessRole"
-                      + Sid       = "ProtectTheAdministrationRole"
-                    },
-                ]
-              + Version   = "2012-10-17"
-            }
-        )
-      + description = "CloudTrail, GuardDuty, Config, Security Hub and Access Analyzer cannot be turned off"
-      + id          = (known after apply)
-      + name        = "protect-security-services"
-      + tags_all    = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-      + type        = "SERVICE_CONTROL_POLICY"
-    }
-
-  # aws_organizations_policy.guardrail["restrict-regions"] will be created
-  + resource "aws_organizations_policy" "guardrail" {
-      + arn         = (known after apply)
-      + content     = jsonencode(
-            {
-              + Statement = [
-                  + {
-                      + Condition = {
-                          + StringNotEquals = {
-                              + "aws:RequestedRegion" = [
-                                  + "ap-southeast-2",
-                                  + "us-east-1",
-                                ]
-                            }
-                        }
-                      + Effect    = "Deny"
-                      + NotAction = [
-                          + "a4b:*",
-                          + "access-analyzer:*",
-                          + "account:*",
-                          + "acm:*",
-                          + "aws-marketplace-management:*",
-                          + "aws-marketplace:*",
-                          + "aws-portal:*",
-                          + "budgets:*",
-                          + "ce:*",
-                          + "chime:*",
-                          + "cloudfront:*",
-                          + "config:*",
-                          + "cur:*",
-                          + "directconnect:*",
-                          + "ec2:DescribeRegions",
-                          + "ec2:DescribeTransitGateways",
-                          + "ec2:DescribeVpnGateways",
-                          + "fms:*",
-                          + "globalaccelerator:*",
-                          + "health:*",
-                          + "iam:*",
-                          + "identitystore:*",
-                          + "importexport:*",
-                          + "kms:*",
-                          + "mobileanalytics:*",
-                          + "networkmanager:*",
-                          + "organizations:*",
-                          + "pricing:*",
-                          + "route53:*",
-                          + "route53domains:*",
-                          + "route53-recovery-cluster:*",
-                          + "route53-recovery-control-config:*",
-                          + "route53-recovery-readiness:*",
-                          + "s3:GetAccountPublic*",
-                          + "s3:ListAllMyBuckets",
-                          + "s3:ListMultiRegionAccessPoints",
-                          + "s3:PutAccountPublic*",
-                          + "shield:*",
-                          + "sso:*",
-                          + "sts:*",
-                          + "support:*",
-                          + "trustedadvisor:*",
-                          + "waf-regional:*",
-                          + "waf:*",
-                          + "wafv2:*",
-                          + "wellarchitected:*",
-                        ]
-                      + Resource  = "*"
-                      + Sid       = "DenyOutsideAllowedRegions"
-                    },
-                ]
-              + Version   = "2012-10-17"
-            }
-        )
-      + description = "Resources can only be created in the allowed regions"
-      + id          = (known after apply)
-      + name        = "restrict-regions"
-      + tags_all    = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-      + type        = "SERVICE_CONTROL_POLICY"
-    }
-
-  # aws_organizations_policy_attachment.guardrail["deny-leave-organization"] will be created
-  + resource "aws_organizations_policy_attachment" "guardrail" {
-      + id        = (known after apply)
-      + policy_id = (known after apply)
-      + target_id = "r-m9si"
-    }
-
-  # aws_organizations_policy_attachment.guardrail["deny-root-user"] will be created
-  + resource "aws_organizations_policy_attachment" "guardrail" {
-      + id        = (known after apply)
-      + policy_id = (known after apply)
-      + target_id = "r-m9si"
-    }
-
-  # aws_organizations_policy_attachment.guardrail["protect-security-services"] will be created
-  + resource "aws_organizations_policy_attachment" "guardrail" {
-      + id        = (known after apply)
-      + policy_id = (known after apply)
-      + target_id = "r-m9si"
-    }
-
-  # aws_organizations_policy_attachment.guardrail["restrict-regions"] will be created
-  + resource "aws_organizations_policy_attachment" "guardrail" {
-      + id        = (known after apply)
-      + policy_id = (known after apply)
-      + target_id = "r-m9si"
-    }
-
-  # aws_securityhub_account.management will be created
-  + resource "aws_securityhub_account" "management" {
-      + arn                       = (known after apply)
-      + auto_enable_controls      = true
-      + control_finding_generator = (known after apply)
-      + enable_default_standards  = false
-      + id                        = (known after apply)
-    }
-
-  # aws_securityhub_organization_admin_account.this will be created
-  + resource "aws_securityhub_organization_admin_account" "this" {
-      + admin_account_id = (known after apply)
-      + id               = (known after apply)
+  # aws_securityhub_account.management will be destroyed
+  # (because aws_securityhub_account.management is not in configuration)
+  - resource "aws_securityhub_account" "management" {
+      - arn                       = "arn:aws:securityhub:ap-southeast-2:669591255093:hub/default" -> null
+      - auto_enable_controls      = true -> null
+      - control_finding_generator = "SECURITY_CONTROL" -> null
+      - enable_default_standards  = false -> null
+      - id                        = "669591255093" -> null
     }
 
   # aws_ssoadmin_account_assignment.this["auditors/ReadOnly/dev"] will be created
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62"
       + principal_id       = "399e44c8-4051-7057-34cb-1fd8ceef7023"
       + principal_type     = "GROUP"
-      + target_id          = (known after apply)
+      + target_id          = "740667376104"
       + target_type        = "AWS_ACCOUNT"
     }
 
@@ -591,7 +166,7 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62"
       + principal_id       = "399e44c8-4051-7057-34cb-1fd8ceef7023"
       + principal_type     = "GROUP"
       + target_id          = "669591255093"
@@ -602,10 +177,10 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62"
       + principal_id       = "399e44c8-4051-7057-34cb-1fd8ceef7023"
       + principal_type     = "GROUP"
-      + target_id          = (known after apply)
+      + target_id          = "483598626480"
       + target_type        = "AWS_ACCOUNT"
     }
 
@@ -613,10 +188,10 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62"
       + principal_id       = "399e44c8-4051-7057-34cb-1fd8ceef7023"
       + principal_type     = "GROUP"
-      + target_id          = (known after apply)
+      + target_id          = "021407434891"
       + target_type        = "AWS_ACCOUNT"
     }
 
@@ -624,7 +199,7 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62"
       + principal_id       = "399e44c8-4051-7057-34cb-1fd8ceef7023"
       + principal_type     = "GROUP"
       + target_id          = (known after apply)
@@ -635,10 +210,10 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62"
       + principal_id       = "399e44c8-4051-7057-34cb-1fd8ceef7023"
       + principal_type     = "GROUP"
-      + target_id          = (known after apply)
+      + target_id          = "231217915029"
       + target_type        = "AWS_ACCOUNT"
     }
 
@@ -646,10 +221,10 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-cffe08bd7be182da"
       + principal_id       = "d98e0418-1061-7075-4abe-d51109fcb12b"
       + principal_type     = "GROUP"
-      + target_id          = (known after apply)
+      + target_id          = "740667376104"
       + target_type        = "AWS_ACCOUNT"
     }
 
@@ -657,10 +232,10 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62"
       + principal_id       = "d98e0418-1061-7075-4abe-d51109fcb12b"
       + principal_type     = "GROUP"
-      + target_id          = (known after apply)
+      + target_id          = "483598626480"
       + target_type        = "AWS_ACCOUNT"
     }
 
@@ -668,10 +243,10 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62"
       + principal_id       = "d98e0418-1061-7075-4abe-d51109fcb12b"
       + principal_type     = "GROUP"
-      + target_id          = (known after apply)
+      + target_id          = "231217915029"
       + target_type        = "AWS_ACCOUNT"
     }
 
@@ -679,10 +254,10 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d"
       + principal_id       = "e97e8468-00f1-704d-7f74-9dee91d6869e"
       + principal_type     = "GROUP"
-      + target_id          = (known after apply)
+      + target_id          = "740667376104"
       + target_type        = "AWS_ACCOUNT"
     }
 
@@ -690,7 +265,7 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d"
       + principal_id       = "e97e8468-00f1-704d-7f74-9dee91d6869e"
       + principal_type     = "GROUP"
       + target_id          = "669591255093"
@@ -701,10 +276,10 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d"
       + principal_id       = "e97e8468-00f1-704d-7f74-9dee91d6869e"
       + principal_type     = "GROUP"
-      + target_id          = (known after apply)
+      + target_id          = "483598626480"
       + target_type        = "AWS_ACCOUNT"
     }
 
@@ -712,10 +287,10 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d"
       + principal_id       = "e97e8468-00f1-704d-7f74-9dee91d6869e"
       + principal_type     = "GROUP"
-      + target_id          = (known after apply)
+      + target_id          = "021407434891"
       + target_type        = "AWS_ACCOUNT"
     }
 
@@ -723,7 +298,7 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d"
       + principal_id       = "e97e8468-00f1-704d-7f74-9dee91d6869e"
       + principal_type     = "GROUP"
       + target_id          = (known after apply)
@@ -734,109 +309,19 @@ Terraform will perform the following actions:
   + resource "aws_ssoadmin_account_assignment" "this" {
       + id                 = (known after apply)
       + instance_arn       = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + permission_set_arn = (known after apply)
+      + permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d"
       + principal_id       = "e97e8468-00f1-704d-7f74-9dee91d6869e"
       + principal_type     = "GROUP"
-      + target_id          = (known after apply)
+      + target_id          = "231217915029"
       + target_type        = "AWS_ACCOUNT"
     }
 
-  # aws_ssoadmin_managed_policy_attachment.this["Developer"] will be created
-  + resource "aws_ssoadmin_managed_policy_attachment" "this" {
-      + id                  = (known after apply)
-      + instance_arn        = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + managed_policy_arn  = "arn:aws:iam::aws:policy/PowerUserAccess"
-      + managed_policy_name = (known after apply)
-      + permission_set_arn  = (known after apply)
-    }
-
-  # aws_ssoadmin_managed_policy_attachment.this["PlatformAdmin"] will be created
-  + resource "aws_ssoadmin_managed_policy_attachment" "this" {
-      + id                  = (known after apply)
-      + instance_arn        = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + managed_policy_arn  = "arn:aws:iam::aws:policy/AdministratorAccess"
-      + managed_policy_name = (known after apply)
-      + permission_set_arn  = (known after apply)
-    }
-
-  # aws_ssoadmin_managed_policy_attachment.this["ReadOnly"] will be created
-  + resource "aws_ssoadmin_managed_policy_attachment" "this" {
-      + id                  = (known after apply)
-      + instance_arn        = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + managed_policy_arn  = "arn:aws:iam::aws:policy/ReadOnlyAccess"
-      + managed_policy_name = (known after apply)
-      + permission_set_arn  = (known after apply)
-    }
-
-  # aws_ssoadmin_permission_set.this["Developer"] will be created
-  + resource "aws_ssoadmin_permission_set" "this" {
-      + arn              = (known after apply)
-      + created_date     = (known after apply)
-      + description      = "Everything except managing users and permissions"
-      + id               = (known after apply)
-      + instance_arn     = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + name             = "CobbleDeveloper"
-      + session_duration = "PT8H"
-      + tags_all         = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-    }
-
-  # aws_ssoadmin_permission_set.this["PlatformAdmin"] will be created
-  + resource "aws_ssoadmin_permission_set" "this" {
-      + arn              = (known after apply)
-      + created_date     = (known after apply)
-      + description      = "Full administrator"
-      + id               = (known after apply)
-      + instance_arn     = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + name             = "CobblePlatformAdmin"
-      + session_duration = "PT4H"
-      + tags_all         = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-    }
-
-  # aws_ssoadmin_permission_set.this["ReadOnly"] will be created
-  + resource "aws_ssoadmin_permission_set" "this" {
-      + arn              = (known after apply)
-      + created_date     = (known after apply)
-      + description      = "Look, don't touch"
-      + id               = (known after apply)
-      + instance_arn     = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb"
-      + name             = "CobbleReadOnly"
-      + session_duration = "PT8H"
-      + tags_all         = {
-          + "Application" = "Cobbled"
-          + "CostCentre"  = "Cobble"
-          + "Criticality" = "High"
-          + "DataClass"   = "Internal"
-          + "Environment" = "organization"
-          + "ManagedBy"   = "IaC"
-          + "Owner"       = "Cyber Security Centre"
-        }
-    }
-
-Plan: 45 to add, 1 to change, 0 to destroy.
+Plan: 16 to add, 0 to change, 4 to destroy.
 
 Changes to Outputs:
-  + account_ids     = {
-      + dev             = (known after apply)
-      + prod            = (known after apply)
-      + security        = (known after apply)
+  ~ account_ids     = {
       + shared_services = (known after apply)
-      + staging         = (known after apply)
+        # (4 unchanged attributes hidden)
     }
 
 ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
