@@ -14,7 +14,7 @@ locals {
 
   guardrails = {
     deny-leave-organization = {
-      description = "Accounts cannot remove themselves from the organisation"
+      description = "Accounts cannot leave the organisation or close themselves"
       content     = file("${path.module}/policies/deny-leave-organization.json")
     }
     protect-security-services = {

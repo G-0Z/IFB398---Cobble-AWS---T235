@@ -6,7 +6,7 @@ module "access_logs" {
   source = "../../../modules/access-log-bucket"
 
   bucket_name   = "cobble-security-access-logs-${local.security_account_id}"
-  force_destroy = false
+  force_destroy = var.force_destroy_buckets
 }
 
 # --- Audit log bucket (CloudTrail, every account) --------------------------
@@ -26,7 +26,7 @@ module "trail_bucket" {
   kms_key_arn          = aws_kms_key.security.arn
   access_log_bucket_id = module.access_logs.bucket_id
   access_log_prefix    = "audit-logs/"
-  force_destroy        = false
+  force_destroy        = var.force_destroy_buckets
 
   object_lock_retention_days = var.audit_log_retention_days
   object_lock_mode           = var.audit_log_lock_mode
@@ -85,7 +85,7 @@ module "config_bucket" {
   kms_key_arn                        = aws_kms_key.security.arn
   access_log_bucket_id               = module.access_logs.bucket_id
   access_log_prefix                  = "config-history/"
-  force_destroy                      = false
+  force_destroy                      = var.force_destroy_buckets
   archive_after_days                 = 90
   noncurrent_version_expiration_days = 365
 

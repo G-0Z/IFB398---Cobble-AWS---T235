@@ -4,7 +4,7 @@
     {
       "Sid": "DenyLeavingTheOrganization",
       "Effect": "Deny",
-      "Action": "organizations:LeaveOrganization",
+      "Action": ["organizations:LeaveOrganization", "account:CloseAccount"],
       "Resource": "*"
     }
   ]

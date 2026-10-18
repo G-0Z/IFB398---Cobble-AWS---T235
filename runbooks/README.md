@@ -8,12 +8,13 @@ can follow it from start to finish.
 
 | I want to... | Runbook | Time |
 |---|---|---|
+| **Run the demo we show:** Solution A's landing zone with dev, then remove it (one command each way) | [demo-landing-zone-quickstart.md](demo-landing-zone-quickstart.md) | About 15 minutes up, 10 down |
 | Show Solution B, then remove it | [deploy.md](deploy.md), then [teardown.md](teardown.md) | About 5 minutes each way |
 | Show Solution A's workload in the same account, then remove it | [demo-solution-a.md](demo-solution-a.md) | About 15 minutes each way |
 | Prove a solution redeploys identically | [teardown.md](teardown.md#redeploy-the-repeatability-check) | |
 | Create the state bucket (only if it's missing) | [bootstrap.md](bootstrap.md) | A few minutes, once |
 | Build the full six-account landing zone | [deploy-solution-a.md](deploy-solution-a.md) | Half a day, plus an hour per environment |
-| Demo the landing zone with dev only, then close the accounts | [demo-landing-zone-dev.md](demo-landing-zone-dev.md) | About half a day |
+| The landing zone demo step by step by hand, or to close the accounts at the end of the project | [demo-landing-zone-dev.md](demo-landing-zone-dev.md) | About half a day |
 
 Runbooks for when something goes wrong (an outage, a database failure,
 stolen credentials, drift, the web firewall blocking real users, a cost
@@ -22,16 +23,21 @@ spike) are in the
 
 ## A typical demo day
 
+The recording of 18 October 2026 is steps 1 and 4, with the console tour
+in between:
+
 ```text
-1. deploy.md            Solution B: the account's security baseline
-2. demo-solution-a.md   Solution A's workload beside it
-                        ... demo ...
-3. demo-solution-a.md   tear down Solution A first
-4. teardown.md          then Solution B
+1. quickstart   .\lz-dev.ps1 up     Solution A: landing zone + dev       about 15 min
+2. deploy.md    terraform apply     Solution B, if showing it too        about 5 min
+                ... demo: the app, then the console tour (quickstart step 3) ...
+3. teardown.md  terraform destroy   Solution B first, if deployed
+4. quickstart   .\lz-dev.ps1 down   Solution A                           about 10 min
 ```
 
-Solution A's workload doesn't depend on Solution B, so you can also deploy
-it on its own.
+The two solutions don't depend on each other, so either can be shown on its
+own. For a smaller Solution A demo without the organisation, deploy only its
+workload into the team's account with
+[demo-solution-a.md](demo-solution-a.md).
 
 ## What you need
 
@@ -52,7 +58,8 @@ it on its own.
 
 After a teardown, `terraform plan` in the same folder should offer to
 create everything again: 48 resources for Solution B, 66 for the Solution A
-demo. In the AWS console, check that the VPCs, load balancers, ECS clusters
+workload demo. For the landing zone demo, `.\lz-dev.ps1 status` must read
+`False` in every column and `Dev app: not deployed`. In the AWS console, check that the VPCs, load balancers, ECS clusters
 and databases are gone, and look at Billing the next day for any new spend.
 
 ## Deploying into a different AWS account

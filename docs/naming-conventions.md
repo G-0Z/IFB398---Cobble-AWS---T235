@@ -150,7 +150,7 @@ On/off switches (booleans):
 
 | Pattern | Meaning | Example |
 |---|---|---|
-| `enable_<feature>` | Turns a feature on or off. New optional features default to `false`, so adding one for Solution A never changes Solution B. A few protections that are normally wanted default to `true` and are switched off only where they'd clash (`enable_guardduty`, `enable_github_deploy`) | `enable_waf`, `enable_demo_app`, `enable_guardduty` |
+| `enable_<feature>` | Turns a feature on or off. New optional features default to `false`, so adding one for Solution A never changes Solution B. A few protections that are normally wanted default to `true` and are switched off only where they'd clash (`enable_guardduty`, `enable_management_guardduty`, `enable_github_deploy`) | `enable_waf`, `enable_demo_app`, `enable_guardduty` |
 | A plain statement | Describes the protection that's on when `true` | `protect_from_deletion`, `force_destroy`, `read_only_root_filesystem` |
 
 The naming prefix comes in three forms; check the module's README for which

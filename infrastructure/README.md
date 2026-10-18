@@ -36,7 +36,8 @@ README saying what it builds and how to run it.
 |---|---|---|---|
 | [`bootstrap`](bootstrap/) | Both | The team's account | [bootstrap.md](../runbooks/bootstrap.md) |
 | [`solution-b`](solution-b/) | B | The team's account | [deploy.md](../runbooks/deploy.md), [teardown.md](../runbooks/teardown.md) |
-| [`solution-a/workload`](solution-a/workload/) + `demo.tfvars` | A (demo) | The team's account | [demo-solution-a.md](../runbooks/demo-solution-a.md) |
+| [`solution-a/lz-dev.ps1`](solution-a/lz-dev.ps1) | A (the demo we show) | Management account, then Security and dev | [demo-landing-zone-quickstart.md](../runbooks/demo-landing-zone-quickstart.md) |
+| [`solution-a/workload`](solution-a/workload/) + `demo.tfvars` | A (workload-only demo) | The team's account | [demo-solution-a.md](../runbooks/demo-solution-a.md) |
 | [`solution-a/workload`](solution-a/workload/) + `dev`, `staging`, `prod.tfvars` | A | Each environment's own account | [deploy-solution-a.md, step 4](../runbooks/deploy-solution-a.md#step-4-dev-then-staging-then-prod) |
 | [`solution-a/landing-zone/*`](solution-a/landing-zone/) (4 folders) | A | Management, Security and Shared Services accounts | [deploy-solution-a.md](../runbooks/deploy-solution-a.md) |
 

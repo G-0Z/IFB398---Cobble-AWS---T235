@@ -1,86 +1,31 @@
-aws_guardduty_organization_admin_account.this: Destroying... [id=100808729153]
-aws_organizations_policy_attachment.guardrail["deny-leave-organization"]: Destroying... [id=r-m9si:p-zqdjf4lo]
-aws_ssoadmin_account_assignment.this["developers/ReadOnly/prod"]: Destroying... [id=d98e0418-1061-7075-4abe-d51109fcb12b,GROUP,024687770889,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_organizations_policy_attachment.guardrail["deny-root-user"]: Destroying... [id=r-m9si:p-ykgspmt4]
-aws_ssoadmin_account_assignment.this["developers/ReadOnly/staging"]: Destroying... [id=d98e0418-1061-7075-4abe-d51109fcb12b,GROUP,938917087952,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/shared_services"]: Destroying... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GROUP,793239960775,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/staging"]: Destroying... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GROUP,938917087952,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_organizations_policy_attachment.guardrail["restrict-regions"]: Destroying... [id=r-m9si:p-14bbxdbv]
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/security"]: Destroying... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,100808729153,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/shared_services"]: Destroying... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,793239960775,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_organizations_policy_attachment.guardrail["deny-leave-organization"]: Destruction complete after 1s
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/prod"]: Destroying... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,024687770889,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_organizations_policy_attachment.guardrail["deny-root-user"]: Destruction complete after 1s
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/management"]: Destroying... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,669591255093,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_organizations_policy_attachment.guardrail["restrict-regions"]: Destruction complete after 2s
-aws_securityhub_organization_admin_account.this: Destroying... [id=100808729153]
-aws_securityhub_organization_admin_account.this: Destruction complete after 1s
-aws_organizations_delegated_administrator.config: Destroying... [id=100808729153/config.amazonaws.com]
-aws_organizations_delegated_administrator.config: Destruction complete after 1s
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/management"]: Destroying... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GROUP,669591255093,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_guardduty_organization_admin_account.this: Destruction complete after 5s
-aws_organizations_policy_attachment.guardrail["protect-security-services"]: Destroying... [id=r-m9si:p-ofdpy4z8]
+aws_ssoadmin_managed_policy_attachment.this["Developer"]: Destroying... [id=arn:aws:iam::aws:policy/PowerUserAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-cffe08bd7be182da,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_managed_policy_attachment.this["PlatformAdmin"]: Destroying... [id=arn:aws:iam::aws:policy/AdministratorAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_managed_policy_attachment.this["ReadOnly"]: Destroying... [id=arn:aws:iam::aws:policy/ReadOnlyAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_organizations_policy_attachment.guardrail["protect-security-services"]: Destroying... [id=r-m9si:p-dem0nc2o]
+aws_organizations_policy_attachment.guardrail["deny-leave-organization"]: Destroying... [id=r-m9si:p-nvepczjy]
+aws_organizations_policy_attachment.guardrail["deny-root-user"]: Destroying... [id=r-m9si:p-uh8oewnh]
+aws_organizations_policy_attachment.guardrail["restrict-regions"]: Destroying... [id=r-m9si:p-x4te7baa]
 aws_organizations_policy_attachment.guardrail["protect-security-services"]: Destruction complete after 1s
-aws_organizations_delegated_administrator.access_analyzer: Destroying... [id=100808729153/access-analyzer.amazonaws.com]
-aws_organizations_delegated_administrator.access_analyzer: Destruction complete after 0s
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/prod"]: Destroying... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GROUP,024687770889,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_account_assignment.this["developers/ReadOnly/prod"]: Still destroying... [id=d98e0418-1061-7075-4abe-d51109fcb12b,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/security"]: Still destroying... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["developers/ReadOnly/staging"]: Still destroying... [id=d98e0418-1061-7075-4abe-d51109fcb12b,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/shared_services"]: Still destroying... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/shared_services"]: Still destroying... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/staging"]: Still destroying... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["developers/ReadOnly/staging"]: Destruction complete after 10s
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/dev"]: Destroying... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GROUP,614294918430,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/staging"]: Destruction complete after 10s
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/shared_services"]: Destruction complete after 10s
-aws_ssoadmin_account_assignment.this["developers/Developer/dev"]: Destroying... [id=d98e0418-1061-7075-4abe-d51109fcb12b,GROUP,614294918430,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-76f5c8292291e8db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/dev"]: Destroying... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,614294918430,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_account_assignment.this["developers/ReadOnly/prod"]: Destruction complete after 10s
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/security"]: Destroying... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GROUP,100808729153,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/security"]: Destruction complete after 10s
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/staging"]: Destroying... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,938917087952,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/shared_services"]: Destruction complete after 10s
-aws_securityhub_account.management: Destroying... [id=669591255093]
-aws_securityhub_account.management: Destruction complete after 0s
-aws_organizations_policy.guardrail["restrict-regions"]: Destroying... [id=p-14bbxdbv]
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/prod"]: Still destroying... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/prod"]: Destruction complete after 10s
-aws_organizations_policy.guardrail["deny-leave-organization"]: Destroying... [id=p-zqdjf4lo]
-aws_organizations_policy.guardrail["restrict-regions"]: Destruction complete after 1s
-aws_organizations_policy.guardrail["deny-root-user"]: Destroying... [id=p-ykgspmt4]
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/management"]: Still destroying... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/management"]: Destruction complete after 10s
-aws_organizations_policy.guardrail["protect-security-services"]: Destroying... [id=p-ofdpy4z8]
-aws_organizations_policy.guardrail["deny-leave-organization"]: Destruction complete after 0s
+aws_organizations_policy_attachment.guardrail["deny-leave-organization"]: Destruction complete after 1s
+aws_organizations_policy_attachment.guardrail["deny-root-user"]: Destruction complete after 2s
+aws_organizations_policy_attachment.guardrail["restrict-regions"]: Destruction complete after 2s
+aws_organizations_policy.guardrail["deny-root-user"]: Destroying... [id=p-uh8oewnh]
+aws_organizations_policy.guardrail["deny-leave-organization"]: Destroying... [id=p-nvepczjy]
+aws_organizations_policy.guardrail["protect-security-services"]: Destroying... [id=p-dem0nc2o]
+aws_organizations_policy.guardrail["restrict-regions"]: Destroying... [id=p-x4te7baa]
 aws_organizations_policy.guardrail["deny-root-user"]: Destruction complete after 1s
+aws_organizations_policy.guardrail["deny-leave-organization"]: Destruction complete after 1s
 aws_organizations_policy.guardrail["protect-security-services"]: Destruction complete after 1s
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/management"]: Still destroying... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/management"]: Destruction complete after 10s
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/prod"]: Still destroying... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/prod"]: Destruction complete after 10s
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/dev"]: Still destroying... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/dev"]: Still destroying... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["developers/Developer/dev"]: Still destroying... [id=d98e0418-1061-7075-4abe-d51109fcb12b,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/security"]: Still destroying... [id=399e44c8-4051-7057-34cb-1fd8ceef7023,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/staging"]: Still destroying... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GR...sso:::instance/ssoins-8259e7fa2fa852cb, 00m10s elapsed]
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/dev"]: Destruction complete after 10s
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/dev"]: Destruction complete after 10s
-aws_ssoadmin_account_assignment.this["auditors/ReadOnly/security"]: Destruction complete after 10s
-aws_ssoadmin_account_assignment.this["developers/Developer/dev"]: Destruction complete after 10s
-aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/staging"]: Destruction complete after 10s
-aws_ssoadmin_managed_policy_attachment.this["ReadOnly"]: Destroying... [id=arn:aws:iam::aws:policy/ReadOnlyAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_managed_policy_attachment.this["PlatformAdmin"]: Destroying... [id=arn:aws:iam::aws:policy/AdministratorAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_managed_policy_attachment.this["Developer"]: Destroying... [id=arn:aws:iam::aws:policy/PowerUserAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-76f5c8292291e8db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_managed_policy_attachment.this["PlatformAdmin"]: Destruction complete after 6s
-aws_ssoadmin_managed_policy_attachment.this["ReadOnly"]: Destruction complete after 6s
-aws_ssoadmin_managed_policy_attachment.this["Developer"]: Destruction complete after 6s
-aws_ssoadmin_permission_set.this["Developer"]: Destroying... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-76f5c8292291e8db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_permission_set.this["ReadOnly"]: Destroying... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-46fe8b926eda5fb2,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_permission_set.this["PlatformAdmin"]: Destroying... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-12a770fd568e5d89,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
-aws_ssoadmin_permission_set.this["Developer"]: Destruction complete after 0s
-aws_ssoadmin_permission_set.this["ReadOnly"]: Destruction complete after 0s
+aws_organizations_policy.guardrail["restrict-regions"]: Destruction complete after 1s
+aws_ssoadmin_managed_policy_attachment.this["Developer"]: Destruction complete after 5s
+aws_ssoadmin_managed_policy_attachment.this["PlatformAdmin"]: Destruction complete after 5s
+aws_ssoadmin_managed_policy_attachment.this["ReadOnly"]: Destruction complete after 5s
+aws_ssoadmin_permission_set.this["PlatformAdmin"]: Destroying... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_permission_set.this["ReadOnly"]: Destroying... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_permission_set.this["Developer"]: Destroying... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-cffe08bd7be182da,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
 aws_ssoadmin_permission_set.this["PlatformAdmin"]: Destruction complete after 0s
+aws_ssoadmin_permission_set.this["ReadOnly"]: Destruction complete after 0s
+aws_ssoadmin_permission_set.this["Developer"]: Destruction complete after 0s
 
 Warning: Applied changes may be incomplete
 
@@ -95,16 +40,15 @@ only for exceptional situations such as recovering from errors or mistakes,
 or when Terraform specifically suggests to use it as part of an error
 message.
 
-Apply complete! Resources: 0 added, 0 changed, 34 destroyed.
+Apply complete! Resources: 0 added, 0 changed, 14 destroyed.
 
 Outputs:
 
 account_ids = {
-  "dev" = "614294918430"
-  "prod" = "024687770889"
-  "security" = "100808729153"
-  "shared_services" = "793239960775"
-  "staging" = "938917087952"
+  "dev" = "740667376104"
+  "prod" = "483598626480"
+  "security" = "021407434891"
+  "staging" = "231217915029"
 }
 guardrails = [
   "deny-leave-organization",

@@ -10,17 +10,17 @@ variable "aws_region" {
 }
 
 variable "account_emails" {
-  description = "A unique, monitored email address for each new account's root user. Use a shared team mailbox, never a personal address (ADR 0001, D10)."
+  description = "A unique, monitored email address for each new account's root user. Use a shared team mailbox, never a personal address (ADR 0001, D10). shared_services may be left out until step 3 is needed: that account is then not created."
   type = object({
     security        = string
-    shared_services = string
+    shared_services = optional(string)
     dev             = string
     staging         = string
     prod            = string
   })
 
   validation {
-    condition     = alltrue([for e in values(var.account_emails) : can(regex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", e)) && !endswith(e, "@example.com")])
+    condition     = alltrue([for e in values(var.account_emails) : can(regex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", e)) && !endswith(e, "@example.com") if e != null])
     error_message = "Each account needs a real email address (the example.com placeholders must be replaced)."
   }
 }

@@ -89,7 +89,11 @@ platform admin deploys by following the runbook.
 Deploy and tear down by hand around each demo:
 [deploy.md](../../runbooks/deploy.md) and [teardown.md](../../runbooks/teardown.md) for
 Solution B (48 resources), [demo-solution-a.md](../../runbooks/demo-solution-a.md) for
-Solution A's workload (66 resources). A redeploy should create the same
+Solution A's workload (66 resources). Solution A's landing zone demo uses
+`lz-dev.ps1` ([quickstart](../../runbooks/demo-landing-zone-quickstart.md)):
+`up` adds the security services and dev (143 resources) to the existing
+accounts and `down` removes them, leaving the free accounts, sign-in and
+guardrails in place. A redeploy should create the same
 resources again, and a final check should show nothing differs from the
 code. That proves the deployment is repeatable.
 

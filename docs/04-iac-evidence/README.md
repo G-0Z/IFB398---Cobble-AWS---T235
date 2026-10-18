@@ -5,8 +5,10 @@ collects the **evidence that it deploys, tears down and redeploys
 reliably**, and tracks the platform against the Implementation Guide's
 acceptance checklist.
 
-**In short:** both solutions deploy from code into the team's AWS account
-and tear down cleanly. Deploying again gives exactly the same result, and a
+**In short:** both solutions deploy from code and tear down cleanly. Solution
+A's landing zone with a dev environment went up and down twice on 18
+October 2026 with one command each way, and the second cycle was recorded
+for the demo. Deploying again gives exactly the same result, and a
 final check confirms nothing differs from the code. Every change is also
 checked automatically before it can merge.
 
@@ -15,9 +17,9 @@ checked automatically before it can merge.
 | | Solution B (MVP) | Solution A (full landing zone) |
 |---|---|---|
 | Code | [`solution-b`](../../infrastructure/solution-b/) | [`solution-a/`](../../infrastructure/solution-a/) |
-| Deploys | 48 resources, one `terraform apply` | Workload: 66 resources in one account with `demo.tfvars` ([`workload/`](../../infrastructure/solution-a/workload/)); landing zone in ordered steps |
+| Deploys | 48 resources, one `terraform apply` | Landing zone + dev: `.\lz-dev.ps1 up` adds 68 security and 75 dev resources to the existing accounts. Workload alone: 66 resources in one account with `demo.tfvars` ([`workload/`](../../infrastructure/solution-a/workload/)) |
 | Checked on every pull request | Formatting, validation, security scan, and automated tests for every building block | Same |
-| How to run it | [runbooks/deploy.md](../../runbooks/deploy.md) | [runbooks/demo-solution-a.md](../../runbooks/demo-solution-a.md) |
+| How to run it | [runbooks/deploy.md](../../runbooks/deploy.md) | [Landing zone quickstart](../../runbooks/demo-landing-zone-quickstart.md) (the demo we show), or [demo-solution-a.md](../../runbooks/demo-solution-a.md) for the workload alone |
 
 ## Evidence log
 
@@ -28,6 +30,8 @@ proves the instructions work too.
 
 | Date | What | Who | Result | Evidence |
 |---|---|---|---|---|
+| 2026-10-18 | Solution A landing zone + dev, second cycle: `.\lz-dev.ps1 up` → console tour → `down`. **Recorded for the demo** | Max Gosling | Up in 13 minutes: people and organisation 0 changes, security 68 added, dev 75 added, app answered 200. Down in 10 minutes: dev 75 destroyed, security 68 destroyed, every account `False` for GuardDuty, Security Hub and Config | [up](../../infrastructure/solution-a/evidence/lz-dev-up-20261018-2147.txt), [down](../../infrastructure/solution-a/evidence/lz-dev-down-20261018-2219.txt) |
+| 2026-10-18 | Solution A landing zone + dev, first cycle with `lz-dev.ps1`: up → down → up (repeatability) | Max Gosling | Up: org 27 added, security 68, dev 75. Down: 75 and 68 destroyed. Re-running `up` while it was up found two things AWS reports differently from the code: GuardDuty and Security Hub members being replaced on every apply (fixed in `2-security/detection.tf`) and the database's `rds.force_ssl` setting (fixed in `modules/postgres-database`). After the fixes `up` reports 0 changes | [up](../../infrastructure/solution-a/evidence/lz-dev-up-20261018-2029.txt), [down](../../infrastructure/solution-a/evidence/lz-dev-down-20261018-2117.txt), [later `up` runs](../../infrastructure/solution-a/evidence/) |
 | 2026-10-17 | Solution A landing zone + dev: deploy → teardown, accounts closed ([runbook](../../runbooks/demo-landing-zone-dev.md)) | Max Gosling | Org 45 added; security 61 added (after retries, see logs); dev 75 added / 75 destroyed; security 10 and org 34 destroyed; 5 accounts closed | [logs](../../infrastructure/solution-a/evidence/) |
 | 2026-10-17 | Solution B: deploy | Max Gosling | 48 added | [logs](../../infrastructure/solution-b/evidence/) |
 | YYYY-MM-DD | Solution B: deploy → teardown → redeploy → `plan -detailed-exitcode` | | e.g. 48 added / 48 destroyed / 48 added / exit 0 | link to log or screenshot |

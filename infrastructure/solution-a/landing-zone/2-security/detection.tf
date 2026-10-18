@@ -1,6 +1,6 @@
 # Threat detection and posture checks, switched on for every account in the
-# organisation (including accounts added later). The Security account was
-# made the delegated administrator for each of these in step 1.
+# organisation (including accounts added later). delegation.tf makes the
+# Security account the delegated administrator for each of these.
 
 # Auto-enable only covers accounts that join the organisation later. The
 # Cobble accounts already exist (step 1 made them), so GuardDuty and Security
@@ -28,6 +28,8 @@ resource "aws_guardduty_detector" "this" {
 resource "aws_guardduty_organization_configuration" "this" {
   detector_id                      = aws_guardduty_detector.this.id
   auto_enable_organization_members = "ALL"
+
+  depends_on = [aws_guardduty_organization_admin_account.this]
 }
 
 resource "aws_guardduty_member" "this" {
@@ -36,6 +38,13 @@ resource "aws_guardduty_member" "this" {
   detector_id = aws_guardduty_detector.this.id
   account_id  = each.key
   email       = each.value
+
+  # AWS doesn't return an organisation member's email and reports it as
+  # invited, so without this every re-apply replaces the member, which
+  # auto-enable ALL then refuses.
+  lifecycle {
+    ignore_changes = [email, invite]
+  }
 
   depends_on = [aws_guardduty_organization_configuration.this]
 }
@@ -53,13 +62,18 @@ resource "aws_securityhub_organization_configuration" "this" {
   auto_enable           = true
   auto_enable_standards = "DEFAULT"
 
-  depends_on = [aws_securityhub_account.this]
+  depends_on = [aws_securityhub_organization_admin_account.this]
 }
 
 resource "aws_securityhub_member" "this" {
   for_each = local.member_accounts
 
   account_id = each.key
+
+  # AWS reports organisation members as invited; ignore it or every re-apply replaces them.
+  lifecycle {
+    ignore_changes = [invite]
+  }
 
   depends_on = [aws_securityhub_organization_configuration.this]
 }
@@ -103,7 +117,7 @@ resource "aws_config_configuration_aggregator" "organization" {
     role_arn = aws_iam_role.config_aggregator.arn
   }
 
-  depends_on = [aws_iam_role_policy_attachment.config_aggregator]
+  depends_on = [aws_iam_role_policy_attachment.config_aggregator, aws_organizations_delegated_administrator.config]
 }
 
 # --- IAM Access Analyzer: anything shared outside the organisation --------
@@ -113,6 +127,8 @@ resource "aws_config_configuration_aggregator" "organization" {
 resource "aws_accessanalyzer_analyzer" "organization" {
   analyzer_name = "cobble-organization"
   type          = "ORGANIZATION"
+
+  depends_on = [aws_organizations_delegated_administrator.access_analyzer]
 }
 
 # --- Config recording for the Security and management accounts ------------

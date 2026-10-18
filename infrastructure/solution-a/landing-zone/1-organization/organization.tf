@@ -56,3 +56,10 @@ resource "aws_organizations_organizational_unit" "production" {
   name      = "Production"
   parent_id = aws_organizations_organizational_unit.workloads.id
 }
+
+# Step 2 makes the Security account the organisation's Access Analyzer
+# administrator, which needs this role in the management account. Free, so
+# it stays when step 2 is torn down.
+resource "aws_iam_service_linked_role" "access_analyzer" {
+  aws_service_name = "access-analyzer.amazonaws.com"
+}
