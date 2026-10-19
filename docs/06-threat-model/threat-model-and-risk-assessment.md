@@ -106,10 +106,97 @@ The initial risk represents the level of exposure before controls are considered
 
 ### 6.1 Multi-Tenacy
 
+Multi-tenancy is a high-impact risk because Cobbled may host information belonging to multiple clients. A failure in tenant isolation could allow one client to access information belonging to another.
 
-### 6.2
+Controls should ensure that tenant identify is validated before data is accesssed and that application and database permissions prevent unauthorised cross-tenant access.
+
+Key controls include:
+
+- Validate tenant identity before processing requests.
+- Prevent users from selecting or modifying another tenant's identity.
+- Restrict access to tenant data at both the application and database layers.
+- Test that incorrect tenant identifiers are rejected.
+- Review tenant isolation as new modules are introduced.
+
+### 6.2 Privileged Access
+
+ Privileged AWS access could allow an attacker or compromised account to modify security controls, retrieve data or destroy resources.
+
+The target design reduces this risk by removing long-lived credentials and using single sign-on, MFA and temporary roles.
+
+Key controls include:
+
+- Require MFA for privileged access.
+- Use IAM Identity Center for human access.
+- Use short-lived AWS sessions rather than long-lived access keys.
+- Apply least-privilege permissions.
+- Separate platform administrator, developer and auditor access.
+- Record privileged activity through CloudTrail.
+
+### 6.3 API Exposure
+
+Application APIs are a major entry point into Cobbled and may be targeted through unauthorised requests, malformed input, excessive requests or attempts to bypass authentication.
+
+The proposed architecture limits public exposure by allowing internet traffic to enter only through the public edge.
+
+Key controls include:
+
+- Authenticate and authorise API requests.
+- Place application workloads inside private subnets.
+- Use the web firewall to filter malicious traffic.
+- Apply request validation and rate limiting.
+- Prevent direct internet access to application containers and databases.
+
+### 6.4 Data Protection
+
+Tenant and application data must remain protected both while stored and while being transmitted.
+
+Secrets and credentials should not be stored directly in source code, Terraform files or application logs.
+
+Key controls include:
+
+- Encrypt sensitive data at rest and in transit.
+- Store credentials and application secrets using an approved secrets-management service.
+- Keep databases private.
+- Restrict database access to approved application services.
+- Avoid storing secrets or unnecessary sensitive information in logs.
+
+### 6.5 Service Availability
+
+The platform must remain available when individual components fail or when deployments introduce errors.
+
+Environment separation also reduces the risk that changes made during development affect production services.
+
+Key controls include:
+
+- Separate development, staging and production environments.
+- Monitor application and infrastructure health.
+- Use health checks and automated recovery where possible.
+- Maintain rollback procedures for failed deployments.
+- Maintain backups and regularly test recovery.
+
+### 6.6 Infrastructure and Configuration Risk
+
+Terraform provides a repeatable method for managing AWS infrastructure, but an incorrect configuration could affect many resources at once.
+
+Key controls include:
+
+- Use feature branches and pull requests.
+- Review Terraform plans before changes are applied.
+- Restrict deployments to approved AWS accounts and regions.
+- Use automated Terraform validation and security scanning.
+- Test infrastructure changes before production deployment.
+- Prevent routine manual changes that bypass Infrastructure-as-Code.
+
+## 7. Current PoC Limitations and Residual Risk
 
 
-### 6.3
 
-## 7. 
+## 8. Phase 2 Security Actions
+
+
+
+
+## 9. Conclusion
+
+
