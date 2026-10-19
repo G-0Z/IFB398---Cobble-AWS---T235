@@ -1,35 +1,35 @@
 # Threat Model and Risk Assessment
 
--**Status:** Draft
--**Date:** 2026-10-10
--**Author:** Timothy Hartmann
--**Reviewed by:** T235
+- **Status:** Final
+- **Date:** 2026-10-10
+- **Author:** Timothy Hartmann
+- **Reviewed by:** T235
 
 ## 1. Purpose and Scope
 
 This document provides a practical threat model and risk assessment for the proposed Cobbled AWS environment. Its purpose is to identify key cloud security threats that could affect the confidentiality, integrity and availability of the platform, and to document practical controls that can reduce those risks. 
 
-This assessment focuses on the areas considered most relevant to the Cobled architecture and Proof of Concept (PoC), including:
+This assessment focuses on the areas considered most relevant to the Cobbled architecture and Proof of Concept (PoC), including:
 
 - Multi-Tenancy and unauthorised access between tenants 
-- Privileged access to AWS resources abd administrative functions
+- Privileged access to AWS resources and administrative functions
 - Public and internal API exposure
 - Protection of application data, credentials and secrets
 - Service availability and resilience
 - Infrastructure and Terraform configuration risks
 - Logging, monitoring and recovery
 
-The assessment considers both the current PoC and the proposed production architecure. The PoC is intentionally lightweight and cost-conscious, while the target production platform includes stronger availability, identity and operational controls. 
+The assessment considers both the current PoC and the proposed production architecture. The PoC is intentionally lightweight and cost-conscious, while the target production platform includes stronger availability, identity and operational controls. 
 
-This document is intended to support Phase 1 security analysis and Phase 2 implementation planning. It is not a formal test, compliance or complete production security assessement. Risks and controls should be reviewed again as the architecture and deployed environment mature.
+This document is intended to support Phase 1 security analysis and Phase 2 implementation planning. It is not a formal test, compliance or complete production security assessment. Risks and controls should be reviewed again as the architecture and deployed environment mature.
 
 ## 2. System Context
 
 Cobbled is designed as a modular, multi-tenant platform where independently deployable modules own their frontend components, APIs, data stores and release lifecycle. 
 
-The proposed AWS design seperates the platform across dedicated accounts for managment, security, shared services, development stagin and production. This separation reduces the impact of configuration errors or security incidents by preventing development andproduction workloads from sharing the same security boundary.
+The proposed AWS design separates the platform across dedicated accounts for management, security, shared services, development staging and production. This separation reduces the impact of configuration errors or security incidents by preventing development andproduction workloads from sharing the same security boundary.
 
-Only the public edge of the platform is intended to be directly accessible from the internet. Requests pass through the web firewall and load balancer before reaching application services running on ECS Fargate within private subnts. The database is also private and has no direct orute to the internet. 
+Only the public edge of the platform is intended to be directly accessible from the internet. Requests pass through the web firewall and load balancer before reaching application services running on ECS Fargate within private subnts. The database is also private and has no direct route to the internet. 
 
 The production design also aims to use short-lived AWS credentials, single sign-on and MFA rather than standing passwords or access keys
 
@@ -108,7 +108,7 @@ The initial risk represents the level of exposure before controls are considered
 
 Multi-tenancy is a high-impact risk because Cobbled may host information belonging to multiple clients. A failure in tenant isolation could allow one client to access information belonging to another.
 
-Controls should ensure that tenant identify is validated before data is accesssed and that application and database permissions prevent unauthorised cross-tenant access.
+Controls should ensure that tenant identity is validated before data is accesssed and that application and database permissions prevent unauthorised cross-tenant access.
 
 Key controls include:
 
@@ -190,13 +190,35 @@ Key controls include:
 
 ## 7. Current PoC Limitations and Residual Risk
 
+The current Proof of Concept is intentionally designed to remain lightweight and cost-conscious. As a result, not every production security control is implemented at its final level.
 
+Current limitations include:
+
+- Some production controls are designed but not yet fully implemented or tested.
+- The production multi-account structure is more complex than the current PoC environment.
+- Tenant-isolation controls cannot be completely validated until representative Cobbled application workloads are deployed.
+- Backup resilience remains an identified gap because backups currently do not have a protected copy outside the account they are intended to protect.
+- Availability and recovery controls require further testing during Phase 2.
+
+These limitations do not prevent the PoC from demonstrating the proposed architecture, but they must be considered before Cobbled is used as a production platform.
 
 ## 8. Phase 2 Security Actions
 
+The following security activities should be prioritised during Phase 2:
 
-
+1. Validate tenant isolation using representative Cobbled application workloads.
+2. Confirm IAM Identity Center, MFA and role-based access are operating as designed.
+3. Test API authentication, authorisation and public-edge controls.
+4. Verify that application services and databases are not publicly reachable.
+5. Test logging and monitoring across the platform.
+6. Implement and test backup and restore procedures, including off-account backup protection.
+7. Review Terraform plans and security scan results before infrastructure changes are deployed.
+8. Reassess the threat model after the Phase 2 environment is operational.
 
 ## 9. Conclusion
 
+The threat model identifies multi-tenancy, privileged access, API exposure, data protection, service availability and infrastructure configuration as the most significant security concerns for the proposed Cobbled AWS environment.
 
+The proposed architecture reduces these risks through account separation, private networking, central security controls, short-lived access, Infrastructure-as-Code and logging and monitoring. However, several controls remain to be implemented or validated as the project progresses into Phase 2.
+
+This assessment should therefore be treated as a living document and reviewed as the Cobbled architecture, workloads and production requirements continue to develop.
