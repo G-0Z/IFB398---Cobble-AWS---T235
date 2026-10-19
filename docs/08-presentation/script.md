@@ -1,32 +1,44 @@
 # Presentation script: 14 slides
 
 The spoken script for [`Cobble-AWS-Platform.pptx`](Cobble-AWS-Platform.pptx):
-**14 slides, including the title and Questions. About 9:15 of talk,
-then 3 minutes of questions, 12:15 in all.** The same words are in each
+**14 slides, including the title and Questions. About 9:30 of talk,
+then 3 minutes of questions, 12:30 in all.** The same words are in each
 slide's speaker notes, so presenter view shows them.
+
+## How it's built
+
+The talk tells one story rather than listing deliverables:
+
+1. **Start with a person.** Wayne asked for something implementable, not a diagram.
+2. **Give the reason for every choice.** Two solutions from one codebase, one Security account, ECS over Kubernetes.
+3. **Use the method to find something.** The "could an admin turn it off?" test is what exposed the backup gap.
+4. **Show, don't describe.** The demo comes as soon as the design is explained.
+5. **Own the mistake.** Closing the accounts on 17 October, and how it changed the design.
+6. **Say who did what.** Each presenter names their role and why it suited them.
+7. **End confident.** What's ready to hand over, then thank you.
 
 ## Running order
 
 | Slide | Title | Who | Starts | Length |
 |---|---|---|---|---|
 | 1 | Secure foundation. Rebuilt from code. | Jacob | 0:00 | 0:30 |
-| 2 | Cobble needs a foundation before it needs features | Jacob | 0:30 | 0:45 |
-| 3 | Two solutions. One set of building blocks. | Jacob | 1:15 | 0:45 |
-| 4 | Six accounts, each with one job | Tim | 2:00 | 0:55 |
-| 5 | Four guardrails hold, even for administrators | Tim | 2:55 | 0:50 |
-| 6 | All ten control areas are built in code | Tim | 3:45 | 0:40 |
+| 2 | Cobble needs a foundation before it needs features | Jacob | 0:30 | 0:50 |
+| 3 | Two solutions. One set of building blocks. | Jacob | 1:20 | 0:45 |
+| 4 | Six accounts, each with one job | Tim | 2:05 | 0:50 |
+| 5 | Four guardrails hold, even for administrators | Tim | 2:55 | 0:45 |
+| 6 | All ten control areas are built in code | Tim | 3:40 | 0:45 |
 | 7 | The page is served by containers the internet can’t reach | Max | 4:25 | 0:45 |
 | 8 | Even an administrator is refused outside Australia | Max | 5:10 | 0:30 |
-| 9 | Everything that costs money came down with one command | Max | 5:40 | 0:45 |
-| 10 | Where we stand | Max | 6:25 | 0:45 |
-| 11 | How the team operated | Khai | 7:10 | 0:40 |
-| 12 | Three risks to fix before real tenant data arrives | Khai | 7:50 | 0:45 |
-| 13 | Reflection and what’s next | Khai | 8:35 | 0:40 |
-| 14 | Questions? | All | 9:15 | 3:00 |
+| 9 | Everything that costs money came down with one command | Max | 5:40 | 0:50 |
+| 10 | Where we stand | Max | 6:30 | 0:45 |
+| 11 | Three risks to fix before real tenant data arrives | Khai | 7:15 | 0:45 |
+| 12 | How the team operated | Khai | 8:00 | 0:45 |
+| 13 | Reflection and what’s next | Khai | 8:45 | 0:45 |
+| 14 | Questions? | All | 9:30 | 3:00 |
 
-Every section is under its time at about 150 words a minute, leaving room
-for clicks and the live demo. Rehearse with a timer: if a section runs
-long, cut its last sentence, not the demo.
+Every section fits its time at about 150 words a minute, leaving room for
+clicks and the live demo. Rehearse with a timer: if a section runs long, cut
+its last sentence, not the demo.
 
 ## Backup slides (hidden)
 
@@ -67,94 +79,91 @@ if a question needs it.
 
 *Jacob, about 30 seconds*
 
-Hi, we're Team T235, and our industry partner is the Cyber Security Centre. In the next ten minutes: I'll cover what we were asked to build, Tim the design, Max a live demo and where we stand, and Khai how it's operated and the risks that remain. Then questions.
+Hi, we're Team T235. Our industry partner is the Cyber Security Centre, and they're building Cobble: one platform that will host software for many customer organisations at once. I'll cover what we were asked for, Tim the design, Max a live demo and where we stand, and Khai how we work and what's left.
 
 ### 2. Cobble needs a foundation before it needs features
 
-*Jacob, about 45 seconds*
+*Jacob, about 50 seconds*
 
-Cobble is the Centre's proof-of-concept platform for hosting software for many customer organisations at once. Because those tenants share one platform, a weak foundation exposes all of them at once. The brief asked for eight deliverables, covering ten control areas and five risk themes: multi-tenancy, privileged access, API exposure, data protection and availability. And it had to be repeatable: deployed, torn down and rebuilt the same way every time. Our scope is the AWS foundation, not the Cobble application; a standard web server stands in for it.
+When we first met Wayne at the Centre, he didn't ask for a diagram. He asked for something implementable: recommendations he could act on, issues written down, and a plan he could run in one month or three. That shaped everything we did. Cobble's tenants will share one platform, so a weak foundation doesn't expose one customer, it exposes all of them at once. The brief asks for eight deliverables, ten control areas and five risk themes. And one requirement drove the rest: it has to be repeatable, deployed, torn down and rebuilt the same way every time, from code. So our scope is the AWS foundation underneath Cobble, not the app itself.
 
 ### 3. Two solutions. One set of building blocks.
 
 *Jacob, about 45 seconds*
 
-We built two solutions from one set of Terraform modules. Solution B is the minimum viable product: one account, 48 resources, with encryption, an audit trail, threat detection and a budget alert. It costs about nothing because we tear it down between demos. Solution A is what the Centre would actually run: six accounts with guardrails, single sign-on, locked central logs and security monitoring, about 790 dollars a month with everything on. Because they share modules, B is a working slice of A, not a throwaway prototype. Tim will walk through A.
+That left us a choice: one full design that's expensive to run, or a cheap prototype that gets thrown away. We did neither. We wrote one set of Terraform modules and built two solutions from it. Solution B is the minimum viable product: one account, 48 resources, close to nothing to run because it's torn down between demos. Solution A is what the Centre would actually run: six accounts, guardrails, single sign-on and central security, about 790 dollars a month with everything on. Because they share code, B is a working slice of A, and a fix in one lands in both. Tim.
 
 ### 4. Six accounts, each with one job
 
-*Tim, about 55 seconds*
+*Tim, about 50 seconds*
 
-Solution A splits the platform into six accounts, each with one job, following the AWS Security Reference Architecture. Management runs the organisation, sign-in and billing. Security holds the locked logs and the detection services. Shared services holds the container registry. Dev, staging and prod are separate accounts, so a mistake in dev can't reach prod. One simplification: a single Security account does the job of AWS's separate Log Archive and Security Tooling accounts, which halves the fixed cost. Inside each environment only the load balancer faces the internet; the web servers and database sit in private subnets.
+Solution A gives each job its own account, following the AWS Security Reference Architecture. Management runs the organisation and sign-in. Security holds the audit logs and the threat detection, away from the people being logged. Shared services holds the container registry. And dev, staging and prod are separate, so a mistake in dev can't reach prod. We made one deliberate simplification: a single Security account does the work of AWS's two, which halves the fixed cost. Inside each environment, only the load balancer faces the internet; the web servers and database sit in private subnets.
 
 ### 5. Four guardrails hold, even for administrators
 
-*Tim, about 50 seconds*
+*Tim, about 45 seconds*
 
-Four guardrails sit at the root of the organisation as service control policies, so they apply to every member account whoever signs in, administrators included. Stay in Australia. No root user. The security services can't be switched off. And no account can leave the organisation or close itself. On top of that, no one has a standing password or key: people sign in through IAM Identity Center with MFA, admin sessions last four hours, and GitHub deploys with short-lived roles. Max will show a guardrail refusing an administrator.
+A policy in a document can be ignored. A service control policy can't. These four guardrails sit at the root of the organisation, so they apply in every account, to everyone, administrators included: stay in Australia, no root user, the security services can't be switched off, and no account can leave or close itself. And no one holds a standing password or key: people sign in through single sign-on with MFA, and admin sessions end after four hours.
 
 ### 6. All ten control areas are built in code
 
-*Tim, about 40 seconds*
+*Tim, about 45 seconds*
 
-All ten control areas in the brief are built in code. We mark each one as enforced, meaning a guardrail stops anyone turning it off, or configured, meaning the code builds it but an admin could still change it. We think being honest about that difference matters. The biggest gap is backups: there's no copy outside the account they protect yet. Over to Max.
+For each of the ten control areas we asked one question: could an administrator turn this off? If a guardrail stops them, we call it enforced. If the code builds it but an admin could still change it, we call it configured. That question is what showed us our biggest gap: backups have no copy outside the account they protect. Rather than describe any more of it, Max will show you.
 
 ### 7. The page is served by containers the internet can’t reach
 
 *Max, about 45 seconds*
 
-Here's Solution A running. Before the session I ran one command, lz-dev.ps1 up, which builds the security services and a dev environment in about 15 minutes. [Live: open the App address.] This is the dev app, a stand-in nginx page. It reaches you through the load balancer, from containers in private subnets with no public IP, and the database has no route to the internet at all. If anything fails live, we have a recording of the full run from 18 October.
+This is Solution A, running now. Before the session I ran one command, lz-dev.ps1 up, and about 15 minutes later the security services and a dev environment were built into accounts we keep. [Live: open the App address.] This page is a stand-in for Cobble. What matters is the path: it reaches you through the load balancer, from containers with no public address, and the database behind them has no route to the internet at all.
 
 ### 8. Even an administrator is refused outside Australia
 
 *Max, about 30 seconds*
 
-Here I'm signed in as a full administrator in cobble-dev, and I try to create a bucket in London. It's refused: explicit deny in a service control policy. Even an admin can't take data out of Australia.
+Here I'm a full administrator in the dev account, and I try to create a storage bucket in London. Refused: explicit deny in a service control policy. Even an admin can't take data out of Australia, which is exactly the guardrail Tim described.
 
 ### 9. Everything that costs money came down with one command
 
-*Max, about 45 seconds*
+*Max, about 50 seconds*
 
-While it's up, every account reports to the Security account: GuardDuty, Security Hub and Config, with high and critical findings emailed to the team. [Live: run .\lz-dev.ps1 down.] And it comes down with one command. It removes 75 dev resources and 68 security resources in about ten minutes; I've just started it, so it finishes while we take questions. Its last check reads every account directly: GuardDuty, Security Hub and Config all off. The accounts, sign-in and guardrails are free, so they stay for next time.
+Now the part we got wrong first. On 17 October we tore everything down, accounts included. Then we found a closed AWS account keeps counting against the organisation's limit for 90 days, so we couldn't simply rebuild. So we changed the design: accounts, sign-in and guardrails cost nothing, so they stay, and only what costs money comes and goes. [Live: run .\lz-dev.ps1 down.] One command removes 75 dev and 68 security resources in about ten minutes. I've just started it, so it finishes while we take questions.
 
 ### 10. Where we stand
 
 *Max, about 45 seconds*
 
-So where are we? Both solutions deploy and tear down from code, and the landing zone with dev now goes up and down with one command each way, recorded. Still in progress: the evidence log and screenshots, the Security Hub scores, the first backup restore test, and the shared services account, which waits on AWS's account limit. Running everything would cost about 790 Australian dollars a month, or 475 with dev and staging off when idle. Phase 2 closes the gaps: backups outside the account, alarms and dashboards, a break-glass role, and automatic deploys with approvals. Khai will cover how we work.
+So where are we? Both solutions deploy and tear down from code, and the landing zone with dev now goes up and down with one command each way. We ran that cycle twice on 18 October and recorded the second. Running it again found two settings that changed on every apply, and we fixed both, which is exactly what repeatable is meant to catch. Still to do: a backup restore test and the last evidence. Next is Phase 2: the same code, deployed into the Centre's own accounts. Khai.
 
-### 11. How the team operated
-
-*Khai, about 40 seconds*
-
-Design and build ran in parallel: one stream on the architecture, controls, operations, threat model and compliance documents, the other on the Terraform, both solutions, the checks and the runbooks. Every deliverable is a GitHub issue, and every change goes branch, pull request, automatic checks, one approving review, then merge. The checks format, validate, test and security-scan every change, and a nightly drift check flags anything changed outside the code.
-
-### 12. Three risks to fix before real tenant data arrives
+### 11. Three risks to fix before real tenant data arrives
 
 *Khai, about 45 seconds*
 
-We rated thirteen threats with STRIDE. Three are High, and all three must be fixed before real tenant data arrives. Tenant isolation: today tenants are kept apart only by the application, so the fix is a database user and role per module. Admin access: one stolen admin session can change anything, so narrower roles and a break-glass role. Backups: no copy outside the account they protect, so AWS Backup to another account and region.
+Three risks stand between this and real tenant data. Tenant isolation: today only the application keeps tenants apart, so the fix is a database user and role per module. Admin access: one stolen admin session could change anything, so narrower roles and a break-glass role. Backups: no copy outside the account they protect, so AWS Backup to another account and region. We rated thirteen threats in all; these are the three High ones, and each has a named fix.
+
+### 12. How the team operated
+
+*Khai, about 45 seconds*
+
+On how we worked: each of us owned a part of today. Jacob led the definition; Tim the design; Max the build, the demo and the plans; and I led operations. [Each of us: one sentence on why that role suited you.] Design and build ran side by side, so the documents and the code shaped each other. Every change went through a pull request, automatic checks and one teammate's review before it merged. And when we departed from the Implementation Guide, like choosing ECS over Kubernetes, we wrote down why, and what would make us change our minds.
 
 ### 13. Reflection and what’s next
 
-*Khai, about 40 seconds*
+*Khai, about 45 seconds*
 
-Honestly, we captured evidence late. Screenshots after our first demo showed setup gaps we hadn't checked, and the landing zone needed retries to deploy in order. We've since scripted the whole run, so it's one tested command each way, but next time we'd capture evidence as each step runs. Ready to hand over: both solutions, every change checked and reviewed, all eight deliverables drafted, and the Phase 2 gaps named and sequenced. We still need decisions from the Centre on the recovery region, the SQL Server edition and recovery targets. Thank you.
+If we did it again, we'd capture evidence as each step runs. We took screenshots after our first demo, and they showed setup gaps we hadn't checked; the landing zone also needed retries to deploy in order. Scripting the whole run fixed both, but we'd do it from day one. Here's what's ready to hand over: two solutions that deploy and tear down from code, every change checked and reviewed, all eight deliverables drafted, and the Phase 2 work named and in order. With that, we're in a strong position to put Cobble's foundation into the Centre's hands. Thank you.
 
 ## Likely questions
 
-The assessors' questions to Team T183 (26se1) were about a demo fallback,
-team roles, and deployment. Ours are likely to be similar.
-
 | Question | Answer | Who |
 |---|---|---|
-| If the live demo had failed, did you have a fallback? | Yes: a recording of the full run on 18 October, and the run logs in the repository. The script also picks up where it stopped if it's run again | Max |
-| What were your roles, and why? | [Each presenter: one sentence on your role and why it suited you] | All |
+| If the live demo had failed, what was your fallback? | A recording of the full run on 18 October, and the run logs in the repository. The script also picks up where it stopped if it's run again | Max |
+| What were your roles, and why? | [Each presenter: your section, and one sentence on why it suited you] | All |
 | Could this run in the Centre's own AWS? | Yes, that's Phase 2. The same code deploys into their organisation with their settings files; it needs their accounts and a budget decision first | Max |
 | How long does it take to deploy? | About 15 minutes up and 10 down for the landing zone with dev. The very first build, creating the accounts, took about half a day | Max |
-| What keeps tenants apart today? | Only the application. That's High risk T1: the fix is a database user and role per module | Khai |
+| What keeps tenants apart today? | Only the application. That's a High risk: the fix is a database user and role per module | Khai |
 | How is the network separated? | Only the load balancer is public; web servers and the database sit in private subnets, and the database has no route to the internet (slides 17 and 21) | Tim |
-| Why one Security account, not two? | It does the job of AWS's separate Log Archive and Security Tooling accounts with the same separation, at half the fixed cost (slide 25) | Tim |
+| Why one Security account, not two? | It does the work of AWS's separate Log Archive and Security Tooling accounts with the same separation, at half the fixed cost (slide 25) | Tim |
 | Why ECS and not Kubernetes? | The Implementation Guide recommends EKS only when the team can run Kubernetes day to day. ECS Fargate needs no cluster to look after (slides 19 and 25) | Tim |
 | What if someone changes something by hand in the console? | A nightly drift check compares AWS with the code and flags the difference, and the guardrails stop anyone switching the security services off (slide 24) | Khai |
 | How do people get access over time? | Through IAM Identity Center groups with MFA. Adding someone is one row in a file; what they can do in each account comes from their group (slide 18) | Tim |
