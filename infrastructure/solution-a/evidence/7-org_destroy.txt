@@ -1,0 +1,59 @@
+aws_ssoadmin_managed_policy_attachment.this["Developer"]: Destroying... [id=arn:aws:iam::aws:policy/PowerUserAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-cffe08bd7be182da,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_managed_policy_attachment.this["PlatformAdmin"]: Destroying... [id=arn:aws:iam::aws:policy/AdministratorAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_managed_policy_attachment.this["ReadOnly"]: Destroying... [id=arn:aws:iam::aws:policy/ReadOnlyAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_organizations_policy_attachment.guardrail["protect-security-services"]: Destroying... [id=r-m9si:p-dem0nc2o]
+aws_organizations_policy_attachment.guardrail["deny-leave-organization"]: Destroying... [id=r-m9si:p-nvepczjy]
+aws_organizations_policy_attachment.guardrail["deny-root-user"]: Destroying... [id=r-m9si:p-uh8oewnh]
+aws_organizations_policy_attachment.guardrail["restrict-regions"]: Destroying... [id=r-m9si:p-x4te7baa]
+aws_organizations_policy_attachment.guardrail["protect-security-services"]: Destruction complete after 1s
+aws_organizations_policy_attachment.guardrail["deny-leave-organization"]: Destruction complete after 1s
+aws_organizations_policy_attachment.guardrail["deny-root-user"]: Destruction complete after 2s
+aws_organizations_policy_attachment.guardrail["restrict-regions"]: Destruction complete after 2s
+aws_organizations_policy.guardrail["deny-root-user"]: Destroying... [id=p-uh8oewnh]
+aws_organizations_policy.guardrail["deny-leave-organization"]: Destroying... [id=p-nvepczjy]
+aws_organizations_policy.guardrail["protect-security-services"]: Destroying... [id=p-dem0nc2o]
+aws_organizations_policy.guardrail["restrict-regions"]: Destroying... [id=p-x4te7baa]
+aws_organizations_policy.guardrail["deny-root-user"]: Destruction complete after 1s
+aws_organizations_policy.guardrail["deny-leave-organization"]: Destruction complete after 1s
+aws_organizations_policy.guardrail["protect-security-services"]: Destruction complete after 1s
+aws_organizations_policy.guardrail["restrict-regions"]: Destruction complete after 1s
+aws_ssoadmin_managed_policy_attachment.this["Developer"]: Destruction complete after 5s
+aws_ssoadmin_managed_policy_attachment.this["PlatformAdmin"]: Destruction complete after 5s
+aws_ssoadmin_managed_policy_attachment.this["ReadOnly"]: Destruction complete after 5s
+aws_ssoadmin_permission_set.this["PlatformAdmin"]: Destroying... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_permission_set.this["ReadOnly"]: Destroying... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_permission_set.this["Developer"]: Destroying... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-cffe08bd7be182da,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_permission_set.this["PlatformAdmin"]: Destruction complete after 0s
+aws_ssoadmin_permission_set.this["ReadOnly"]: Destruction complete after 0s
+aws_ssoadmin_permission_set.this["Developer"]: Destruction complete after 0s
+
+Warning: Applied changes may be incomplete
+
+The plan was created with the -target option in effect, so some changes
+requested in the configuration may have been ignored and the output values
+may not be fully updated. Run the following command to verify that no other
+changes are pending:
+    terraform plan
+
+Note that the -target option is not suitable for routine use, and is provided
+only for exceptional situations such as recovering from errors or mistakes,
+or when Terraform specifically suggests to use it as part of an error
+message.
+
+Apply complete! Resources: 0 added, 0 changed, 14 destroyed.
+
+Outputs:
+
+account_ids = {
+  "dev" = "740667376104"
+  "prod" = "483598626480"
+  "security" = "021407434891"
+  "staging" = "231217915029"
+}
+guardrails = [
+  "deny-leave-organization",
+  "deny-root-user",
+  "protect-security-services",
+  "restrict-regions",
+]
+organization_id = "o-b60hme0nfl"

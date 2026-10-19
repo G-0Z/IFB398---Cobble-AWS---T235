@@ -1,0 +1,46 @@
+data.aws_ssoadmin_instances.this: Reading...
+data.aws_ssoadmin_instances.this: Read complete after 0s [id=ap-southeast-2]
+aws_identitystore_group.this["auditors"]: Refreshing state... [id=d-97679ebd7b/399e44c8-4051-7057-34cb-1fd8ceef7023]
+aws_identitystore_group.this["developers"]: Refreshing state... [id=d-97679ebd7b/d98e0418-1061-7075-4abe-d51109fcb12b]
+aws_identitystore_user.this["max.gosling"]: Refreshing state... [id=d-97679ebd7b/99aee458-00e1-7021-2e03-82333dc281b4]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_identitystore_group.this["platform-admins"] will be created
+  + resource "aws_identitystore_group" "this" {
+      + description       = "Run the platform: full access to every account"
+      + display_name      = "cobble-platform-admins"
+      + external_ids      = (known after apply)
+      + group_id          = (known after apply)
+      + id                = (known after apply)
+      + identity_store_id = "d-97679ebd7b"
+    }
+
+  # aws_identitystore_group_membership.this["max.gosling/platform-admins"] will be created
+  + resource "aws_identitystore_group_membership" "this" {
+      + group_id          = (known after apply)
+      + id                = (known after apply)
+      + identity_store_id = "d-97679ebd7b"
+      + member_id         = "99aee458-00e1-7021-2e03-82333dc281b4"
+      + membership_id     = (known after apply)
+    }
+
+Plan: 2 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + groups = {
+      + cobble-auditors        = "399e44c8-4051-7057-34cb-1fd8ceef7023"
+      + cobble-developers      = "d98e0418-1061-7075-4abe-d51109fcb12b"
+      + cobble-platform-admins = (known after apply)
+    }
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+Saved the plan to: people.tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "people.tfplan"

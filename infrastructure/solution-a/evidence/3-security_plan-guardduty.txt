@@ -1,0 +1,165 @@
+data.aws_organizations_organization.management: Reading...
+module.management_account_baseline.data.aws_caller_identity.current: Reading...
+module.management_account_baseline.aws_iam_account_password_policy.this: Refreshing state... [id=iam-account-password-policy]
+module.management_account_baseline.aws_ebs_encryption_by_default.this: Refreshing state... [id=terraform-20261017113734869500000001]
+module.management_account_baseline.aws_s3_account_public_access_block.this: Refreshing state... [id=669591255093]
+module.management_account_baseline.aws_iam_role.config: Refreshing state... [id=cobble-management-config-recorder]
+module.management_account_baseline.data.aws_caller_identity.current: Read complete after 0s [id=669591255093]
+module.access_logs.data.aws_elb_service_account.current: Reading...
+aws_securityhub_account.this: Refreshing state... [id=100808729153]
+module.account_baseline.aws_iam_account_password_policy.this: Refreshing state... [id=iam-account-password-policy]
+module.account_baseline.aws_s3_account_public_access_block.this: Refreshing state... [id=100808729153]
+aws_cloudwatch_event_rule.high_severity_findings: Refreshing state... [id=cobble-high-severity-findings]
+module.account_baseline.data.aws_caller_identity.current: Reading...
+module.access_logs.data.aws_elb_service_account.current: Read complete after 0s [id=783225319266]
+module.account_baseline.aws_iam_role.config: Refreshing state... [id=cobble-security-config-recorder]
+data.aws_organizations_organization.this: Reading...
+module.account_baseline.data.aws_caller_identity.current: Read complete after 1s [id=100808729153]
+module.access_logs.data.aws_caller_identity.current: Reading...
+module.access_logs.data.aws_caller_identity.current: Read complete after 0s [id=100808729153]
+aws_accessanalyzer_analyzer.organization: Refreshing state... [id=cobble-organization]
+aws_guardduty_detector.this: Refreshing state... [id=f01d302b69e24dbe887735cdd0e1ed6a]
+data.aws_caller_identity.current: Reading...
+aws_iam_role.config_aggregator: Refreshing state... [id=cobble-config-aggregator]
+data.aws_caller_identity.current: Read complete after 0s [id=100808729153]
+data.aws_region.current: Reading...
+data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.account_baseline.aws_ebs_encryption_by_default.this: Refreshing state... [id=terraform-20261017113735375200000002]
+aws_securityhub_organization_configuration.this: Refreshing state... [id=100808729153]
+aws_guardduty_organization_configuration.this: Refreshing state... [id=f01d302b69e24dbe887735cdd0e1ed6a]
+aws_securityhub_standards_subscription.fsbp: Refreshing state... [id=arn:aws:securityhub:ap-southeast-2:100808729153:subscription/aws-foundational-security-best-practices/v/1.0.0]
+aws_securityhub_standards_subscription.cis: Refreshing state... [id=arn:aws:securityhub:ap-southeast-2:100808729153:subscription/cis-aws-foundations-benchmark/v/3.0.0]
+module.access_logs.aws_s3_bucket.this: Refreshing state... [id=cobble-security-access-logs-100808729153]
+module.config_bucket.aws_s3_bucket.this: Refreshing state... [id=cobble-config-history-100808729153]
+module.trail_bucket.aws_s3_bucket.this: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.management_account_baseline.aws_iam_role_policy_attachment.config: Refreshing state... [id=cobble-management-config-recorder-20261017113737625800000002]
+module.management_account_baseline.aws_config_configuration_recorder.this: Refreshing state... [id=cobble-management-recorder]
+module.access_logs.aws_s3_bucket_versioning.this: Refreshing state... [id=cobble-security-access-logs-100808729153]
+module.access_logs.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cobble-security-access-logs-100808729153]
+data.aws_organizations_organization.management: Read complete after 2s [id=o-b60hme0nfl]
+module.access_logs.aws_s3_bucket_public_access_block.this: Refreshing state... [id=cobble-security-access-logs-100808729153]
+aws_securityhub_member.this["938917087952"]: Refreshing state... [id=938917087952]
+aws_securityhub_member.this["614294918430"]: Refreshing state... [id=614294918430]
+aws_securityhub_member.this["793239960775"]: Refreshing state... [id=793239960775]
+aws_securityhub_member.this["024687770889"]: Refreshing state... [id=024687770889]
+module.config_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=cobble-config-history-100808729153]
+module.config_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=cobble-config-history-100808729153]
+module.config_bucket.aws_s3_bucket_logging.this: Refreshing state... [id=cobble-config-history-100808729153]
+module.access_logs.aws_s3_bucket_policy.this: Refreshing state... [id=cobble-security-access-logs-100808729153]
+module.trail_bucket.aws_s3_bucket_logging.this: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.trail_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.trail_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=cobble-audit-logs-100808729153]
+aws_iam_role_policy_attachment.config_aggregator: Refreshing state... [id=cobble-config-aggregator-20261017113738266200000003]
+module.account_baseline.aws_iam_role_policy_attachment.config: Refreshing state... [id=cobble-security-config-recorder-20261017113738575900000004]
+module.account_baseline.aws_config_configuration_recorder.this: Refreshing state... [id=cobble-security-recorder]
+data.aws_organizations_organization.this: Read complete after 2s [id=o-b60hme0nfl]
+module.trail_bucket.aws_s3_bucket_policy.this[0]: Refreshing state... [id=cobble-audit-logs-100808729153]
+aws_kms_key.security: Refreshing state... [id=bb8dd9a9-acd4-4e53-a3d7-3ff1a42c2d70]
+module.config_bucket.aws_s3_bucket_policy.this[0]: Refreshing state... [id=cobble-config-history-100808729153]
+aws_config_configuration_aggregator.organization: Refreshing state... [id=cobble-organization]
+aws_kms_alias.security: Refreshing state... [id=alias/cobble-security]
+aws_sns_topic.security_alerts: Refreshing state... [id=arn:aws:sns:ap-southeast-2:100808729153:cobble-security-alerts]
+module.account_baseline.aws_iam_role_policy.config_delivery: Refreshing state... [id=cobble-security-config-recorder:cobble-security-config-delivery]
+module.management_account_baseline.aws_iam_role_policy.config_delivery: Refreshing state... [id=cobble-management-config-recorder:cobble-management-config-delivery]
+module.management_account_baseline.aws_config_delivery_channel.this: Refreshing state... [id=cobble-management-delivery]
+module.trail_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.config_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cobble-config-history-100808729153]
+module.account_baseline.aws_config_delivery_channel.this: Refreshing state... [id=cobble-security-delivery]
+module.management_account_baseline.aws_config_configuration_recorder_status.this: Refreshing state... [id=cobble-management-recorder]
+module.account_baseline.aws_config_configuration_recorder_status.this: Refreshing state... [id=cobble-security-recorder]
+aws_sns_topic_policy.security_alerts: Refreshing state... [id=arn:aws:sns:ap-southeast-2:100808729153:cobble-security-alerts]
+aws_sns_topic_subscription.security_alerts_email: Refreshing state... [id=arn:aws:sns:ap-southeast-2:100808729153:cobble-security-alerts:c31abf58-87fd-4249-bc1e-6959373bff49]
+aws_cloudwatch_event_target.email_security_team: Refreshing state... [id=cobble-high-severity-findings-terraform-20261017113750257800000005]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Refreshing state... [id=cobble-security-access-logs-100808729153]
+module.config_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Refreshing state... [id=cobble-config-history-100808729153]
+module.trail_bucket.aws_s3_bucket_object_lock_configuration.this[0]: Refreshing state... [id=cobble-audit-logs-100808729153]
+module.trail_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Refreshing state... [id=cobble-audit-logs-100808729153]
+aws_cloudtrail.organization: Refreshing state... [id=arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # aws_guardduty_member.this["024687770889"] will be created
+  + resource "aws_guardduty_member" "this" {
+      + account_id          = "024687770889"
+      + detector_id         = "f01d302b69e24dbe887735cdd0e1ed6a"
+      + email               = "t235cobbleaws+prod@gmail.com"
+      + id                  = (known after apply)
+      + relationship_status = (known after apply)
+    }
+
+  # aws_guardduty_member.this["614294918430"] will be created
+  + resource "aws_guardduty_member" "this" {
+      + account_id          = "614294918430"
+      + detector_id         = "f01d302b69e24dbe887735cdd0e1ed6a"
+      + email               = "t235cobbleaws+dev@gmail.com"
+      + id                  = (known after apply)
+      + relationship_status = (known after apply)
+    }
+
+  # aws_guardduty_member.this["793239960775"] will be created
+  + resource "aws_guardduty_member" "this" {
+      + account_id          = "793239960775"
+      + detector_id         = "f01d302b69e24dbe887735cdd0e1ed6a"
+      + email               = "t235cobbleaws+shared@gmail.com"
+      + id                  = (known after apply)
+      + relationship_status = (known after apply)
+    }
+
+  # aws_guardduty_member.this["938917087952"] will be created
+  + resource "aws_guardduty_member" "this" {
+      + account_id          = "938917087952"
+      + detector_id         = "f01d302b69e24dbe887735cdd0e1ed6a"
+      + email               = "t235cobbleaws+staging@gmail.com"
+      + id                  = (known after apply)
+      + relationship_status = (known after apply)
+    }
+
+  # aws_securityhub_member.this["024687770889"] must be replaced
+-/+ resource "aws_securityhub_member" "this" {
+      ~ id            = "024687770889" -> (known after apply)
+      - invite        = true -> null # forces replacement
+      ~ master_id     = "100808729153" -> (known after apply)
+      ~ member_status = "Enabled" -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+  # aws_securityhub_member.this["614294918430"] must be replaced
+-/+ resource "aws_securityhub_member" "this" {
+      ~ id            = "614294918430" -> (known after apply)
+      - invite        = true -> null # forces replacement
+      ~ master_id     = "100808729153" -> (known after apply)
+      ~ member_status = "Enabled" -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+  # aws_securityhub_member.this["793239960775"] must be replaced
+-/+ resource "aws_securityhub_member" "this" {
+      ~ id            = "793239960775" -> (known after apply)
+      - invite        = true -> null # forces replacement
+      ~ master_id     = "100808729153" -> (known after apply)
+      ~ member_status = "Enabled" -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+  # aws_securityhub_member.this["938917087952"] must be replaced
+-/+ resource "aws_securityhub_member" "this" {
+      ~ id            = "938917087952" -> (known after apply)
+      - invite        = true -> null # forces replacement
+      ~ master_id     = "100808729153" -> (known after apply)
+      ~ member_status = "Enabled" -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+Plan: 8 to add, 0 to change, 4 to destroy.
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+Saved the plan to: security.tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "security.tfplan"

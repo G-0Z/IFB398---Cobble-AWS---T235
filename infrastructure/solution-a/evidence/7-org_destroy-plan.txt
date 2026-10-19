@@ -1,0 +1,417 @@
+data.aws_ssoadmin_instances.this: Reading...
+aws_organizations_policy.guardrail["deny-leave-organization"]: Refreshing state... [id=p-nvepczjy]
+aws_organizations_policy.guardrail["restrict-regions"]: Refreshing state... [id=p-x4te7baa]
+aws_organizations_policy.guardrail["deny-root-user"]: Refreshing state... [id=p-uh8oewnh]
+aws_organizations_policy.guardrail["protect-security-services"]: Refreshing state... [id=p-dem0nc2o]
+aws_organizations_organization.this: Refreshing state... [id=o-b60hme0nfl]
+data.aws_ssoadmin_instances.this: Read complete after 0s [id=ap-southeast-2]
+aws_ssoadmin_permission_set.this["Developer"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-cffe08bd7be182da,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_permission_set.this["ReadOnly"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+data.aws_identitystore_group.this["developers"]: Reading...
+data.aws_identitystore_group.this["auditors"]: Reading...
+aws_ssoadmin_permission_set.this["PlatformAdmin"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+data.aws_identitystore_group.this["platform-admins"]: Reading...
+aws_ssoadmin_managed_policy_attachment.this["ReadOnly"]: Refreshing state... [id=arn:aws:iam::aws:policy/ReadOnlyAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_managed_policy_attachment.this["PlatformAdmin"]: Refreshing state... [id=arn:aws:iam::aws:policy/AdministratorAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+data.aws_identitystore_group.this["auditors"]: Read complete after 0s [id=399e44c8-4051-7057-34cb-1fd8ceef7023]
+aws_ssoadmin_managed_policy_attachment.this["Developer"]: Refreshing state... [id=arn:aws:iam::aws:policy/PowerUserAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-cffe08bd7be182da,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+data.aws_identitystore_group.this["developers"]: Read complete after 0s [id=d98e0418-1061-7075-4abe-d51109fcb12b]
+data.aws_identitystore_group.this["platform-admins"]: Read complete after 0s [id=e97e8468-00f1-704d-7f74-9dee91d6869e]
+aws_organizations_policy_attachment.guardrail["protect-security-services"]: Refreshing state... [id=r-m9si:p-dem0nc2o]
+aws_organizations_policy_attachment.guardrail["deny-root-user"]: Refreshing state... [id=r-m9si:p-uh8oewnh]
+aws_organizations_organizational_unit.infrastructure: Refreshing state... [id=ou-m9si-jhsi97ox]
+aws_organizations_policy_attachment.guardrail["restrict-regions"]: Refreshing state... [id=r-m9si:p-x4te7baa]
+aws_organizations_policy_attachment.guardrail["deny-leave-organization"]: Refreshing state... [id=r-m9si:p-nvepczjy]
+aws_organizations_organizational_unit.security: Refreshing state... [id=ou-m9si-astnnylp]
+aws_organizations_organizational_unit.workloads: Refreshing state... [id=ou-m9si-h7yrqefz]
+aws_organizations_organizational_unit.production: Refreshing state... [id=ou-m9si-7qvmhlmm]
+aws_organizations_organizational_unit.non_production: Refreshing state... [id=ou-m9si-dkm2w3c4]
+aws_organizations_account.this["dev"]: Refreshing state... [id=740667376104]
+aws_organizations_account.this["prod"]: Refreshing state... [id=483598626480]
+aws_organizations_account.this["security"]: Refreshing state... [id=021407434891]
+aws_organizations_account.this["staging"]: Refreshing state... [id=231217915029]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_organizations_policy.guardrail["deny-leave-organization"] will be destroyed
+  - resource "aws_organizations_policy" "guardrail" {
+      - arn         = "arn:aws:organizations::669591255093:policy/o-b60hme0nfl/service_control_policy/p-nvepczjy" -> null
+      - content     = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action   = "organizations:LeaveOrganization"
+                      - Effect   = "Deny"
+                      - Resource = "*"
+                      - Sid      = "DenyLeavingTheOrganization"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - description = "Accounts cannot remove themselves from the organisation" -> null
+      - id          = "p-nvepczjy" -> null
+      - name        = "deny-leave-organization" -> null
+      - tags        = {} -> null
+      - tags_all    = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "High"
+          - "DataClass"   = "Internal"
+          - "Environment" = "organization"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - type        = "SERVICE_CONTROL_POLICY" -> null
+    }
+
+  # aws_organizations_policy.guardrail["deny-root-user"] will be destroyed
+  - resource "aws_organizations_policy" "guardrail" {
+      - arn         = "arn:aws:organizations::669591255093:policy/o-b60hme0nfl/service_control_policy/p-uh8oewnh" -> null
+      - content     = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "*"
+                      - Condition = {
+                          - StringLike = {
+                              - "aws:PrincipalArn" = "arn:aws:iam::*:root"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Resource  = "*"
+                      - Sid       = "DenyRootUser"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - description = "The root user of member accounts cannot be used" -> null
+      - id          = "p-uh8oewnh" -> null
+      - name        = "deny-root-user" -> null
+      - tags        = {} -> null
+      - tags_all    = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "High"
+          - "DataClass"   = "Internal"
+          - "Environment" = "organization"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - type        = "SERVICE_CONTROL_POLICY" -> null
+    }
+
+  # aws_organizations_policy.guardrail["protect-security-services"] will be destroyed
+  - resource "aws_organizations_policy" "guardrail" {
+      - arn         = "arn:aws:organizations::669591255093:policy/o-b60hme0nfl/service_control_policy/p-dem0nc2o" -> null
+      - content     = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = [
+                          - "cloudtrail:DeleteTrail",
+                          - "cloudtrail:StopLogging",
+                          - "cloudtrail:UpdateTrail",
+                          - "cloudtrail:PutEventSelectors",
+                          - "guardduty:DeleteDetector",
+                          - "guardduty:DisassociateFromAdministratorAccount",
+                          - "guardduty:DisassociateFromMasterAccount",
+                          - "guardduty:UpdateDetector",
+                          - "config:DeleteConfigurationRecorder",
+                          - "config:DeleteDeliveryChannel",
+                          - "config:StopConfigurationRecorder",
+                          - "securityhub:DisableSecurityHub",
+                          - "securityhub:DisassociateFromAdministratorAccount",
+                          - "securityhub:DisassociateFromMasterAccount",
+                          - "access-analyzer:DeleteAnalyzer",
+                          - "access-analyzer:CreateArchiveRule",
+                          - "access-analyzer:UpdateArchiveRule",
+                          - "config:PutConfigurationRecorder",
+                          - "config:PutDeliveryChannel",
+                          - "ec2:DeleteFlowLogs",
+                          - "guardduty:CreateFilter",
+                          - "guardduty:UpdateFilter",
+                          - "guardduty:DeleteMembers",
+                          - "guardduty:DisassociateMembers",
+                          - "guardduty:StopMonitoringMembers",
+                          - "securityhub:BatchUpdateFindings",
+                        ]
+                      - Condition = {
+                          - ArnNotLike = {
+                              - "aws:PrincipalArn" = "arn:aws:iam::*:role/OrganizationAccountAccessRole"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Resource  = "*"
+                      - Sid       = "ProtectSecurityServices"
+                    },
+                  - {
+                      - Action    = [
+                          - "iam:AttachRolePolicy",
+                          - "iam:DeleteRole",
+                          - "iam:DeleteRolePolicy",
+                          - "iam:DetachRolePolicy",
+                          - "iam:PutRolePolicy",
+                          - "iam:UpdateAssumeRolePolicy",
+                          - "iam:UpdateRole",
+                        ]
+                      - Condition = {
+                          - ArnNotLike = {
+                              - "aws:PrincipalArn" = "arn:aws:iam::*:role/OrganizationAccountAccessRole"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Resource  = "arn:aws:iam::*:role/OrganizationAccountAccessRole"
+                      - Sid       = "ProtectTheAdministrationRole"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - description = "CloudTrail, GuardDuty, Config, Security Hub and Access Analyzer cannot be turned off" -> null
+      - id          = "p-dem0nc2o" -> null
+      - name        = "protect-security-services" -> null
+      - tags        = {} -> null
+      - tags_all    = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "High"
+          - "DataClass"   = "Internal"
+          - "Environment" = "organization"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - type        = "SERVICE_CONTROL_POLICY" -> null
+    }
+
+  # aws_organizations_policy.guardrail["restrict-regions"] will be destroyed
+  - resource "aws_organizations_policy" "guardrail" {
+      - arn         = "arn:aws:organizations::669591255093:policy/o-b60hme0nfl/service_control_policy/p-x4te7baa" -> null
+      - content     = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Condition = {
+                          - StringNotEquals = {
+                              - "aws:RequestedRegion" = [
+                                  - "ap-southeast-2",
+                                  - "us-east-1",
+                                ]
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - NotAction = [
+                          - "a4b:*",
+                          - "access-analyzer:*",
+                          - "account:*",
+                          - "acm:*",
+                          - "aws-marketplace-management:*",
+                          - "aws-marketplace:*",
+                          - "aws-portal:*",
+                          - "budgets:*",
+                          - "ce:*",
+                          - "chime:*",
+                          - "cloudfront:*",
+                          - "config:*",
+                          - "cur:*",
+                          - "directconnect:*",
+                          - "ec2:DescribeRegions",
+                          - "ec2:DescribeTransitGateways",
+                          - "ec2:DescribeVpnGateways",
+                          - "fms:*",
+                          - "globalaccelerator:*",
+                          - "health:*",
+                          - "iam:*",
+                          - "identitystore:*",
+                          - "importexport:*",
+                          - "kms:*",
+                          - "mobileanalytics:*",
+                          - "networkmanager:*",
+                          - "organizations:*",
+                          - "pricing:*",
+                          - "route53:*",
+                          - "route53domains:*",
+                          - "route53-recovery-cluster:*",
+                          - "route53-recovery-control-config:*",
+                          - "route53-recovery-readiness:*",
+                          - "s3:GetAccountPublic*",
+                          - "s3:ListAllMyBuckets",
+                          - "s3:ListMultiRegionAccessPoints",
+                          - "s3:PutAccountPublic*",
+                          - "shield:*",
+                          - "sso:*",
+                          - "sts:*",
+                          - "support:*",
+                          - "trustedadvisor:*",
+                          - "waf-regional:*",
+                          - "waf:*",
+                          - "wafv2:*",
+                          - "wellarchitected:*",
+                        ]
+                      - Resource  = "*"
+                      - Sid       = "DenyOutsideAllowedRegions"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - description = "Resources can only be created in the allowed regions" -> null
+      - id          = "p-x4te7baa" -> null
+      - name        = "restrict-regions" -> null
+      - tags        = {} -> null
+      - tags_all    = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "High"
+          - "DataClass"   = "Internal"
+          - "Environment" = "organization"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - type        = "SERVICE_CONTROL_POLICY" -> null
+    }
+
+  # aws_organizations_policy_attachment.guardrail["deny-leave-organization"] will be destroyed
+  - resource "aws_organizations_policy_attachment" "guardrail" {
+      - id        = "r-m9si:p-nvepczjy" -> null
+      - policy_id = "p-nvepczjy" -> null
+      - target_id = "r-m9si" -> null
+    }
+
+  # aws_organizations_policy_attachment.guardrail["deny-root-user"] will be destroyed
+  - resource "aws_organizations_policy_attachment" "guardrail" {
+      - id        = "r-m9si:p-uh8oewnh" -> null
+      - policy_id = "p-uh8oewnh" -> null
+      - target_id = "r-m9si" -> null
+    }
+
+  # aws_organizations_policy_attachment.guardrail["protect-security-services"] will be destroyed
+  - resource "aws_organizations_policy_attachment" "guardrail" {
+      - id        = "r-m9si:p-dem0nc2o" -> null
+      - policy_id = "p-dem0nc2o" -> null
+      - target_id = "r-m9si" -> null
+    }
+
+  # aws_organizations_policy_attachment.guardrail["restrict-regions"] will be destroyed
+  - resource "aws_organizations_policy_attachment" "guardrail" {
+      - id        = "r-m9si:p-x4te7baa" -> null
+      - policy_id = "p-x4te7baa" -> null
+      - target_id = "r-m9si" -> null
+    }
+
+  # aws_ssoadmin_managed_policy_attachment.this["Developer"] will be destroyed
+  - resource "aws_ssoadmin_managed_policy_attachment" "this" {
+      - id                  = "arn:aws:iam::aws:policy/PowerUserAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-cffe08bd7be182da,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb" -> null
+      - instance_arn        = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb" -> null
+      - managed_policy_arn  = "arn:aws:iam::aws:policy/PowerUserAccess" -> null
+      - managed_policy_name = "PowerUserAccess" -> null
+      - permission_set_arn  = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-cffe08bd7be182da" -> null
+    }
+
+  # aws_ssoadmin_managed_policy_attachment.this["PlatformAdmin"] will be destroyed
+  - resource "aws_ssoadmin_managed_policy_attachment" "this" {
+      - id                  = "arn:aws:iam::aws:policy/AdministratorAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb" -> null
+      - instance_arn        = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb" -> null
+      - managed_policy_arn  = "arn:aws:iam::aws:policy/AdministratorAccess" -> null
+      - managed_policy_name = "AdministratorAccess" -> null
+      - permission_set_arn  = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d" -> null
+    }
+
+  # aws_ssoadmin_managed_policy_attachment.this["ReadOnly"] will be destroyed
+  - resource "aws_ssoadmin_managed_policy_attachment" "this" {
+      - id                  = "arn:aws:iam::aws:policy/ReadOnlyAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb" -> null
+      - instance_arn        = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb" -> null
+      - managed_policy_arn  = "arn:aws:iam::aws:policy/ReadOnlyAccess" -> null
+      - managed_policy_name = "ReadOnlyAccess" -> null
+      - permission_set_arn  = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62" -> null
+    }
+
+  # aws_ssoadmin_permission_set.this["Developer"] will be destroyed
+  - resource "aws_ssoadmin_permission_set" "this" {
+      - arn              = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-cffe08bd7be182da" -> null
+      - created_date     = "2026-10-17T13:17:29Z" -> null
+      - description      = "Everything except managing users and permissions" -> null
+      - id               = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-cffe08bd7be182da,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb" -> null
+      - instance_arn     = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb" -> null
+      - name             = "CobbleDeveloper" -> null
+      - session_duration = "PT8H" -> null
+      - tags             = {} -> null
+      - tags_all         = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "High"
+          - "DataClass"   = "Internal"
+          - "Environment" = "organization"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # aws_ssoadmin_permission_set.this["PlatformAdmin"] will be destroyed
+  - resource "aws_ssoadmin_permission_set" "this" {
+      - arn              = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d" -> null
+      - created_date     = "2026-10-17T13:17:29Z" -> null
+      - description      = "Full administrator" -> null
+      - id               = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3e427d26da62fe9d,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb" -> null
+      - instance_arn     = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb" -> null
+      - name             = "CobblePlatformAdmin" -> null
+      - session_duration = "PT4H" -> null
+      - tags             = {} -> null
+      - tags_all         = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "High"
+          - "DataClass"   = "Internal"
+          - "Environment" = "organization"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # aws_ssoadmin_permission_set.this["ReadOnly"] will be destroyed
+  - resource "aws_ssoadmin_permission_set" "this" {
+      - arn              = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62" -> null
+      - created_date     = "2026-10-17T13:17:29Z" -> null
+      - description      = "Look, don't touch" -> null
+      - id               = "arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-ee500003c8fbac62,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb" -> null
+      - instance_arn     = "arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb" -> null
+      - name             = "CobbleReadOnly" -> null
+      - session_duration = "PT8H" -> null
+      - tags             = {} -> null
+      - tags_all         = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "High"
+          - "DataClass"   = "Internal"
+          - "Environment" = "organization"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+        # (1 unchanged attribute hidden)
+    }
+
+Plan: 0 to add, 0 to change, 14 to destroy.
+
+Warning: Resource targeting is in effect
+
+You are creating a plan with the -target option, which means that the result
+of this plan may not represent all of the changes requested by the current
+configuration.
+
+The -target option is not for routine use, and is provided only for
+exceptional situations such as recovering from errors or mistakes, or when
+Terraform specifically suggests to use it as part of an error message.
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+Saved the plan to: org-destroy.tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "org-destroy.tfplan"

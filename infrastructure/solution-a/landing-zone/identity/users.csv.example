@@ -1,0 +1,4 @@
+user_name,given_name,family_name,email,groups
+alex.admin,Alex,Admin,alex.admin@example.com,platform-admins
+dana.dev,Dana,Developer,dana.dev@example.com,developers
+avery.audit,Avery,Auditor,avery.audit@example.com,auditors;developers

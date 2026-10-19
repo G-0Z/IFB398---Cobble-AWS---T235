@@ -1,0 +1,132 @@
+var.account_id
+  The environment's AWS account. Terraform refuses to run against any other, so the wrong .tfvars can't touch the wrong account.
+
+  Enter a value: 
+var.alert_email
+  Who receives budget alerts.
+
+  Enter a value: 
+var.app_cpu
+  CPU units per container (256 = 0.25 vCPU).
+
+  Enter a value: 
+var.app_desired_count
+  How many copies of the container to run (the minimum when auto scaling is on).
+
+  Enter a value: 
+var.app_memory
+  Memory per container, in MiB.
+
+  Enter a value: 
+var.budget_limit
+  Monthly budget for this environment's account. Alerts at 80% (actual) and 100% (forecast).
+
+  Enter a value: 
+var.container_image
+  Cobble module image, with a fixed version tag, from the Shared Services ECR repository.
+
+  Enter a value: 
+var.database_subnet_cidrs
+  One database subnet per AZ (no internet route).
+
+  Enter a value: 
+var.db_backup_retention_days
+  Days of automatic database backups.
+
+  Enter a value: 
+var.db_instance_class
+  Database server size.
+
+  Enter a value: 
+var.db_multi_az
+  Standby database copy in a second AZ.
+
+  Enter a value: 
+var.db_performance_insights
+  Query-level database monitoring.
+
+  Enter a value: 
+var.enable_container_insights
+  Detailed container metrics (small extra cost).
+
+  Enter a value: 
+var.enable_waf
+  Put AWS WAF in front of the load balancer.
+
+  Enter a value: 
+var.environment
+  Which environment this is.
+
+  Enter a value: 
+var.log_retention_days
+  How long application and network logs are kept in CloudWatch.
+
+  Enter a value: 
+var.nat_gateway_mode
+  "single" (dev, staging) or "one_per_az" (prod). See modules/network.
+
+  Enter a value: 
+var.private_subnet_cidrs
+  One private subnet per AZ (application containers).
+
+  Enter a value: 
+var.protect_from_deletion
+  Production safeguards: the database, load balancer and buckets refuse to be deleted, and the database keeps a final backup. false for dev and staging so they tear down cleanly.
+
+  Enter a value: 
+var.public_subnet_cidrs
+  One public subnet per AZ (load balancer and NAT gateways).
+
+  Enter a value: 
+var.vpc_cidr
+  IP range for the environment's VPC. Must not overlap with any other environment.
+
+  Enter a value: 
+
+Error: Missing expression
+
+  on <value for var.database_subnet_cidrs> line 1:
+  (source code not available)
+
+Expected the start of an expression, but found the end of the file.
+
+Error: Missing expression
+
+  on <value for var.private_subnet_cidrs> line 1:
+  (source code not available)
+
+Expected the start of an expression, but found the end of the file.
+
+Error: Missing expression
+
+  on <value for var.public_subnet_cidrs> line 1:
+  (source code not available)
+
+Expected the start of an expression, but found the end of the file.
+
+Error: No value for required variable
+
+  on variables.tf line 57:
+  57: variable "public_subnet_cidrs" {
+
+The root module input variable "public_subnet_cidrs" is not set, and has no
+default value. Use a -var or -var-file command line argument to provide a
+value for this variable.
+
+Error: No value for required variable
+
+  on variables.tf line 62:
+  62: variable "private_subnet_cidrs" {
+
+The root module input variable "private_subnet_cidrs" is not set, and has no
+default value. Use a -var or -var-file command line argument to provide a
+value for this variable.
+
+Error: No value for required variable
+
+  on variables.tf line 67:
+  67: variable "database_subnet_cidrs" {
+
+The root module input variable "database_subnet_cidrs" is not set, and has no
+default value. Use a -var or -var-file command line argument to provide a
+value for this variable.

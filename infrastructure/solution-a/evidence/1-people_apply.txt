@@ -1,0 +1,8 @@
+aws_identitystore_group.this["platform-admins"]: Creating...
+
+Error: creating IdentityStore Group (cobble-platform-admins): operation error identitystore: CreateGroup, https response error StatusCode: 400, RequestID: 0ec1e5c4-7af6-4153-bf8a-680dd76a9398, ConflictException: Duplicate GroupDisplayName
+
+  with aws_identitystore_group.this["platform-admins"],
+  on main.tf line 44, in resource "aws_identitystore_group" "this":
+  44: resource "aws_identitystore_group" "this" {
+

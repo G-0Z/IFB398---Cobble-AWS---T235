@@ -1,0 +1,27 @@
+aws_securityhub_organization_admin_account.this: Creating...
+aws_guardduty_organization_admin_account.this: Creating...
+aws_securityhub_organization_admin_account.this: Still creating... [00m10s elapsed]
+aws_securityhub_organization_admin_account.this: Still creating... [00m20s elapsed]
+aws_securityhub_organization_admin_account.this: Still creating... [00m30s elapsed]
+aws_securityhub_organization_admin_account.this: Still creating... [00m40s elapsed]
+aws_securityhub_organization_admin_account.this: Still creating... [00m50s elapsed]
+aws_securityhub_organization_admin_account.this: Still creating... [01m00s elapsed]
+aws_securityhub_organization_admin_account.this: Still creating... [01m10s elapsed]
+aws_securityhub_organization_admin_account.this: Still creating... [01m20s elapsed]
+aws_securityhub_organization_admin_account.this: Still creating... [01m30s elapsed]
+aws_securityhub_organization_admin_account.this: Still creating... [01m40s elapsed]
+aws_securityhub_organization_admin_account.this: Still creating... [01m50s elapsed]
+
+Error: enabling GuardDuty Organization Admin Account (021407434891): operation error GuardDuty: EnableOrganizationAdminAccount, https response error StatusCode: 400, RequestID: e0f71686-a508-47cb-b263-004288af9b05, BadRequestException: The request failed because another account is already enabled as GuardDuty delegated administrator for the organization.
+
+  with aws_guardduty_organization_admin_account.this,
+  on delegation.tf line 18, in resource "aws_guardduty_organization_admin_account" "this":
+  18: resource "aws_guardduty_organization_admin_account" "this" {
+
+
+Error: enabling Security Hub Organization Admin Account (021407434891): operation error SecurityHub: EnableOrganizationAdminAccount, https response error StatusCode: 409, RequestID: 288ae6b3-bf37-40a0-aca3-3152e0ff9458, api error ResourceConflictException: You have exceeded the allowed number of delegated administrators for the delegated service.
+
+  with aws_securityhub_organization_admin_account.this,
+  on delegation.tf line 33, in resource "aws_securityhub_organization_admin_account" "this":
+  33: resource "aws_securityhub_organization_admin_account" "this" {
+

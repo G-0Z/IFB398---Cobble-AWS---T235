@@ -1,0 +1,14 @@
+aws_guardduty_organization_admin_account.this: Creating...
+aws_iam_service_linked_role.access_analyzer: Creating...
+aws_securityhub_organization_admin_account.this: Creating...
+aws_guardduty_detector.management: Creating...
+aws_securityhub_organization_admin_account.this: Creation complete after 3s [id=100808729153]
+aws_iam_service_linked_role.access_analyzer: Creation complete after 3s [id=arn:aws:iam::669591255093:role/aws-service-role/access-analyzer.amazonaws.com/AWSServiceRoleForAccessAnalyzer]
+aws_guardduty_organization_admin_account.this: Creation complete after 4s [id=100808729153]
+
+Error: creating GuardDuty Detector: operation error GuardDuty: CreateDetector, https response error StatusCode: 400, RequestID: 12bf1e9e-adcd-462a-829c-5857a51d2302, BadRequestException: The request is rejected because a detector already exists for the current account.
+
+  with aws_guardduty_detector.management,
+  on security-delegation.tf line 11, in resource "aws_guardduty_detector" "management":
+  11: resource "aws_guardduty_detector" "management" {
+

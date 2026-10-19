@@ -1,0 +1,4 @@
+# Trivy exceptions that can't be written as inline #trivy:ignore comments.
+# Every other exception is an inline comment next to the code it excuses.
+# None are needed at the moment.
+misconfigurations: []

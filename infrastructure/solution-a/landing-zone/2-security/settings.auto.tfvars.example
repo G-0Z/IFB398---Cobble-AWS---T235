@@ -1,0 +1,12 @@
+# Copy to settings.auto.tfvars and replace every value.
+
+management_account_id = "123456789012"
+security_account_id   = "210987654321" # step 1 output: account_ids.security
+security_alert_email  = "cobble-security-alerts@example.com"
+
+# false if something else in the management account owns its GuardDuty
+# detector (e.g. Solution B).
+# enable_management_guardduty = false
+
+# Demo only: lets `terraform destroy` delete the log buckets.
+# force_destroy_buckets = true

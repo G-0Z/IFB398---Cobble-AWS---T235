@@ -1,0 +1,62 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ProtectSecurityServices",
+      "Effect": "Deny",
+      "Action": [
+        "cloudtrail:DeleteTrail",
+        "cloudtrail:StopLogging",
+        "cloudtrail:UpdateTrail",
+        "cloudtrail:PutEventSelectors",
+        "guardduty:DeleteDetector",
+        "guardduty:DisassociateFromAdministratorAccount",
+        "guardduty:DisassociateFromMasterAccount",
+        "guardduty:UpdateDetector",
+        "config:DeleteConfigurationRecorder",
+        "config:DeleteDeliveryChannel",
+        "config:StopConfigurationRecorder",
+        "securityhub:DisableSecurityHub",
+        "securityhub:DisassociateFromAdministratorAccount",
+        "securityhub:DisassociateFromMasterAccount",
+        "access-analyzer:DeleteAnalyzer",
+        "access-analyzer:CreateArchiveRule",
+        "access-analyzer:UpdateArchiveRule",
+        "config:PutConfigurationRecorder",
+        "config:PutDeliveryChannel",
+        "ec2:DeleteFlowLogs",
+        "guardduty:CreateFilter",
+        "guardduty:UpdateFilter",
+        "guardduty:DeleteMembers",
+        "guardduty:DisassociateMembers",
+        "guardduty:StopMonitoringMembers",
+        "securityhub:BatchUpdateFindings"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "ArnNotLike": {
+          "aws:PrincipalArn": "${admin_role_arn_pattern}"
+        }
+      }
+    },
+    {
+      "Sid": "ProtectTheAdministrationRole",
+      "Effect": "Deny",
+      "Action": [
+        "iam:AttachRolePolicy",
+        "iam:DeleteRole",
+        "iam:DeleteRolePolicy",
+        "iam:DetachRolePolicy",
+        "iam:PutRolePolicy",
+        "iam:UpdateAssumeRolePolicy",
+        "iam:UpdateRole"
+      ],
+      "Resource": "${admin_role_arn_pattern}",
+      "Condition": {
+        "ArnNotLike": {
+          "aws:PrincipalArn": "${admin_role_arn_pattern}"
+        }
+      }
+    }
+  ]
+}

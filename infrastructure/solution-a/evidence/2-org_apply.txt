@@ -1,0 +1,16 @@
+aws_organizations_delegated_administrator.access_analyzer: Destroying... [id=021407434891/access-analyzer.amazonaws.com]
+aws_securityhub_account.management: Destroying... [id=669591255093]
+aws_organizations_delegated_administrator.config: Destroying... [id=021407434891/config.amazonaws.com]
+aws_guardduty_detector.management: Destroying... [id=1cff7a4ae0734e3abfeb0f88df8bda61]
+aws_securityhub_account.management: Destruction complete after 0s
+aws_guardduty_detector.management: Destruction complete after 0s
+aws_organizations_delegated_administrator.config: Destruction complete after 0s
+aws_organizations_delegated_administrator.access_analyzer: Destruction complete after 1s
+aws_organizations_account.this["shared_services"]: Creating...
+
+Error: creating AWS Organizations Account (cobble-shared-services): operation error Organizations: CreateAccount, https response error StatusCode: 400, RequestID: 38580a08-2124-4dd9-9d14-fd29298f64cf, ConstraintViolationException: You have exceeded the allowed number of AWS accounts.
+
+  with aws_organizations_account.this["shared_services"],
+  on accounts.tf line 39, in resource "aws_organizations_account" "this":
+  39: resource "aws_organizations_account" "this" {
+

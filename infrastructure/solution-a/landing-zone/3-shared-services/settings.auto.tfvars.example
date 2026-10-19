@@ -1,0 +1,7 @@
+# Copy to settings.auto.tfvars and replace every value.
+
+shared_services_account_id = "333333333333" # step 1 output: account_ids.shared_services
+config_bucket_name         = "cobble-config-history-210987654321" # step 2 output
+config_kms_key_arn         = "arn:aws:kms:ap-southeast-2:210987654321:key/REPLACE-ME" # step 2 output
+budget_limit               = 10 # US$ (AWS budgets are USD-only), about A$14
+alert_email                = "cobble-aws-billing@example.com"
