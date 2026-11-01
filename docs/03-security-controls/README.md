@@ -25,7 +25,7 @@ Two companion pages go deeper:
 ### MFA
 - **What we do:** MFA is required at every single sign-on. In Solution B it's turned on for each IAM user. Member accounts' root users can't be used at all.
 - **Built in:** an Identity Center setting (console only; AWS has no API for it).
-- **Risk left:** it can't be enforced as code, so we keep a screenshot as evidence and check it in access reviews. Phishing-resistant MFA (Essential Eight, Nov 2023) isn't required yet.
+- **Risk left:** it can't be enforced as code, so we keep a [screenshot](../Evidence/images/04-idc-mfa.png) as evidence and check it in access reviews. Phishing-resistant MFA (Essential Eight, Nov 2023) isn't required yet.
 
 ### Secrets
 - **What we do:** no passwords in code or settings files. AWS creates and stores the database password in Secrets Manager, and the web servers read it when they start.
@@ -58,7 +58,7 @@ Two companion pages go deeper:
 - **Risk left:** basic image scanning only; running servers aren't scanned, and neither are code dependencies.
 
 ### Incident response
-- **What we do:** high and critical findings are emailed. Runbooks cover an application outage, database failure, stolen credentials, drift, the firewall blocking real users, and a cost spike. Roles and responsibilities are agreed.
+- **What we do:** high and critical findings are emailed (set up in the code; no alert has been received end to end yet). Runbooks cover an application outage, database failure, stolen credentials, drift, the firewall blocking real users, and a cost spike. Roles and responsibilities are agreed.
 - **Built in:** [`alerts.tf`](../../infrastructure/solution-a/landing-zone/2-security/alerts.tf), [operations model](../05-deployment-operations/README.md#6-runbooks)
 - **Risk left:** email only, no on-call paging. There's no step yet for reporting to the government (ASD) within 12 or 72 hours ([compliance mapping](../07-compliance-mapping/README.md#soci-style-considerations)).
 

@@ -82,20 +82,19 @@ platform admin deploys by following the runbook.
 
 **Rollback:** set `container_image` back to the previous tag and apply. The old image is still in ECR: the lifecycle policy keeps the 30 most recent.
 
-### Solution B
-
 ### Demos (both solutions)
 
-Deploy and tear down by hand around each demo:
-[deploy.md](../../runbooks/deploy.md) and [teardown.md](../../runbooks/teardown.md) for
-Solution B (48 resources), [demo-solution-a.md](../../runbooks/demo-solution-a.md) for
-Solution A's workload (66 resources). Solution A's landing zone demo uses
-`lz-dev.ps1` ([quickstart](../../runbooks/demo-landing-zone-quickstart.md)):
-`up` adds the security services and dev (143 resources) to the existing
-accounts and `down` removes them, leaving the free accounts, sign-in and
-guardrails in place. A redeploy should create the same
-resources again, and a final check should show nothing differs from the
-code. That proves the deployment is repeatable.
+Each demo is deployed and torn down by hand:
+
+| Demo | Runbook | Resources |
+|---|---|---|
+| Solution A landing zone + dev (the one we show) | [quickstart](../../runbooks/demo-landing-zone-quickstart.md): `lz-dev.ps1 up` / `down` | 143 added to the existing accounts. The free accounts, sign-in and guardrails stay |
+| Solution A workload in one account | [demo-solution-a.md](../../runbooks/demo-solution-a.md) | 66 |
+| Solution B | [deploy-solution-b.md](../../runbooks/deploy-solution-b.md) | 48 |
+
+A redeploy should create the same resources again, and a final check
+should show nothing differs from the code. That proves the deployment is
+repeatable.
 
 ---
 
@@ -114,6 +113,10 @@ code. That proves the deployment is repeatable.
 | Infrastructure drift | Nightly `terraform plan` ([drift.yml](../../.github/workflows/drift.yml)) | A failed workflow emails repo watchers | A |
 | Spend | AWS Budgets per account: 80% of actual spend, 100% of forecast | Budget email | A, B |
 | Container image vulnerabilities | ECR scan on push | Scan results in ECR, checked by the module team at release | A |
+
+**Not yet proven end to end:** the security alert emails are set up in the
+code, but no alert has been received in a test yet. Proving it needs a
+deployment left running, which is Phase 2 work.
 
 **Designed only (Phase 2), Guide §13.3:** application alarms (load
 balancer 5xx errors, unhealthy containers, p95 latency; database CPU,
@@ -165,7 +168,7 @@ Deliberate exceptions are kept in
 | Database (RDS PostgreSQL) | Automated backups with point-in-time restore | dev and staging: 7 days. prod: 35 days |
 | Database (prod) | Standby copy in a second AZ (Multi-AZ). Deletion protection. A final snapshot is taken if it's ever deleted | While the database exists |
 | Data buckets (S3) | Versioning: a deleted or overwritten file can be recovered | Old versions kept 90 days |
-| Audit logs | Object Lock: can't be changed or deleted | 365 days (governance mode) |
+| Audit logs | Object Lock: can't be changed or deleted | 365 days (governance mode). The demo uses 1 day so it can be torn down |
 | Container images | ECR, tags can't be overwritten | 30 most recent images |
 | Infrastructure | Terraform code in Git; state in a versioned, encrypted S3 bucket | Git history |
 
@@ -271,12 +274,12 @@ signs in as.
 
 | Role | Identity Center group | Responsible for |
 |---|---|---|
-| Cloud platform team | `platform-admins` | Landing zone, accounts, network, ECS, Terraform, pipeline, drift, provider updates |
-| DevSecOps | `platform-admins` | CI checks, image scanning, deployment controls, release evidence |
-| Database engineering | `developers` (dev); `platform-admins` for prod changes | Database settings, backups, restore tests, migrations |
-| Security operations | `auditors` (read everywhere) | GuardDuty, Security Hub, CloudTrail, incident response, access reviews, WAF exceptions |
-| Module team | `developers` | Their container image, health check, releases and rollbacks, fixing image vulnerabilities |
-| Platform product owner | `auditors` | RTO/RPO, release approvals, risk acceptance, budget |
+| Cloud platform team | `cobble-platform-admins` | Landing zone, accounts, network, ECS, Terraform, pipeline, drift, provider updates |
+| DevSecOps | `cobble-platform-admins` | CI checks, image scanning, deployment controls, release evidence |
+| Database engineering | `cobble-developers` (dev); `cobble-platform-admins` for prod changes | Database settings, backups, restore tests, migrations |
+| Security operations | `cobble-auditors` (read everywhere) | GuardDuty, Security Hub, CloudTrail, incident response, access reviews, WAF exceptions |
+| Module team | `cobble-developers` | Their container image, health check, releases and rollbacks, fixing image vulnerabilities |
+| Platform product owner | `cobble-auditors` | RTO/RPO, release approvals, risk acceptance, budget |
 
 ### Who does what (R = does it, A = accountable, C = consulted, I = told)
 

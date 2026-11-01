@@ -57,6 +57,22 @@ flowchart TB
     GH -- "plan / apply roles" --> ENV
 ```
 
+## What has been tested
+
+The same design, marked up to show how much of it has actually run in AWS
+(status at 25 October 2026):
+
+- **Solid green: demonstrated.** It ran in AWS on 17 to 18 October 2026.
+- **Dashed blue: configured.** It's in the code, but hasn't run live yet.
+- **Dotted grey: not yet built.** Planned for Phase 2.
+
+![Cobble's target architecture, marked up to show which parts have been demonstrated, configured or not yet built](cobble-target-architecture.png)
+
+The evidence behind each status is in [deliverable 4](../Evidence/README.md).
+To edit the diagram, open
+[`cobble-target-architecture.drawio`](cobble-target-architecture.drawio) in
+draw.io.
+
 ## Environments
 
 All environments are built by the same code
@@ -145,5 +161,5 @@ permissions per module, and storage permissions per tenant.
 | §13 Logging and monitoring | Partial | Security monitoring built; no application alarms or vulnerability scanning of running servers |
 | §14 Availability, backup, disaster recovery | Partial | Standby database and point-in-time restore built; no AWS Backup or second region |
 | §15 Infrastructure as code | Met | Terraform, ordered steps, secure shared state, peer review, nightly drift check |
-| §16 Acceptance checklist | Tracked | [Deliverable 4](../04-iac-evidence/README.md#implementation-guide-acceptance-checklist) |
+| §16 Acceptance checklist | Tracked | [Deliverable 4](../Evidence/README.md#implementation-guide-acceptance-checklist) |
 | §17 Runbooks and ownership | Mostly met | [Operations model](../05-deployment-operations/README.md); no disaster recovery runbook |

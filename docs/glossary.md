@@ -10,7 +10,7 @@ The terms used across this project, in plain English.
 | **Solution B**, **MVP**, **PoC** | Three names for the same thing: the smallest secure version of the platform, in one AWS account (`infrastructure/solution-b/`) |
 | **Solution A** | The full design: six AWS accounts with guardrails, single sign-on and central security (`infrastructure/solution-a/`) |
 | **Workload** | One Cobble environment: network, web servers, database and storage (`solution-a/workload/`). The same code builds the demo, dev, staging and prod |
-| **Demo** | Solution A's workload deployed into Solution B's account for a few hours, then torn down |
+| **Demo** | Usually the landing zone demo: Solution A's security services and dev environment brought up and down with `lz-dev.ps1`. Also the `demo` environment: Solution A's workload deployed into Solution B's account for a few hours |
 | **Landing zone** | The secure, ready-made AWS starting point that applications are deployed into (`solution-a/landing-zone/`) |
 | **Implementation Guide** | The client's *Cobbled AWS Platform Engineering Implementation Guide*, the target design we measure ourselves against |
 | **Phase 1 / Phase 2** | This semester's work / the follow-on work we've recommended |
@@ -53,12 +53,15 @@ The terms used across this project, in plain English.
 
 ## How finished a control is
 
-Used in the [control map](../infrastructure/README.md#control-map) and the
-deliverables.
+Two separate questions. **Has it run in AWS?** uses *demonstrated*, as in
+the [status diagram](01-reference-architecture/README.md#what-has-been-tested).
+**How strong is it?** uses the scale below, as in the
+[control map](../infrastructure/README.md#control-map) and the deliverables.
 
 | Status | Meaning |
 |---|---|
-| **Designed** | Written down only |
+| **Demonstrated** | Deployed and seen working in AWS, in the runs of 17 to 18 October 2026, with logs and screenshots in [the evidence](Evidence/README.md) |
+| **Designed** | Written down only. The status diagram calls this *not yet built* |
 | **Configured** | Built by the code, so it's there whenever the platform is deployed. An administrator could still change it |
 | **Enforced** | Built, and no one in the account can turn it off (for example, because a guardrail stops them) |
 | **Not covered** | Not part of that solution |

@@ -12,6 +12,7 @@ here.
 | [AWS Security Reference Architecture](https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/welcome.html) | Current | OU and account structure; security services delegated to a Security account | [`solution-a/landing-zone/1-organization`](../infrastructure/solution-a/landing-zone/1-organization/), [deliverable 2](02-landing-zone-design/README.md) |
 | [Organizing your AWS environment](https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html) | Current | OU names (Security, Infrastructure, Workloads) | `organization.tf` |
 | [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html), Security pillar | Current | Threat modelling (SEC01-BP07), least privilege, encryption, detection | [Deliverables 3](03-security-controls/README.md) and [6](06-threat-model/README.md) |
+| [AWS Organizations SCP examples](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps_examples.html) | Current | Guardrails written as targeted denies | [`1-organization/policies/`](../infrastructure/solution-a/landing-zone/1-organization/policies/) |
 | [IAM security best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html) | Current | Temporary credentials only: Identity Center for people, OIDC for CI | `identity-center.tf`, `modules/github-oidc` |
 
 ## Security and compliance
@@ -24,7 +25,7 @@ here.
 | Security of Critical Infrastructure Act 2018 (SOCI) | As amended (enhanced CIRMP rules 10 Jun 2026) | "SOCI-style considerations" if Cobble hosts critical-infrastructure tenants | Deliverable 7 |
 | [CIS AWS Foundations Benchmark](https://www.cisecurity.org/benchmark/amazon_web_services) | v3.0 | Live posture checks in Security Hub | [`2-security/detection.tf`](../infrastructure/solution-a/landing-zone/2-security/detection.tf) |
 | AWS Foundational Security Best Practices | Current | Live posture checks in Security Hub | `2-security/detection.tf` |
-| STRIDE, with [AWS Threat Composer](https://awslabs.github.io/threat-composer/) | — | Threat modelling method | [Deliverable 6](06-threat-model/README.md) |
+| STRIDE, with [AWS Threat Composer](https://awslabs.github.io/threat-composer/) | n/a | Threat modelling method | [Deliverable 6](06-threat-model/README.md) |
 
 ## Code
 

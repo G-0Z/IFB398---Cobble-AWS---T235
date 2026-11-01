@@ -6,9 +6,9 @@ decisions and the gaps that remain.
 
 **In short:** six accounts, grouped by purpose. Staff sign in once through
 single sign-on and get only the access their role needs. Four guardrails
-apply to every account, even to administrators: stay in Australian regions,
-never use the root user, never switch off security monitoring, and never
-leave the organisation.
+apply to every account, even to administrators: stay in Sydney (plus
+`us-east-1` for AWS's global services), never use the root user, never
+switch off security monitoring, and never leave the organisation.
 
 The code is Solution A's landing zone
 ([`infrastructure/solution-a/landing-zone/`](../../infrastructure/solution-a/landing-zone/)).
@@ -23,7 +23,7 @@ simplification: a single Security account does the job of AWS's separate
 |---|---|---|---|
 | (top level) | Management | Runs the organisation, billing and single sign-on. Runs no applications | `1-organization` |
 | Security | `cobble-security` | Holds the locked audit logs and runs threat detection and security checks for every account | `2-security` |
-| Infrastructure | `cobble-shared-services` | The container image registry every environment pulls from | `3-shared-services` |
+| Infrastructure | `cobble-shared-services` | The container image registry every environment pulls from. **In the code, but the account isn't created yet:** the five accounts closed on 17 October count against the organisation's 10-account limit until about mid-January 2027 | `3-shared-services` |
 | Workloads > NonProduction | `cobble-dev` | Where developers try changes | `workload/dev.tfvars` |
 | Workloads > NonProduction | `cobble-staging` | A dress rehearsal for prod, with synthetic data. Also the Guide's "test" environment | `workload/staging.tfvars` |
 | Workloads > Production | `cobble-prod` | What tenants use | `workload/prod.tfvars` |

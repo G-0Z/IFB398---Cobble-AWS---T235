@@ -1,19 +1,20 @@
-# Runbook: demo the Solution A landing zone with one environment (dev)
+# Runbook: the landing zone demo, step by step
 
-**What it does:** builds the real Solution A landing zone in the team's
-organisation (`o-b60hme0nfl`, managed from `669591255093`) and one
-environment (dev) inside it, so it can be recorded. Then it tears down
-everything that costs money, leaving the empty accounts ready for the next
-run.
+Builds the real Solution A landing zone in the team's organisation
+(`o-b60hme0nfl`, managed from `669591255093`) with one environment (dev)
+inside it, then tears down everything that costs money, leaving the empty
+accounts ready for the next run.
 
-Unlike the [single-account demo](demo-solution-a.md), this shows the parts
-that need an organisation: separate accounts, guardrails that block even an
-administrator, single sign-on, and central security.
-
-## The demo cycle: deploy, destroy, redeploy
+> [!TIP]
+> **Just running the demo?** Use the [quickstart](demo-landing-zone-quickstart.md):
+> `.\lz-dev.ps1 up` does steps 1 to 4 below, and `.\lz-dev.ps1 down` does
+> step 7. Come here for what each step does, to run one by hand, for the
+> console tour ([step 5](#5-what-to-record)), the screenshot list
+> ([step 6](#6-evidence)), or to close the accounts at the end of the
+> project ([Decommission](#decommission-end-of-project-only)).
 
 The accounts are built once and kept. Each demo only builds and removes
-what costs money (security services and the dev environment).
+what costs money:
 
 ```text
    ┌──────────────── kept between demos (free) ─────────────────┐
@@ -26,38 +27,11 @@ what costs money (security services and the dev environment).
    └──────────────┘  .\lz-dev.ps1 down └──────────────┘
 ```
 
-Every time, in one PowerShell window:
-
-```powershell
-aws sso login --profile AdministratorAccess-669591255093
-cd C:\Users\maxgo\dev\IFB398---Cobble-AWS---T235\infrastructure\solution-a
-Set-ExecutionPolicy -Scope Process Bypass     # once per window, lets it run the script
-```
-
-| To... | Run | Takes | Done when |
-|---|---|---|---|
-| **Deploy** | `.\lz-dev.ps1 up` | About 15 minutes from removed, a few minutes if already up | It prints `Up. App: http://…` and that page loads |
-| **See what's running** | `.\lz-dev.ps1 status` | A minute | Running: GuardDuty and SecurityHub `True` in every account, plus a `Dev app:` address |
-| **Destroy** | `.\lz-dev.ps1 down` | About 10 minutes | Its final table reads `False` in every column |
-| **Redeploy** | `.\lz-dev.ps1 up` again | About 15 minutes | As for deploy. The same 4 accounts are reused |
-
-- **Safe to repeat.** Running `up` twice changes nothing the second time. If either command stops partway, fix the cause and run the same command again: it carries on from where it stopped.
-- **After each `up`:** click **Confirm subscription** in the AWS email in the `n11543027@qut.edu.au` inbox, or no security alerts arrive. `down` deletes the subscription.
-- **Never closes or creates accounts.** `up` refuses to apply an organisation change that deletes anything. Accounts are only closed by hand at the end of the project ([Decommission](#decommission-end-of-project-only)).
-- **Logs:** each run saves its output to `infrastructure/solution-a/evidence/lz-dev-<up|down>-<time>.txt`.
-- **Stuck?** See the [quickstart's error table](demo-landing-zone-quickstart.md#if-it-stops). Setting up a new computer is covered in the [quickstart](demo-landing-zone-quickstart.md#1-set-up-your-computer-once).
-
-The rest of this runbook is the same thing step by step by hand, plus what
-to show while it's up ([step 5](#5-what-to-record)) and the screenshots to
-take ([step 6](#6-evidence)).
-
----
-
 > [!IMPORTANT]
-> **This creates 5 real AWS accounts, once.** They are permanent: the teardown empties them but never closes them. Closing an account burns its email address for good and keeps it counted against the organisation's 10-account limit for 90 days, which is what broke earlier re-runs. Close them only when the project ends ([Decommission](#decommission-end-of-project-only)).
+> **The member accounts are permanent.** The teardown empties them but never closes them. Closing an account burns its email address for good and keeps it counted against the organisation's 10-account limit for 90 days, which is what broke earlier re-runs. Close them only when the project ends ([Decommission](#decommission-end-of-project-only)).
 
 > [!NOTE]
-> **For now there are 4, not 5.** `cobble-shared-services` is left out of `1-organization/settings.auto.tfvars`: the 5 accounts closed on 2026-10-17 fill the organisation's 10-account limit until about 2027-01-15, and this demo doesn't use that account. Wherever this runbook says 5 accounts (6 with management), read 4 (5). To add it later, uncomment its email and re-run step 2.
+> **There are 4 member accounts today, not 5.** `cobble-shared-services` is left out of `1-organization/settings.auto.tfvars`: the 5 accounts closed on 2026-10-17 fill the organisation's 10-account limit until about 2027-01-15, and this demo doesn't use that account. Wherever this runbook says 5 accounts (6 with management), read 4 (5). To add it later, uncomment its email and re-run step 2.
 
 | | |
 |---|---|
@@ -140,7 +114,7 @@ so nothing has to be handed over between the two.
 Then set up the values and the helper the rest of the runbook uses:
 
 ```powershell
-$repo = "C:\Users\maxgo\dev\IFB398---Cobble-AWS---T235"
+$repo = "<where you cloned it>"   # e.g. C:\Users\you\dev\IFB398---Cobble-AWS---T235
 $lz   = "$repo\infrastructure\solution-a\landing-zone"
 $ev   = "$repo\infrastructure\solution-a\evidence"
 $env:AWS_REGION = "ap-southeast-2"
@@ -353,7 +327,7 @@ region on Sydney unless told otherwise: in another region S3 says the bucket
 |---|---|---|
 | Organizations > AWS accounts (management account) | The folder tree: Security, Infrastructure, Workloads > NonProduction / Production, each with its account | Separate accounts per purpose and environment (D2) |
 | Organizations > Policies > Service control policies | The 4 guardrails attached to Root | Guardrails cover every member account (D2, D3) |
-| **A guardrail blocking an admin** | Portal > `cobble-dev` > `CobblePlatformAdmin`. Switch the region to US West (Oregon) and try to create an S3 bucket | "Explicit deny in a service control policy": even a full administrator can't work outside the allowed regions |
+| **A guardrail blocking an admin** | Portal > `cobble-dev` > `CobblePlatformAdmin`. Switch the region to Europe (London) and try to create an S3 bucket | "Explicit deny in a service control policy": even a full administrator can't work outside the allowed regions |
 | IAM Identity Center | The `cobble-` groups, the 3 permission sets, MFA required | Single sign-on with MFA, no shared IAM users (D3) |
 | Portal > `cobble-security` | CloudTrail: the organisation trail. S3: `cobble-audit-logs-<security account ID>` > Properties > Object Lock (the bucket is in this account, not the management account). GuardDuty > Accounts: the four other Cobble accounts enrolled. Security Hub: both standards (findings fill in over the next hours), and Settings > Accounts listing the Cobble accounts as members. Config > Aggregators: all accounts | Central, tamper-resistant logging and detection across the organisation (D3) |
 | Portal > `cobble-dev` | VPC: six subnets in three layers. ECS: the web server has a private IP only. RDS: "Publicly accessible: No", encrypted. Secrets Manager: the database password. S3: encrypted, versioned data bucket. Budgets: the US$100 dev budget | The workload design running in its own account (D1, D4) |
@@ -431,7 +405,7 @@ possible:
 | | `06-scps.png` | Organizations > Policies > Service control policies | The 4 guardrails |
 | | `06b-org-policy-types.png` | Organizations > Policies | Service control policies enabled |
 | | `07-scps-root-targets.png` | Root > Policies tab | All 4 attached to Root |
-| `cobble-dev`, **PlatformAdmin** | `08-scp-deny.png` | Region US West (Oregon) > S3 > Create bucket | The SCP explicit-deny error, with role and region in view |
+| `cobble-dev`, **PlatformAdmin** | `08-scp-deny.png` | Region Europe (London) > S3 > Create bucket | The SCP explicit-deny error, with role and region in view |
 | `cobble-security`, PlatformAdmin | `09-cloudtrail-org-trail.png` | CloudTrail > Trails | Organisation trail, multi-region, log file validation on |
 | | `10-s3-object-lock.png` | S3 > `cobble-audit-logs-…` > Properties | Object Lock enabled, with retention |
 | | `11-guardduty-accounts.png` | GuardDuty > Accounts | The 4 other Cobble accounts, Enabled |

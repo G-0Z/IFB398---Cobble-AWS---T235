@@ -4,7 +4,8 @@ How things are named in this repo and in AWS. Read it when you need to
 name something new, or work out what an existing name means. Most readers
 only need the short version.
 
-**Short version:** folders and files are `kebab-case`, Terraform names are
+**Short version:** folders and files are `kebab-case` (except the four
+record folders in `docs/`, below), Terraform names are
 `snake_case`, AWS resource names are `cobble-<environment>-<thing>`, and a
 name says *what the thing is*, not how it's built.
 
@@ -32,6 +33,7 @@ name says *what the thing is*, not how it's built.
 | `infrastructure/solution-a/landing-zone/<n>-<step>/` | A landing-zone **root config**. The number is the order you run them in. | `landing-zone/2-security/` |
 | `infrastructure/solution-a/landing-zone/identity/` | People and groups; run before step 1 | `identity/` |
 | `docs/<nn>-<deliverable>/` | One folder per capstone deliverable; the number matches the brief | `docs/06-threat-model/` |
+| `docs/Evidence/`, `docs/Presentation/`, `docs/Meeting Minutes/`, `docs/Sprint Plans/` | Records the team and markers read, named in plain words. Deliverables 4 and 8 live in `Evidence/` and `Presentation/` | `docs/Sprint Plans/` |
 
 Solution B has three everyday names, **Solution B**, **the MVP** and **the
 PoC**, and they all mean `solution-b/` (called `envs/poc/` until October 2026;
@@ -224,8 +226,10 @@ Engineering Implementation Guide*. Tag keys are `PascalCase`.
 | Thing | Pattern | Example |
 |---|---|---|
 | Design decisions | A numbered paragraph under [Key decisions](02-landing-zone-design/README.md#key-decisions): the decision, why, and when to revisit it | Decision 5: PostgreSQL for now |
-| Runbooks | `runbooks/<action>[-<target>].md`. No target means Solution B (the first runbooks written); new ones always name a target. List every runbook in [`runbooks/README.md`](../runbooks/README.md) | `deploy.md`, `deploy-solution-a.md`, `demo-solution-a.md` |
-| A deliverable's main page | `docs/<nn>-<deliverable>/README.md`, so GitHub shows it when the folder is opened | `docs/06-threat-model/README.md` |
+| Runbooks | `runbooks/<action>[-<target>].md`. Name the target whenever there's more than one; only one-off setup like `bootstrap.md` leaves it out. List every runbook in [`runbooks/README.md`](../runbooks/README.md) | `deploy-solution-b.md`, `deploy-solution-a.md`, `demo-solution-a.md` |
+| A deliverable's main page | `docs/<nn>-<deliverable>/README.md`, so GitHub shows it when the folder is opened. Deliverables 4 and 8 use `docs/Evidence/` and `docs/Presentation/` | `docs/06-threat-model/README.md` |
+| Meeting minutes | `docs/Meeting Minutes/IFB398-T235-Meeting Minutes-<yyyy-mm-dd>-<Team or Client> Meeting <n>.md` | `IFB398-T235-Meeting Minutes-2026-09-14-Client Meeting 2.md` |
+| Sprint reports | `docs/Sprint Plans/IFB398-T235-Sprint Report-<start date>-P<phase> Sprint <n>.md` | `IFB398-T235-Sprint Report-2026-10-12-P1 Sprint 5.md` |
 | Personal branches | `<Firstname>-dev`, merged to `main` by pull request | `Khai-dev`, `max-dev` |
 
 ## 8. Decoding a name: worked examples

@@ -10,10 +10,10 @@ one, and the rest are deliberate trade-offs, false alarms, or Phase 2 work,
 each explained below. A manual review found five more issues that no
 scanner could see, and all five are fixed.
 
-| Tool | Where it runs | Result (6 Oct 2026) |
+| Tool | Where it runs | Result |
 |---|---|---|
 | [Trivy](https://trivy.dev/) | Automatically on every pull request, on all 7 root configs. A finding blocks the merge | **0 open findings** (14 Oct 2026, Trivy 0.74.0). Each deliberate exception is a comment next to the code, giving the reason |
-| [Checkov](https://www.checkov.io/) | By hand, as a stricter second opinion | **75 findings across 32 checks**, all reviewed below |
+| [Checkov](https://www.checkov.io/) | By hand, as a stricter second opinion | **75 findings across 32 checks** (6 Oct 2026), all reviewed below |
 
 **Why so many Checkov findings?** Checkov reads each building block on its
 own, without the settings each environment gives it. So it flags "load

@@ -10,7 +10,7 @@ it. It's also called **the MVP** or **the PoC**.
 | **Runs in** | The team's AWS account. Terraform refuses to run against any other account |
 | **Settings** | [`poc.auto.tfvars`](poc.auto.tfvars): the only file to edit to change a setting. It holds no secrets, so it's committed |
 | **Cost** | About A$0, because it's only deployed around demos. The demo web page adds about A$1.90 a day |
-| **Deploy / tear down** | [runbooks/deploy.md](../../runbooks/deploy.md), [runbooks/teardown.md](../../runbooks/teardown.md) |
+| **Deploy / tear down** | [runbooks/deploy-solution-b.md](../../runbooks/deploy-solution-b.md) |
 
 To see everything it builds, read [`main.tf`](main.tf) from top to bottom.
 

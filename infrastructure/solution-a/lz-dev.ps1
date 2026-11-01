@@ -23,11 +23,14 @@ $ev       = "$PSScriptRoot\evidence"
 $log      = "$ev\lz-dev-$Action-$(Get-Date -Format yyyyMMdd-HHmm).txt"
 New-Item -ItemType Directory -Force $ev | Out-Null
 
+# Shows each line and appends it to $log as UTF-8 (5.1's Tee-Object writes UTF-16, which GitHub shows as binary).
+filter log { $_; Add-Content -LiteralPath $log -Value $_ -Encoding UTF8 }
+
 # Runs terraform in $dir, shows and logs its output, stops on failure.
 # cmd /c because PowerShell 5.1 turns a native command's stderr into errors.
 function tf($dir, $cmd) {
-  "`n>> terraform $cmd   ($(Split-Path $dir -Leaf))" | Tee-Object -Append $log
-  cmd /c "terraform -chdir=`"$dir`" $cmd 2>&1" | Tee-Object -Append $log
+  "`n>> terraform $cmd   ($(Split-Path $dir -Leaf))" | log
+  cmd /c "terraform -chdir=`"$dir`" $cmd 2>&1" | log
   if ($LASTEXITCODE) { throw "terraform $cmd failed in $dir (exit $LASTEXITCODE). Log: $log" }
 }
 
@@ -57,7 +60,7 @@ function Remove-StaleDelegatedAdmins {
   $active = aws organizations list-accounts --query "Accounts[?Status=='ACTIVE'].Id" --output json | ConvertFrom-Json
   $admins = aws organizations list-delegated-administrators --query "DelegatedAdministrators[].Id" --output json | ConvertFrom-Json
   foreach ($a in $admins | Where-Object { $active -notcontains $_ }) {
-    "Removing stale delegated administrator $a" | Tee-Object -Append $log
+    "Removing stale delegated administrator $a" | log
     foreach ($s in 'guardduty.amazonaws.com', 'securityhub.amazonaws.com', 'config.amazonaws.com', 'access-analyzer.amazonaws.com') {
       cmd /c "aws organizations deregister-delegated-administrator --account-id $a --service-principal $s 2>nul"
     }
@@ -140,7 +143,7 @@ switch ($Action) {
       if ($d -and $d -ne 'None') { aws guardduty update-organization-configuration --detector-id $d --auto-enable-organization-members NONE }
     }
     try { tf $sec "destroy -auto-approve -input=false -no-color -var security_account_id=$($ids.security)" }
-    catch { 'Retrying security destroy once' | Tee-Object -Append $log
+    catch { 'Retrying security destroy once' | log
             tf $sec "destroy -auto-approve -input=false -no-color -var security_account_id=$($ids.security)" }
 
     # 7.3 Handing GuardDuty and Security Hub back leaves them on (and billing) in each member.

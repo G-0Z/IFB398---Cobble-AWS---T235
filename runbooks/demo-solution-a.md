@@ -27,7 +27,7 @@ passing automatic checks on every folder.
 ## Before you start
 
 Same as Solution B: Terraform, the AWS CLI, and a sign-in to the team's
-account ([deploy.md](deploy.md#sign-in)). Check
+account ([deploy-solution-b.md](deploy-solution-b.md#sign-in)). Check
 `aws sts get-caller-identity` shows account `669591255093`.
 
 ## Deploy
@@ -66,7 +66,7 @@ before deleting it.
 
 To prove it's repeatable, run the deploy steps again: you should get the
 same 66 resources and the same page. Record it in the
-[evidence log](../docs/04-iac-evidence/README.md#evidence-log).
+[evidence log](../docs/Evidence/README.md#evidence-log).
 
 ## If something goes wrong
 

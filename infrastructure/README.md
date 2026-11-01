@@ -35,7 +35,7 @@ README saying what it builds and how to run it.
 | Folder | Solution | Runs in | Runbook |
 |---|---|---|---|
 | [`bootstrap`](bootstrap/) | Both | The team's account | [bootstrap.md](../runbooks/bootstrap.md) |
-| [`solution-b`](solution-b/) | B | The team's account | [deploy.md](../runbooks/deploy.md), [teardown.md](../runbooks/teardown.md) |
+| [`solution-b`](solution-b/) | B | The team's account | [deploy-solution-b.md](../runbooks/deploy-solution-b.md) |
 | [`solution-a/lz-dev.ps1`](solution-a/lz-dev.ps1) | A (the demo we show) | Management account, then Security and dev | [demo-landing-zone-quickstart.md](../runbooks/demo-landing-zone-quickstart.md) |
 | [`solution-a/workload`](solution-a/workload/) + `demo.tfvars` | A (workload-only demo) | The team's account | [demo-solution-a.md](../runbooks/demo-solution-a.md) |
 | [`solution-a/workload`](solution-a/workload/) + `dev`, `staging`, `prod.tfvars` | A | Each environment's own account | [deploy-solution-a.md, step 4](../runbooks/deploy-solution-a.md#step-4-dev-then-staging-then-prod) |
@@ -182,15 +182,7 @@ nothing.
 
 ## Why it's built this way
 
-| Practice | Source |
-|---|---|
-| One account per environment, grouped into Security, Infrastructure and Workloads | [AWS Security Reference Architecture](https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/welcome.html), [Organizing your AWS environment](https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html) |
-| Security services run from a dedicated Security account, not the management account | AWS Security Reference Architecture |
-| Guardrails that deny specific actions | [AWS Organizations SCP examples](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps_examples.html) |
-| Only temporary credentials: single sign-on for people, OIDC for GitHub | [IAM security best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html) |
-| Small modules, each with a README; standard file names; consistent formatting | [Terraform style guide](https://developer.hashicorp.com/terraform/language/style), [Standard module structure](https://developer.hashicorp.com/terraform/language/modules/develop/structure) |
-
-The design decisions themselves, with their reasons, are in
-[deliverable 2](../docs/02-landing-zone-design/README.md#key-decisions).
-Every framework the design follows is in
+The design decisions, with their reasons, are in
+[deliverable 2](../docs/02-landing-zone-design/README.md#key-decisions). The
+AWS and Terraform guidance the code follows is listed in
 [frameworks and standards](../docs/frameworks-and-standards.md).

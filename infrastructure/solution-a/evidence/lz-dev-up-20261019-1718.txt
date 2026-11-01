@@ -1,0 +1,3789 @@
+
+>> terraform init -input=false -no-color   (1-organization)
+Initializing the backend...
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/aws v5.100.0
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+>> terraform init -input=false -no-color   (2-security)
+Initializing the backend...
+
+Initializing modules...
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/aws v5.100.0
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+>> terraform init -input=false -no-color -reconfigure -backend-config=key=solution-a/workload/dev/terraform.tfstate   (workload)
+Initializing the backend...
+
+Successfully configured the backend "s3"! Terraform will automatically
+use this backend unless the backend configuration changes.
+
+Initializing modules...
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Reusing previous version of hashicorp/tls from the dependency lock file
+- Using previously-installed hashicorp/aws v5.100.0
+- Using previously-installed hashicorp/tls v4.4.1
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+>> terraform init -input=false -no-color   (identity)
+Initializing the backend...
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/aws v5.100.0
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+>> terraform apply -auto-approve -input=false -no-color   (identity)
+data.aws_ssoadmin_instances.this: Reading...
+data.aws_ssoadmin_instances.this: Read complete after 0s [id=ap-southeast-2]
+aws_identitystore_group.this["developers"]: Refreshing state... [id=d-97679ebd7b/29ae6498-2041-702b-0152-149489ee3834]
+aws_identitystore_group.this["platform-admins"]: Refreshing state... [id=d-97679ebd7b/e97e8468-00f1-704d-7f74-9dee91d6869e]
+aws_identitystore_group.this["auditors"]: Refreshing state... [id=d-97679ebd7b/49ae6448-6051-70f0-fe22-8c2ff5efabad]
+aws_identitystore_user.this["max.gosling"]: Refreshing state... [id=d-97679ebd7b/f95e7498-1091-700e-87de-6576e6dc146d]
+aws_identitystore_group_membership.this["max.gosling/platform-admins"]: Refreshing state... [id=d-97679ebd7b/f9eeb408-10a1-708c-c3bb-c5abac9824c9]
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+groups = {
+  "cobble-auditors" = "49ae6448-6051-70f0-fe22-8c2ff5efabad"
+  "cobble-developers" = "29ae6498-2041-702b-0152-149489ee3834"
+  "cobble-platform-admins" = "e97e8468-00f1-704d-7f74-9dee91d6869e"
+}
+users = [
+  "max.gosling",
+]
+
+>> terraform plan -input=false -no-color -out=org.tfplan   (1-organization)
+data.aws_ssoadmin_instances.this: Reading...
+aws_iam_service_linked_role.access_analyzer: Refreshing state... [id=arn:aws:iam::669591255093:role/aws-service-role/access-analyzer.amazonaws.com/AWSServiceRoleForAccessAnalyzer]
+aws_organizations_policy.guardrail["protect-security-services"]: Refreshing state... [id=p-qgiiqyfx]
+aws_organizations_policy.guardrail["deny-root-user"]: Refreshing state... [id=p-xhrtz3qk]
+aws_organizations_policy.guardrail["restrict-regions"]: Refreshing state... [id=p-qrnup5yu]
+aws_organizations_policy.guardrail["deny-leave-organization"]: Refreshing state... [id=p-vryb86vj]
+aws_organizations_organization.this: Refreshing state... [id=o-b60hme0nfl]
+data.aws_ssoadmin_instances.this: Read complete after 0s [id=ap-southeast-2]
+data.aws_identitystore_group.this["developers"]: Reading...
+data.aws_identitystore_group.this["auditors"]: Reading...
+data.aws_identitystore_group.this["platform-admins"]: Reading...
+aws_ssoadmin_permission_set.this["PlatformAdmin"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_permission_set.this["ReadOnly"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+data.aws_identitystore_group.this["auditors"]: Read complete after 1s [id=49ae6448-6051-70f0-fe22-8c2ff5efabad]
+aws_ssoadmin_permission_set.this["Developer"]: Refreshing state... [id=arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3ef1aafd2fbb3fdd,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+data.aws_identitystore_group.this["platform-admins"]: Read complete after 1s [id=e97e8468-00f1-704d-7f74-9dee91d6869e]
+data.aws_identitystore_group.this["developers"]: Read complete after 1s [id=29ae6498-2041-702b-0152-149489ee3834]
+aws_ssoadmin_managed_policy_attachment.this["Developer"]: Refreshing state... [id=arn:aws:iam::aws:policy/PowerUserAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3ef1aafd2fbb3fdd,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_managed_policy_attachment.this["PlatformAdmin"]: Refreshing state... [id=arn:aws:iam::aws:policy/AdministratorAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_managed_policy_attachment.this["ReadOnly"]: Refreshing state... [id=arn:aws:iam::aws:policy/ReadOnlyAccess,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_organizations_policy_attachment.guardrail["restrict-regions"]: Refreshing state... [id=r-m9si:p-qrnup5yu]
+aws_organizations_policy_attachment.guardrail["deny-leave-organization"]: Refreshing state... [id=r-m9si:p-vryb86vj]
+aws_organizations_policy_attachment.guardrail["protect-security-services"]: Refreshing state... [id=r-m9si:p-qgiiqyfx]
+aws_organizations_organizational_unit.infrastructure: Refreshing state... [id=ou-m9si-jhsi97ox]
+aws_organizations_organizational_unit.workloads: Refreshing state... [id=ou-m9si-h7yrqefz]
+aws_organizations_policy_attachment.guardrail["deny-root-user"]: Refreshing state... [id=r-m9si:p-xhrtz3qk]
+aws_organizations_organizational_unit.security: Refreshing state... [id=ou-m9si-astnnylp]
+aws_organizations_organizational_unit.non_production: Refreshing state... [id=ou-m9si-dkm2w3c4]
+aws_organizations_organizational_unit.production: Refreshing state... [id=ou-m9si-7qvmhlmm]
+aws_organizations_account.this["dev"]: Refreshing state... [id=740667376104]
+aws_organizations_account.this["security"]: Refreshing state... [id=021407434891]
+aws_organizations_account.this["staging"]: Refreshing state... [id=231217915029]
+aws_organizations_account.this["prod"]: Refreshing state... [id=483598626480]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/security"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,021407434891,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/staging"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,231217915029,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/management"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,669591255093,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["developers/ReadOnly/prod"]: Refreshing state... [id=29ae6498-2041-702b-0152-149489ee3834,GROUP,483598626480,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/staging"]: Refreshing state... [id=49ae6448-6051-70f0-fe22-8c2ff5efabad,GROUP,231217915029,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/dev"]: Refreshing state... [id=49ae6448-6051-70f0-fe22-8c2ff5efabad,GROUP,740667376104,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["developers/Developer/dev"]: Refreshing state... [id=29ae6498-2041-702b-0152-149489ee3834,GROUP,740667376104,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-3ef1aafd2fbb3fdd,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/dev"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,740667376104,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/security"]: Refreshing state... [id=49ae6448-6051-70f0-fe22-8c2ff5efabad,GROUP,021407434891,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/management"]: Refreshing state... [id=49ae6448-6051-70f0-fe22-8c2ff5efabad,GROUP,669591255093,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["auditors/ReadOnly/prod"]: Refreshing state... [id=49ae6448-6051-70f0-fe22-8c2ff5efabad,GROUP,483598626480,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["developers/ReadOnly/staging"]: Refreshing state... [id=29ae6498-2041-702b-0152-149489ee3834,GROUP,231217915029,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-d46fc56fffe9955e,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+aws_ssoadmin_account_assignment.this["platform-admins/PlatformAdmin/prod"]: Refreshing state... [id=e97e8468-00f1-704d-7f74-9dee91d6869e,GROUP,483598626480,AWS_ACCOUNT,arn:aws:sso:::permissionSet/ssoins-8259e7fa2fa852cb/ps-42952e4a5885a6db,arn:aws:sso:::instance/ssoins-8259e7fa2fa852cb]
+
+No changes. Your infrastructure matches the configuration.
+
+Terraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+
+>> terraform apply -input=false -no-color org.tfplan   (1-organization)
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+account_ids = {
+  "dev" = "740667376104"
+  "prod" = "483598626480"
+  "security" = "021407434891"
+  "staging" = "231217915029"
+}
+guardrails = [
+  "deny-leave-organization",
+  "deny-root-user",
+  "protect-security-services",
+  "restrict-regions",
+]
+organization_id = "o-b60hme0nfl"
+
+>> terraform apply -auto-approve -input=false -no-color -var security_account_id=021407434891   (2-security)
+data.aws_organizations_organization.management: Reading...
+module.management_account_baseline.data.aws_caller_identity.current: Reading...
+module.management_account_baseline.data.aws_caller_identity.current: Read complete after 0s [id=669591255093]
+data.aws_organizations_organization.this: Reading...
+module.access_logs.data.aws_elb_service_account.current: Reading...
+module.account_baseline.data.aws_caller_identity.current: Reading...
+data.aws_region.current: Reading...
+data.aws_caller_identity.current: Reading...
+module.access_logs.data.aws_elb_service_account.current: Read complete after 0s [id=783225319266]
+data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.access_logs.data.aws_caller_identity.current: Reading...
+data.aws_caller_identity.current: Read complete after 0s [id=021407434891]
+module.account_baseline.data.aws_caller_identity.current: Read complete after 0s [id=021407434891]
+module.access_logs.data.aws_caller_identity.current: Read complete after 0s [id=021407434891]
+data.aws_organizations_organization.management: Read complete after 2s [id=o-b60hme0nfl]
+data.aws_organizations_organization.this: Read complete after 2s [id=o-b60hme0nfl]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_accessanalyzer_analyzer.organization will be created
+  + resource "aws_accessanalyzer_analyzer" "organization" {
+      + analyzer_name = "cobble-organization"
+      + arn           = (known after apply)
+      + id            = (known after apply)
+      + tags_all      = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Confidential"
+          + "Environment" = "security"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + type          = "ORGANIZATION"
+    }
+
+  # aws_cloudtrail.organization will be created
+  + resource "aws_cloudtrail" "organization" {
+      + arn                           = (known after apply)
+      + enable_log_file_validation    = true
+      + enable_logging                = true
+      + home_region                   = (known after apply)
+      + id                            = (known after apply)
+      + include_global_service_events = true
+      + is_multi_region_trail         = true
+      + is_organization_trail         = true
+      + kms_key_id                    = (known after apply)
+      + name                          = "cobble-organization-trail"
+      + s3_bucket_name                = "cobble-audit-logs-021407434891"
+      + sns_topic_arn                 = (known after apply)
+      + tags_all                      = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Confidential"
+          + "Environment" = "security"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+    }
+
+  # aws_cloudwatch_event_rule.high_severity_findings will be created
+  + resource "aws_cloudwatch_event_rule" "high_severity_findings" {
+      + arn            = (known after apply)
+      + description    = "New HIGH or CRITICAL Security Hub findings"
+      + event_bus_name = "default"
+      + event_pattern  = jsonencode(
+            {
+              + detail      = {
+                  + findings = {
+                      + RecordState = [
+                          + "ACTIVE",
+                        ]
+                      + Severity    = {
+                          + Label = [
+                              + "HIGH",
+                              + "CRITICAL",
+                            ]
+                        }
+                      + Workflow    = {
+                          + Status = [
+                              + "NEW",
+                            ]
+                        }
+                    }
+                }
+              + detail-type = [
+                  + "Security Hub Findings - Imported",
+                ]
+              + source      = [
+                  + "aws.securityhub",
+                ]
+            }
+        )
+      + force_destroy  = false
+      + id             = (known after apply)
+      + name           = "cobble-high-severity-findings"
+      + name_prefix    = (known after apply)
+      + tags_all       = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Confidential"
+          + "Environment" = "security"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+    }
+
+  # aws_cloudwatch_event_target.email_security_team will be created
+  + resource "aws_cloudwatch_event_target" "email_security_team" {
+      + arn            = (known after apply)
+      + event_bus_name = "default"
+      + force_destroy  = false
+      + id             = (known after apply)
+      + rule           = "cobble-high-severity-findings"
+      + target_id      = (known after apply)
+    }
+
+  # aws_config_configuration_aggregator.organization will be created
+  + resource "aws_config_configuration_aggregator" "organization" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + name     = "cobble-organization"
+      + tags_all = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Confidential"
+          + "Environment" = "security"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+
+      + organization_aggregation_source {
+          + all_regions = false
+          + regions     = [
+              + "ap-southeast-2",
+            ]
+          + role_arn    = (known after apply)
+        }
+    }
+
+  # aws_guardduty_detector.this will be created
+  + resource "aws_guardduty_detector" "this" {
+      + account_id                   = (known after apply)
+      + arn                          = (known after apply)
+      + enable                       = true
+      + finding_publishing_frequency = (known after apply)
+      + id                           = (known after apply)
+      + tags_all                     = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Confidential"
+          + "Environment" = "security"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+
+      + datasources (known after apply)
+    }
+
+  # aws_guardduty_member.this["231217915029"] will be created
+  + resource "aws_guardduty_member" "this" {
+      + account_id          = "231217915029"
+      + detector_id         = (known after apply)
+      + email               = "t235cobbleaws+staging2@gmail.com"
+      + id                  = (known after apply)
+      + relationship_status = (known after apply)
+    }
+
+  # aws_guardduty_member.this["483598626480"] will be created
+  + resource "aws_guardduty_member" "this" {
+      + account_id          = "483598626480"
+      + detector_id         = (known after apply)
+      + email               = "t235cobbleaws+prod2@gmail.com"
+      + id                  = (known after apply)
+      + relationship_status = (known after apply)
+    }
+
+  # aws_guardduty_member.this["740667376104"] will be created
+  + resource "aws_guardduty_member" "this" {
+      + account_id          = "740667376104"
+      + detector_id         = (known after apply)
+      + email               = "t235cobbleaws+dev2@gmail.com"
+      + id                  = (known after apply)
+      + relationship_status = (known after apply)
+    }
+
+  # aws_guardduty_organization_admin_account.this will be created
+  + resource "aws_guardduty_organization_admin_account" "this" {
+      + admin_account_id = "021407434891"
+      + id               = (known after apply)
+    }
+
+  # aws_guardduty_organization_configuration.this will be created
+  + resource "aws_guardduty_organization_configuration" "this" {
+      + auto_enable                      = true
+      + auto_enable_organization_members = "ALL"
+      + detector_id                      = (known after apply)
+      + id                               = (known after apply)
+
+      + datasources (known after apply)
+    }
+
+  # aws_iam_role.config_aggregator will be created
+  + resource "aws_iam_role" "config_aggregator" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "config.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "cobble-config-aggregator"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Confidential"
+          + "Environment" = "security"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # aws_iam_role_policy_attachment.config_aggregator will be created
+  + resource "aws_iam_role_policy_attachment" "config_aggregator" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/service-role/AWSConfigRoleForOrganizations"
+      + role       = "cobble-config-aggregator"
+    }
+
+  # aws_kms_alias.security will be created
+  + resource "aws_kms_alias" "security" {
+      + arn            = (known after apply)
+      + id             = (known after apply)
+      + name           = "alias/cobble-security"
+      + name_prefix    = (known after apply)
+      + target_key_arn = (known after apply)
+      + target_key_id  = (known after apply)
+    }
+
+  # aws_kms_key.security will be created
+  + resource "aws_kms_key" "security" {
+      + arn                                = (known after apply)
+      + bypass_policy_lockout_safety_check = false
+      + customer_master_key_spec           = "SYMMETRIC_DEFAULT"
+      + deletion_window_in_days            = 30
+      + description                        = "Cobble security: audit logs, Config history, alerts"
+      + enable_key_rotation                = true
+      + id                                 = (known after apply)
+      + is_enabled                         = true
+      + key_id                             = (known after apply)
+      + key_usage                          = "ENCRYPT_DECRYPT"
+      + multi_region                       = (known after apply)
+      + policy                             = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "kms:*"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + AWS = "arn:aws:iam::021407434891:root"
+                        }
+                      + Resource  = "*"
+                      + Sid       = "EnableIAMPolicies"
+                    },
+                  + {
+                      + Action    = "kms:GenerateDataKey*"
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:SourceArn" = "arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail"
+                            }
+                          + StringLike   = {
+                              + "kms:EncryptionContext:aws:cloudtrail:arn" = "arn:aws:cloudtrail:*:669591255093:trail/*"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "cloudtrail.amazonaws.com"
+                        }
+                      + Resource  = "*"
+                      + Sid       = "CloudTrailEncryptsOrganizationLogs"
+                    },
+                  + {
+                      + Action    = "kms:DescribeKey"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "cloudtrail.amazonaws.com"
+                        }
+                      + Resource  = "*"
+                      + Sid       = "CloudTrailDescribesKey"
+                    },
+                  + {
+                      + Action    = [
+                          + "kms:GenerateDataKey",
+                          + "kms:Decrypt",
+                        ]
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:SourceOrgID" = "o-b60hme0nfl"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "config.amazonaws.com"
+                        }
+                      + Resource  = "*"
+                      + Sid       = "ConfigServiceDelivers"
+                    },
+                  + {
+                      + Action    = [
+                          + "kms:GenerateDataKey",
+                          + "kms:Decrypt",
+                        ]
+                      + Condition = {
+                          + ArnLike      = {
+                              + "aws:PrincipalArn" = "arn:aws:iam::*:role/*-config-recorder"
+                            }
+                          + StringEquals = {
+                              + "aws:PrincipalOrgID" = "o-b60hme0nfl"
+                              + "kms:ViaService"     = "s3.ap-southeast-2.amazonaws.com"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + AWS = "*"
+                        }
+                      + Resource  = "*"
+                      + Sid       = "OrganizationConfigRecordersDeliver"
+                    },
+                  + {
+                      + Action    = [
+                          + "kms:GenerateDataKey*",
+                          + "kms:Decrypt",
+                        ]
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:SourceAccount" = "021407434891"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "events.amazonaws.com"
+                        }
+                      + Resource  = "*"
+                      + Sid       = "EventBridgePublishesAlerts"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + rotation_period_in_days            = (known after apply)
+      + tags_all                           = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Confidential"
+          + "Environment" = "security"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+    }
+
+  # aws_organizations_delegated_administrator.access_analyzer will be created
+  + resource "aws_organizations_delegated_administrator" "access_analyzer" {
+      + account_id              = "021407434891"
+      + arn                     = (known after apply)
+      + delegation_enabled_date = (known after apply)
+      + email                   = (known after apply)
+      + id                      = (known after apply)
+      + joined_method           = (known after apply)
+      + joined_timestamp        = (known after apply)
+      + name                    = (known after apply)
+      + service_principal       = "access-analyzer.amazonaws.com"
+      + status                  = (known after apply)
+    }
+
+  # aws_organizations_delegated_administrator.config will be created
+  + resource "aws_organizations_delegated_administrator" "config" {
+      + account_id              = "021407434891"
+      + arn                     = (known after apply)
+      + delegation_enabled_date = (known after apply)
+      + email                   = (known after apply)
+      + id                      = (known after apply)
+      + joined_method           = (known after apply)
+      + joined_timestamp        = (known after apply)
+      + name                    = (known after apply)
+      + service_principal       = "config.amazonaws.com"
+      + status                  = (known after apply)
+    }
+
+  # aws_securityhub_account.management will be created
+  + resource "aws_securityhub_account" "management" {
+      + arn                       = (known after apply)
+      + auto_enable_controls      = true
+      + control_finding_generator = (known after apply)
+      + enable_default_standards  = false
+      + id                        = (known after apply)
+    }
+
+  # aws_securityhub_account.this will be created
+  + resource "aws_securityhub_account" "this" {
+      + arn                       = (known after apply)
+      + auto_enable_controls      = true
+      + control_finding_generator = (known after apply)
+      + enable_default_standards  = false
+      + id                        = (known after apply)
+    }
+
+  # aws_securityhub_member.this["231217915029"] will be created
+  + resource "aws_securityhub_member" "this" {
+      + account_id    = "231217915029"
+      + id            = (known after apply)
+      + master_id     = (known after apply)
+      + member_status = (known after apply)
+    }
+
+  # aws_securityhub_member.this["483598626480"] will be created
+  + resource "aws_securityhub_member" "this" {
+      + account_id    = "483598626480"
+      + id            = (known after apply)
+      + master_id     = (known after apply)
+      + member_status = (known after apply)
+    }
+
+  # aws_securityhub_member.this["740667376104"] will be created
+  + resource "aws_securityhub_member" "this" {
+      + account_id    = "740667376104"
+      + id            = (known after apply)
+      + master_id     = (known after apply)
+      + member_status = (known after apply)
+    }
+
+  # aws_securityhub_organization_admin_account.this will be created
+  + resource "aws_securityhub_organization_admin_account" "this" {
+      + admin_account_id = "021407434891"
+      + id               = (known after apply)
+    }
+
+  # aws_securityhub_organization_configuration.this will be created
+  + resource "aws_securityhub_organization_configuration" "this" {
+      + auto_enable           = true
+      + auto_enable_standards = "DEFAULT"
+      + id                    = (known after apply)
+
+      + organization_configuration (known after apply)
+    }
+
+  # aws_securityhub_standards_subscription.cis will be created
+  + resource "aws_securityhub_standards_subscription" "cis" {
+      + id            = (known after apply)
+      + standards_arn = "arn:aws:securityhub:ap-southeast-2::standards/cis-aws-foundations-benchmark/v/3.0.0"
+    }
+
+  # aws_securityhub_standards_subscription.fsbp will be created
+  + resource "aws_securityhub_standards_subscription" "fsbp" {
+      + id            = (known after apply)
+      + standards_arn = "arn:aws:securityhub:ap-southeast-2::standards/aws-foundational-security-best-practices/v/1.0.0"
+    }
+
+  # aws_sns_topic.security_alerts will be created
+  + resource "aws_sns_topic" "security_alerts" {
+      + arn                         = (known after apply)
+      + beginning_archive_time      = (known after apply)
+      + content_based_deduplication = false
+      + fifo_throughput_scope       = (known after apply)
+      + fifo_topic                  = false
+      + id                          = (known after apply)
+      + kms_master_key_id           = (known after apply)
+      + name                        = "cobble-security-alerts"
+      + name_prefix                 = (known after apply)
+      + owner                       = (known after apply)
+      + policy                      = (known after apply)
+      + signature_version           = (known after apply)
+      + tags_all                    = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Confidential"
+          + "Environment" = "security"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + tracing_config              = (known after apply)
+    }
+
+  # aws_sns_topic_policy.security_alerts will be created
+  + resource "aws_sns_topic_policy" "security_alerts" {
+      + arn    = (known after apply)
+      + id     = (known after apply)
+      + owner  = (known after apply)
+      + policy = (known after apply)
+    }
+
+  # aws_sns_topic_subscription.security_alerts_email will be created
+  + resource "aws_sns_topic_subscription" "security_alerts_email" {
+      + arn                             = (known after apply)
+      + confirmation_timeout_in_minutes = 1
+      + confirmation_was_authenticated  = (known after apply)
+      + endpoint                        = "n11543027@qut.edu.au"
+      + endpoint_auto_confirms          = false
+      + filter_policy_scope             = (known after apply)
+      + id                              = (known after apply)
+      + owner_id                        = (known after apply)
+      + pending_confirmation            = (known after apply)
+      + protocol                        = "email"
+      + raw_message_delivery            = false
+      + topic_arn                       = (known after apply)
+    }
+
+  # module.access_logs.aws_s3_bucket.this will be created
+  + resource "aws_s3_bucket" "this" {
+      + acceleration_status         = (known after apply)
+      + acl                         = (known after apply)
+      + arn                         = (known after apply)
+      + bucket                      = "cobble-security-access-logs-021407434891"
+      + bucket_domain_name          = (known after apply)
+      + bucket_prefix               = (known after apply)
+      + bucket_regional_domain_name = (known after apply)
+      + force_destroy               = true
+      + hosted_zone_id              = (known after apply)
+      + id                          = (known after apply)
+      + object_lock_enabled         = (known after apply)
+      + policy                      = (known after apply)
+      + region                      = (known after apply)
+      + request_payer               = (known after apply)
+      + tags_all                    = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Confidential"
+          + "Environment" = "security"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + website_domain              = (known after apply)
+      + website_endpoint            = (known after apply)
+
+      + cors_rule (known after apply)
+
+      + grant (known after apply)
+
+      + lifecycle_rule (known after apply)
+
+      + logging (known after apply)
+
+      + object_lock_configuration (known after apply)
+
+      + replication_configuration (known after apply)
+
+      + server_side_encryption_configuration (known after apply)
+
+      + versioning (known after apply)
+
+      + website (known after apply)
+    }
+
+  # module.access_logs.aws_s3_bucket_lifecycle_configuration.this will be created
+  + resource "aws_s3_bucket_lifecycle_configuration" "this" {
+      + bucket                                 = (known after apply)
+      + expected_bucket_owner                  = (known after apply)
+      + id                                     = (known after apply)
+      + transition_default_minimum_object_size = "all_storage_classes_128K"
+
+      + rule {
+          + id     = "expire-old-logs"
+          + status = "Enabled"
+            # (1 unchanged attribute hidden)
+
+          + abort_incomplete_multipart_upload {
+              + days_after_initiation = 7
+            }
+
+          + expiration {
+              + days                         = 365
+              + expired_object_delete_marker = false
+            }
+
+          + filter {
+                # (1 unchanged attribute hidden)
+            }
+
+          + noncurrent_version_expiration {
+              + noncurrent_days = 30
+            }
+        }
+    }
+
+  # module.access_logs.aws_s3_bucket_policy.this will be created
+  + resource "aws_s3_bucket_policy" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+      + policy = (known after apply)
+    }
+
+  # module.access_logs.aws_s3_bucket_public_access_block.this will be created
+  + resource "aws_s3_bucket_public_access_block" "this" {
+      + block_public_acls       = true
+      + block_public_policy     = true
+      + bucket                  = (known after apply)
+      + id                      = (known after apply)
+      + ignore_public_acls      = true
+      + restrict_public_buckets = true
+    }
+
+  # module.access_logs.aws_s3_bucket_server_side_encryption_configuration.this will be created
+  + resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + rule {
+          + apply_server_side_encryption_by_default {
+              + sse_algorithm     = "AES256"
+                # (1 unchanged attribute hidden)
+            }
+        }
+    }
+
+  # module.access_logs.aws_s3_bucket_versioning.this will be created
+  + resource "aws_s3_bucket_versioning" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + versioning_configuration {
+          + mfa_delete = (known after apply)
+          + status     = "Enabled"
+        }
+    }
+
+  # module.account_baseline.aws_config_configuration_recorder.this will be created
+  + resource "aws_config_configuration_recorder" "this" {
+      + id       = (known after apply)
+      + name     = "cobble-security-recorder"
+      + role_arn = (known after apply)
+
+      + recording_group {
+          + all_supported                 = true
+          + include_global_resource_types = true
+
+          + exclusion_by_resource_types (known after apply)
+
+          + recording_strategy (known after apply)
+        }
+
+      + recording_mode (known after apply)
+    }
+
+  # module.account_baseline.aws_config_configuration_recorder_status.this will be created
+  + resource "aws_config_configuration_recorder_status" "this" {
+      + id         = (known after apply)
+      + is_enabled = true
+      + name       = "cobble-security-recorder"
+    }
+
+  # module.account_baseline.aws_config_delivery_channel.this will be created
+  + resource "aws_config_delivery_channel" "this" {
+      + id             = (known after apply)
+      + name           = "cobble-security-delivery"
+      + s3_bucket_name = "cobble-config-history-021407434891"
+      + s3_kms_key_arn = (known after apply)
+    }
+
+  # module.account_baseline.aws_ebs_encryption_by_default.this will be created
+  + resource "aws_ebs_encryption_by_default" "this" {
+      + enabled = true
+      + id      = (known after apply)
+    }
+
+  # module.account_baseline.aws_iam_account_password_policy.this will be created
+  + resource "aws_iam_account_password_policy" "this" {
+      + allow_users_to_change_password = true
+      + expire_passwords               = (known after apply)
+      + hard_expiry                    = (known after apply)
+      + id                             = (known after apply)
+      + max_password_age               = 90
+      + minimum_password_length        = 14
+      + password_reuse_prevention      = 24
+      + require_lowercase_characters   = true
+      + require_numbers                = true
+      + require_symbols                = true
+      + require_uppercase_characters   = true
+    }
+
+  # module.account_baseline.aws_iam_role.config will be created
+  + resource "aws_iam_role" "config" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "config.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "cobble-security-config-recorder"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Confidential"
+          + "Environment" = "security"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.account_baseline.aws_iam_role_policy.config_delivery will be created
+  + resource "aws_iam_role_policy" "config_delivery" {
+      + id          = (known after apply)
+      + name        = "cobble-security-config-delivery"
+      + name_prefix = (known after apply)
+      + policy      = (known after apply)
+      + role        = (known after apply)
+    }
+
+  # module.account_baseline.aws_iam_role_policy_attachment.config will be created
+  + resource "aws_iam_role_policy_attachment" "config" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"
+      + role       = "cobble-security-config-recorder"
+    }
+
+  # module.account_baseline.aws_s3_account_public_access_block.this will be created
+  + resource "aws_s3_account_public_access_block" "this" {
+      + account_id              = (known after apply)
+      + block_public_acls       = true
+      + block_public_policy     = true
+      + id                      = (known after apply)
+      + ignore_public_acls      = true
+      + restrict_public_buckets = true
+    }
+
+  # module.config_bucket.aws_s3_bucket.this will be created
+  + resource "aws_s3_bucket" "this" {
+      + acceleration_status         = (known after apply)
+      + acl                         = (known after apply)
+      + arn                         = (known after apply)
+      + bucket                      = "cobble-config-history-021407434891"
+      + bucket_domain_name          = (known after apply)
+      + bucket_prefix               = (known after apply)
+      + bucket_regional_domain_name = (known after apply)
+      + force_destroy               = true
+      + hosted_zone_id              = (known after apply)
+      + id                          = (known after apply)
+      + object_lock_enabled         = (known after apply)
+      + policy                      = (known after apply)
+      + region                      = (known after apply)
+      + request_payer               = (known after apply)
+      + tags_all                    = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Confidential"
+          + "Environment" = "security"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + website_domain              = (known after apply)
+      + website_endpoint            = (known after apply)
+
+      + cors_rule (known after apply)
+
+      + grant (known after apply)
+
+      + lifecycle_rule (known after apply)
+
+      + logging (known after apply)
+
+      + object_lock_configuration (known after apply)
+
+      + replication_configuration (known after apply)
+
+      + server_side_encryption_configuration (known after apply)
+
+      + versioning (known after apply)
+
+      + website (known after apply)
+    }
+
+  # module.config_bucket.aws_s3_bucket_lifecycle_configuration.this[0] will be created
+  + resource "aws_s3_bucket_lifecycle_configuration" "this" {
+      + bucket                                 = (known after apply)
+      + expected_bucket_owner                  = (known after apply)
+      + id                                     = (known after apply)
+      + transition_default_minimum_object_size = "all_storage_classes_128K"
+
+      + rule {
+          + id     = "tidy-up"
+          + status = "Enabled"
+            # (1 unchanged attribute hidden)
+
+          + abort_incomplete_multipart_upload {
+              + days_after_initiation = 7
+            }
+
+          + filter {
+                # (1 unchanged attribute hidden)
+            }
+
+          + noncurrent_version_expiration {
+              + noncurrent_days = 365
+            }
+
+          + transition {
+              + days          = 90
+              + storage_class = "GLACIER_IR"
+            }
+        }
+    }
+
+  # module.config_bucket.aws_s3_bucket_logging.this will be created
+  + resource "aws_s3_bucket_logging" "this" {
+      + bucket        = (known after apply)
+      + id            = (known after apply)
+      + target_bucket = (known after apply)
+      + target_prefix = "config-history/"
+    }
+
+  # module.config_bucket.aws_s3_bucket_policy.this[0] will be created
+  + resource "aws_s3_bucket_policy" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+      + policy = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = [
+                          + "s3:GetBucketAcl",
+                          + "s3:ListBucket",
+                        ]
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:SourceOrgID" = "o-b60hme0nfl"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "config.amazonaws.com"
+                        }
+                      + Resource  = "arn:aws:s3:::cobble-config-history-021407434891"
+                      + Sid       = "ConfigChecksBucket"
+                    },
+                  + {
+                      + Action    = "s3:PutObject"
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:SourceOrgID" = "o-b60hme0nfl"
+                              + "s3:x-amz-acl"    = "bucket-owner-full-control"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "config.amazonaws.com"
+                        }
+                      + Resource  = "arn:aws:s3:::cobble-config-history-021407434891/AWSLogs/*/Config/*"
+                      + Sid       = "ConfigDelivers"
+                    },
+                  + {
+                      + Action    = [
+                          + "s3:GetBucketAcl",
+                          + "s3:PutObject",
+                        ]
+                      + Condition = {
+                          + ArnLike      = {
+                              + "aws:PrincipalArn" = "arn:aws:iam::*:role/*-config-recorder"
+                            }
+                          + StringEquals = {
+                              + "aws:PrincipalOrgID" = "o-b60hme0nfl"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + AWS = "*"
+                        }
+                      + Resource  = [
+                          + "arn:aws:s3:::cobble-config-history-021407434891",
+                          + "arn:aws:s3:::cobble-config-history-021407434891/AWSLogs/*/Config/*",
+                        ]
+                      + Sid       = "OrganizationConfigRecordersDeliver"
+                    },
+                  + {
+                      + Action    = "s3:*"
+                      + Condition = {
+                          + Bool = {
+                              + "aws:SecureTransport" = "false"
+                            }
+                        }
+                      + Effect    = "Deny"
+                      + Principal = "*"
+                      + Resource  = [
+                          + "arn:aws:s3:::cobble-config-history-021407434891",
+                          + "arn:aws:s3:::cobble-config-history-021407434891/*",
+                        ]
+                      + Sid       = "DenyInsecureTransport"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+    }
+
+  # module.config_bucket.aws_s3_bucket_public_access_block.this will be created
+  + resource "aws_s3_bucket_public_access_block" "this" {
+      + block_public_acls       = true
+      + block_public_policy     = true
+      + bucket                  = (known after apply)
+      + id                      = (known after apply)
+      + ignore_public_acls      = true
+      + restrict_public_buckets = true
+    }
+
+  # module.config_bucket.aws_s3_bucket_server_side_encryption_configuration.this will be created
+  + resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + rule {
+          + bucket_key_enabled = true
+
+          + apply_server_side_encryption_by_default {
+              + kms_master_key_id = (known after apply)
+              + sse_algorithm     = "aws:kms"
+            }
+        }
+    }
+
+  # module.config_bucket.aws_s3_bucket_versioning.this will be created
+  + resource "aws_s3_bucket_versioning" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + versioning_configuration {
+          + mfa_delete = (known after apply)
+          + status     = "Enabled"
+        }
+    }
+
+  # module.management_account_baseline.aws_config_configuration_recorder.this will be created
+  + resource "aws_config_configuration_recorder" "this" {
+      + id       = (known after apply)
+      + name     = "cobble-management-recorder"
+      + role_arn = (known after apply)
+
+      + recording_group {
+          + all_supported                 = true
+          + include_global_resource_types = true
+
+          + exclusion_by_resource_types (known after apply)
+
+          + recording_strategy (known after apply)
+        }
+
+      + recording_mode (known after apply)
+    }
+
+  # module.management_account_baseline.aws_config_configuration_recorder_status.this will be created
+  + resource "aws_config_configuration_recorder_status" "this" {
+      + id         = (known after apply)
+      + is_enabled = true
+      + name       = "cobble-management-recorder"
+    }
+
+  # module.management_account_baseline.aws_config_delivery_channel.this will be created
+  + resource "aws_config_delivery_channel" "this" {
+      + id             = (known after apply)
+      + name           = "cobble-management-delivery"
+      + s3_bucket_name = "cobble-config-history-021407434891"
+      + s3_kms_key_arn = (known after apply)
+    }
+
+  # module.management_account_baseline.aws_ebs_encryption_by_default.this will be created
+  + resource "aws_ebs_encryption_by_default" "this" {
+      + enabled = true
+      + id      = (known after apply)
+    }
+
+  # module.management_account_baseline.aws_iam_account_password_policy.this will be created
+  + resource "aws_iam_account_password_policy" "this" {
+      + allow_users_to_change_password = true
+      + expire_passwords               = (known after apply)
+      + hard_expiry                    = (known after apply)
+      + id                             = (known after apply)
+      + max_password_age               = 90
+      + minimum_password_length        = 14
+      + password_reuse_prevention      = 24
+      + require_lowercase_characters   = true
+      + require_numbers                = true
+      + require_symbols                = true
+      + require_uppercase_characters   = true
+    }
+
+  # module.management_account_baseline.aws_iam_role.config will be created
+  + resource "aws_iam_role" "config" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "config.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "cobble-management-config-recorder"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Confidential"
+          + "Environment" = "security"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.management_account_baseline.aws_iam_role_policy.config_delivery will be created
+  + resource "aws_iam_role_policy" "config_delivery" {
+      + id          = (known after apply)
+      + name        = "cobble-management-config-delivery"
+      + name_prefix = (known after apply)
+      + policy      = (known after apply)
+      + role        = (known after apply)
+    }
+
+  # module.management_account_baseline.aws_iam_role_policy_attachment.config will be created
+  + resource "aws_iam_role_policy_attachment" "config" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"
+      + role       = "cobble-management-config-recorder"
+    }
+
+  # module.management_account_baseline.aws_s3_account_public_access_block.this will be created
+  + resource "aws_s3_account_public_access_block" "this" {
+      + account_id              = (known after apply)
+      + block_public_acls       = true
+      + block_public_policy     = true
+      + id                      = (known after apply)
+      + ignore_public_acls      = true
+      + restrict_public_buckets = true
+    }
+
+  # module.trail_bucket.aws_s3_bucket.this will be created
+  + resource "aws_s3_bucket" "this" {
+      + acceleration_status         = (known after apply)
+      + acl                         = (known after apply)
+      + arn                         = (known after apply)
+      + bucket                      = "cobble-audit-logs-021407434891"
+      + bucket_domain_name          = (known after apply)
+      + bucket_prefix               = (known after apply)
+      + bucket_regional_domain_name = (known after apply)
+      + force_destroy               = true
+      + hosted_zone_id              = (known after apply)
+      + id                          = (known after apply)
+      + object_lock_enabled         = true
+      + policy                      = (known after apply)
+      + region                      = (known after apply)
+      + request_payer               = (known after apply)
+      + tags_all                    = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "High"
+          + "DataClass"   = "Confidential"
+          + "Environment" = "security"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + website_domain              = (known after apply)
+      + website_endpoint            = (known after apply)
+
+      + cors_rule (known after apply)
+
+      + grant (known after apply)
+
+      + lifecycle_rule (known after apply)
+
+      + logging (known after apply)
+
+      + object_lock_configuration (known after apply)
+
+      + replication_configuration (known after apply)
+
+      + server_side_encryption_configuration (known after apply)
+
+      + versioning (known after apply)
+
+      + website (known after apply)
+    }
+
+  # module.trail_bucket.aws_s3_bucket_lifecycle_configuration.this[0] will be created
+  + resource "aws_s3_bucket_lifecycle_configuration" "this" {
+      + bucket                                 = (known after apply)
+      + expected_bucket_owner                  = (known after apply)
+      + id                                     = (known after apply)
+      + transition_default_minimum_object_size = "all_storage_classes_128K"
+
+      + rule {
+          + id     = "tidy-up"
+          + status = "Enabled"
+            # (1 unchanged attribute hidden)
+
+          + abort_incomplete_multipart_upload {
+              + days_after_initiation = 7
+            }
+
+          + filter {
+                # (1 unchanged attribute hidden)
+            }
+
+          + transition {
+              + days          = 90
+              + storage_class = "GLACIER_IR"
+            }
+        }
+    }
+
+  # module.trail_bucket.aws_s3_bucket_logging.this will be created
+  + resource "aws_s3_bucket_logging" "this" {
+      + bucket        = (known after apply)
+      + id            = (known after apply)
+      + target_bucket = (known after apply)
+      + target_prefix = "audit-logs/"
+    }
+
+  # module.trail_bucket.aws_s3_bucket_object_lock_configuration.this[0] will be created
+  + resource "aws_s3_bucket_object_lock_configuration" "this" {
+      + bucket              = (known after apply)
+      + id                  = (known after apply)
+      + object_lock_enabled = "Enabled"
+
+      + rule {
+          + default_retention {
+              + days = 1
+              + mode = "GOVERNANCE"
+            }
+        }
+    }
+
+  # module.trail_bucket.aws_s3_bucket_policy.this[0] will be created
+  + resource "aws_s3_bucket_policy" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+      + policy = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "s3:GetBucketAcl"
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:SourceArn" = "arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "cloudtrail.amazonaws.com"
+                        }
+                      + Resource  = "arn:aws:s3:::cobble-audit-logs-021407434891"
+                      + Sid       = "CloudTrailChecksBucket"
+                    },
+                  + {
+                      + Action    = "s3:PutObject"
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:SourceArn" = "arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail"
+                              + "s3:x-amz-acl"  = "bucket-owner-full-control"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "cloudtrail.amazonaws.com"
+                        }
+                      + Resource  = "arn:aws:s3:::cobble-audit-logs-021407434891/AWSLogs/669591255093/*"
+                      + Sid       = "CloudTrailWritesManagementAccountLogs"
+                    },
+                  + {
+                      + Action    = "s3:PutObject"
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:SourceArn" = "arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail"
+                              + "s3:x-amz-acl"  = "bucket-owner-full-control"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "cloudtrail.amazonaws.com"
+                        }
+                      + Resource  = "arn:aws:s3:::cobble-audit-logs-021407434891/AWSLogs/o-b60hme0nfl/*"
+                      + Sid       = "CloudTrailWritesOrganizationLogs"
+                    },
+                  + {
+                      + Action    = "s3:*"
+                      + Condition = {
+                          + Bool = {
+                              + "aws:SecureTransport" = "false"
+                            }
+                        }
+                      + Effect    = "Deny"
+                      + Principal = "*"
+                      + Resource  = [
+                          + "arn:aws:s3:::cobble-audit-logs-021407434891",
+                          + "arn:aws:s3:::cobble-audit-logs-021407434891/*",
+                        ]
+                      + Sid       = "DenyInsecureTransport"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+    }
+
+  # module.trail_bucket.aws_s3_bucket_public_access_block.this will be created
+  + resource "aws_s3_bucket_public_access_block" "this" {
+      + block_public_acls       = true
+      + block_public_policy     = true
+      + bucket                  = (known after apply)
+      + id                      = (known after apply)
+      + ignore_public_acls      = true
+      + restrict_public_buckets = true
+    }
+
+  # module.trail_bucket.aws_s3_bucket_server_side_encryption_configuration.this will be created
+  + resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + rule {
+          + bucket_key_enabled = true
+
+          + apply_server_side_encryption_by_default {
+              + kms_master_key_id = (known after apply)
+              + sse_algorithm     = "aws:kms"
+            }
+        }
+    }
+
+  # module.trail_bucket.aws_s3_bucket_versioning.this will be created
+  + resource "aws_s3_bucket_versioning" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + versioning_configuration {
+          + mfa_delete = (known after apply)
+          + status     = "Enabled"
+        }
+    }
+
+Plan: 68 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + audit_log_bucket_name     = "cobble-audit-logs-021407434891"
+  + config_bucket_name        = "cobble-config-history-021407434891"
+  + config_kms_key_arn        = (known after apply)
+  + organization_trail_arn    = (known after apply)
+  + security_alerts_topic_arn = (known after apply)
+module.management_account_baseline.aws_s3_account_public_access_block.this: Creating...
+module.management_account_baseline.aws_ebs_encryption_by_default.this: Creating...
+aws_securityhub_account.management: Creating...
+module.management_account_baseline.aws_iam_account_password_policy.this: Creating...
+module.management_account_baseline.aws_iam_role.config: Creating...
+module.account_baseline.aws_s3_account_public_access_block.this: Creating...
+module.account_baseline.aws_ebs_encryption_by_default.this: Creating...
+module.account_baseline.aws_iam_account_password_policy.this: Creating...
+aws_cloudwatch_event_rule.high_severity_findings: Creating...
+module.account_baseline.aws_iam_role.config: Creating...
+module.management_account_baseline.aws_ebs_encryption_by_default.this: Creation complete after 1s [id=terraform-20261019071917769700000001]
+aws_guardduty_detector.this: Creating...
+aws_cloudwatch_event_rule.high_severity_findings: Creation complete after 0s [id=cobble-high-severity-findings]
+aws_securityhub_account.this: Creating...
+aws_securityhub_account.management: Creation complete after 1s [id=669591255093]
+aws_iam_role.config_aggregator: Creating...
+module.account_baseline.aws_ebs_encryption_by_default.this: Creation complete after 0s [id=terraform-20261019071918027300000001]
+aws_organizations_delegated_administrator.config: Creating...
+aws_securityhub_account.this: Creation complete after 1s [id=021407434891]
+aws_organizations_delegated_administrator.access_analyzer: Creating...
+module.management_account_baseline.aws_iam_account_password_policy.this: Creation complete after 2s [id=iam-account-password-policy]
+aws_kms_key.security: Creating...
+aws_guardduty_detector.this: Creation complete after 1s [id=427d61cdfe5e49c4b7b9e72ac30c5833]
+aws_securityhub_organization_admin_account.this: Creating...
+module.management_account_baseline.aws_iam_role.config: Creation complete after 2s [id=cobble-management-config-recorder]
+aws_securityhub_standards_subscription.cis: Creating...
+module.account_baseline.aws_iam_account_password_policy.this: Creation complete after 1s [id=iam-account-password-policy]
+aws_securityhub_standards_subscription.fsbp: Creating...
+aws_organizations_delegated_administrator.config: Creation complete after 2s [id=021407434891/config.amazonaws.com]
+module.access_logs.aws_s3_bucket.this: Creating...
+module.account_baseline.aws_iam_role.config: Creation complete after 2s [id=cobble-security-config-recorder]
+aws_guardduty_organization_admin_account.this: Creating...
+aws_iam_role.config_aggregator: Creation complete after 2s [id=cobble-config-aggregator]
+module.management_account_baseline.aws_config_configuration_recorder.this: Creating...
+module.management_account_baseline.aws_config_configuration_recorder.this: Creation complete after 0s [id=cobble-management-recorder]
+module.management_account_baseline.aws_iam_role_policy_attachment.config: Creating...
+aws_securityhub_organization_admin_account.this: Creation complete after 2s [id=021407434891]
+module.trail_bucket.aws_s3_bucket.this: Creating...
+module.management_account_baseline.aws_iam_role_policy_attachment.config: Creation complete after 1s [id=cobble-management-config-recorder-20261019071920835300000002]
+module.account_baseline.aws_config_configuration_recorder.this: Creating...
+module.account_baseline.aws_config_configuration_recorder.this: Creation complete after 1s [id=cobble-security-recorder]
+module.account_baseline.aws_iam_role_policy_attachment.config: Creating...
+module.access_logs.aws_s3_bucket.this: Creation complete after 2s [id=cobble-security-access-logs-021407434891]
+module.config_bucket.aws_s3_bucket.this: Creating...
+aws_organizations_delegated_administrator.access_analyzer: Creation complete after 3s [id=021407434891/access-analyzer.amazonaws.com]
+aws_iam_role_policy_attachment.config_aggregator: Creating...
+module.account_baseline.aws_iam_role_policy_attachment.config: Creation complete after 0s [id=cobble-security-config-recorder-20261019071922067300000002]
+aws_securityhub_organization_configuration.this: Creating...
+aws_iam_role_policy_attachment.config_aggregator: Creation complete after 1s [id=cobble-config-aggregator-20261019071922603500000003]
+module.access_logs.aws_s3_bucket_server_side_encryption_configuration.this: Creating...
+aws_guardduty_organization_admin_account.this: Creation complete after 3s [id=021407434891]
+module.access_logs.aws_s3_bucket_public_access_block.this: Creating...
+aws_securityhub_organization_configuration.this: Creation complete after 1s [id=021407434891]
+module.access_logs.aws_s3_bucket_versioning.this: Creating...
+module.trail_bucket.aws_s3_bucket.this: Creation complete after 2s [id=cobble-audit-logs-021407434891]
+aws_accessanalyzer_analyzer.organization: Creating...
+module.access_logs.aws_s3_bucket_public_access_block.this: Creation complete after 0s [id=cobble-security-access-logs-021407434891]
+aws_config_configuration_aggregator.organization: Creating...
+module.access_logs.aws_s3_bucket_server_side_encryption_configuration.this: Creation complete after 0s [id=cobble-security-access-logs-021407434891]
+aws_guardduty_organization_configuration.this: Creating...
+aws_guardduty_organization_configuration.this: Creation complete after 1s [id=427d61cdfe5e49c4b7b9e72ac30c5833]
+aws_securityhub_member.this["483598626480"]: Creating...
+aws_config_configuration_aggregator.organization: Creation complete after 1s [id=cobble-organization]
+aws_securityhub_member.this["231217915029"]: Creating...
+module.config_bucket.aws_s3_bucket.this: Creation complete after 3s [id=cobble-config-history-021407434891]
+aws_securityhub_member.this["740667376104"]: Creating...
+module.access_logs.aws_s3_bucket_versioning.this: Creation complete after 2s [id=cobble-security-access-logs-021407434891]
+module.trail_bucket.aws_s3_bucket_versioning.this: Creating...
+aws_securityhub_member.this["483598626480"]: Creation complete after 1s [id=483598626480]
+module.trail_bucket.aws_s3_bucket_public_access_block.this: Creating...
+aws_securityhub_standards_subscription.fsbp: Creation complete after 6s [id=arn:aws:securityhub:ap-southeast-2:021407434891:subscription/aws-foundational-security-best-practices/v/1.0.0]
+module.access_logs.aws_s3_bucket_policy.this: Creating...
+module.trail_bucket.aws_s3_bucket_public_access_block.this: Creation complete after 1s [id=cobble-audit-logs-021407434891]
+aws_guardduty_member.this["740667376104"]: Creating...
+aws_securityhub_member.this["231217915029"]: Creation complete after 2s [id=231217915029]
+aws_guardduty_member.this["231217915029"]: Creating...
+module.access_logs.aws_s3_bucket_policy.this: Creation complete after 1s [id=cobble-security-access-logs-021407434891]
+aws_guardduty_member.this["483598626480"]: Creating...
+aws_securityhub_member.this["740667376104"]: Creation complete after 1s [id=740667376104]
+module.config_bucket.aws_s3_bucket_public_access_block.this: Creating...
+module.trail_bucket.aws_s3_bucket_versioning.this: Creation complete after 1s [id=cobble-audit-logs-021407434891]
+module.config_bucket.aws_s3_bucket_versioning.this: Creating...
+module.config_bucket.aws_s3_bucket_public_access_block.this: Creation complete after 0s [id=cobble-config-history-021407434891]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Creating...
+aws_guardduty_member.this["483598626480"]: Creation complete after 1s [id=427d61cdfe5e49c4b7b9e72ac30c5833:483598626480]
+module.config_bucket.aws_s3_bucket_logging.this: Creating...
+aws_guardduty_member.this["740667376104"]: Creation complete after 1s [id=427d61cdfe5e49c4b7b9e72ac30c5833:740667376104]
+module.trail_bucket.aws_s3_bucket_logging.this: Creating...
+module.config_bucket.aws_s3_bucket_logging.this: Creation complete after 0s [id=cobble-config-history-021407434891]
+module.trail_bucket.aws_s3_bucket_policy.this[0]: Creating...
+aws_guardduty_member.this["231217915029"]: Creation complete after 1s [id=427d61cdfe5e49c4b7b9e72ac30c5833:231217915029]
+module.trail_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Creating...
+aws_accessanalyzer_analyzer.organization: Creation complete after 4s [id=cobble-organization]
+module.trail_bucket.aws_s3_bucket_object_lock_configuration.this[0]: Creating...
+module.management_account_baseline.aws_s3_account_public_access_block.this: Still creating... [00m10s elapsed]
+module.trail_bucket.aws_s3_bucket_logging.this: Creation complete after 0s [id=cobble-audit-logs-021407434891]
+module.config_bucket.aws_s3_bucket_policy.this[0]: Creating...
+module.account_baseline.aws_s3_account_public_access_block.this: Still creating... [00m10s elapsed]
+module.trail_bucket.aws_s3_bucket_policy.this[0]: Creation complete after 1s [id=cobble-audit-logs-021407434891]
+module.trail_bucket.aws_s3_bucket_object_lock_configuration.this[0]: Creation complete after 1s [id=cobble-audit-logs-021407434891]
+module.config_bucket.aws_s3_bucket_policy.this[0]: Creation complete after 1s [id=cobble-config-history-021407434891]
+module.config_bucket.aws_s3_bucket_versioning.this: Creation complete after 2s [id=cobble-config-history-021407434891]
+module.config_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Creating...
+aws_kms_key.security: Still creating... [00m10s elapsed]
+aws_securityhub_standards_subscription.cis: Creation complete after 10s [id=arn:aws:securityhub:ap-southeast-2:021407434891:subscription/cis-aws-foundations-benchmark/v/3.0.0]
+aws_kms_key.security: Creation complete after 13s [id=5714ea95-9547-45d6-9b62-46dcfd8011e0]
+aws_kms_alias.security: Creating...
+module.account_baseline.aws_config_delivery_channel.this: Creating...
+module.management_account_baseline.aws_config_delivery_channel.this: Creating...
+module.management_account_baseline.aws_iam_role_policy.config_delivery: Creating...
+aws_sns_topic.security_alerts: Creating...
+aws_kms_alias.security: Creation complete after 0s [id=alias/cobble-security]
+module.config_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Creating...
+module.account_baseline.aws_config_delivery_channel.this: Creation complete after 0s [id=cobble-security-delivery]
+module.account_baseline.aws_iam_role_policy.config_delivery: Creating...
+module.config_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Creation complete after 0s [id=cobble-config-history-021407434891]
+module.trail_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Creating...
+aws_sns_topic.security_alerts: Creation complete after 1s [id=arn:aws:sns:ap-southeast-2:021407434891:cobble-security-alerts]
+module.account_baseline.aws_config_configuration_recorder_status.this: Creating...
+module.account_baseline.aws_config_configuration_recorder_status.this: Creation complete after 0s [id=cobble-security-recorder]
+aws_sns_topic_policy.security_alerts: Creating...
+module.management_account_baseline.aws_iam_role_policy.config_delivery: Creation complete after 1s [id=cobble-management-config-recorder:cobble-management-config-delivery]
+aws_cloudwatch_event_target.email_security_team: Creating...
+aws_sns_topic_policy.security_alerts: Creation complete after 0s [id=arn:aws:sns:ap-southeast-2:021407434891:cobble-security-alerts]
+aws_sns_topic_subscription.security_alerts_email: Creating...
+module.management_account_baseline.aws_config_delivery_channel.this: Creation complete after 1s [id=cobble-management-delivery]
+module.management_account_baseline.aws_config_configuration_recorder_status.this: Creating...
+module.trail_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Creation complete after 1s [id=cobble-audit-logs-021407434891]
+aws_sns_topic_subscription.security_alerts_email: Creation complete after 0s [id=arn:aws:sns:ap-southeast-2:021407434891:cobble-security-alerts:c850ce02-28b3-4ecd-9866-37ebcce6ca0a]
+aws_cloudwatch_event_target.email_security_team: Creation complete after 0s [id=cobble-high-severity-findings-terraform-20261019071932751900000005]
+module.management_account_baseline.aws_config_configuration_recorder_status.this: Creation complete after 0s [id=cobble-management-recorder]
+module.account_baseline.aws_iam_role_policy.config_delivery: Creation complete after 1s [id=cobble-security-config-recorder:cobble-security-config-delivery]
+module.management_account_baseline.aws_s3_account_public_access_block.this: Creation complete after 17s [id=669591255093]
+module.account_baseline.aws_s3_account_public_access_block.this: Creation complete after 16s [id=021407434891]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Still creating... [00m10s elapsed]
+module.trail_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m10s elapsed]
+module.config_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m10s elapsed]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Still creating... [00m20s elapsed]
+module.trail_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m20s elapsed]
+module.config_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m20s elapsed]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Still creating... [00m30s elapsed]
+module.trail_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m30s elapsed]
+module.config_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m30s elapsed]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Still creating... [00m40s elapsed]
+module.trail_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m40s elapsed]
+module.config_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m40s elapsed]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Still creating... [00m50s elapsed]
+module.trail_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m50s elapsed]
+module.config_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m50s elapsed]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Creation complete after 57s [id=cobble-security-access-logs-021407434891]
+module.trail_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Creation complete after 57s [id=cobble-audit-logs-021407434891]
+aws_cloudtrail.organization: Creating...
+module.config_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Creation complete after 56s [id=cobble-config-history-021407434891]
+aws_cloudtrail.organization: Creation complete after 3s [id=arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail]
+
+Apply complete! Resources: 68 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+audit_log_bucket_name = "cobble-audit-logs-021407434891"
+config_bucket_name = "cobble-config-history-021407434891"
+config_kms_key_arn = "arn:aws:kms:ap-southeast-2:021407434891:key/5714ea95-9547-45d6-9b62-46dcfd8011e0"
+organization_trail_arn = "arn:aws:cloudtrail:ap-southeast-2:669591255093:trail/cobble-organization-trail"
+security_alerts_topic_arn = "arn:aws:sns:ap-southeast-2:021407434891:cobble-security-alerts"
+
+>> terraform apply -auto-approve -input=false -no-color -var-file=dev.tfvars -var account_id=740667376104 -var assume_role_name=OrganizationAccountAccessRole -var container_image=public.ecr.aws/nginx/nginx:stable -var read_only_root_filesystem=false -var enable_github_deploy=false -var app_max_count=2 -var alert_email=n11543027@qut.edu.au -var config_bucket_name=cobble-config-history-021407434891 -var config_kms_key_arn=arn:aws:kms:ap-southeast-2:021407434891:key/5714ea95-9547-45d6-9b62-46dcfd8011e0   (workload)
+module.network.data.aws_availability_zones.available: Reading...
+module.app.data.aws_region.current: Reading...
+module.access_logs.data.aws_caller_identity.current: Reading...
+module.app.data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.access_logs.data.aws_elb_service_account.current: Reading...
+module.access_logs.data.aws_elb_service_account.current: Read complete after 0s [id=783225319266]
+data.aws_region.current: Reading...
+data.aws_caller_identity.current: Reading...
+module.account_baseline[0].data.aws_caller_identity.current: Reading...
+data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.network.data.aws_region.current: Reading...
+module.network.data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.access_logs.data.aws_caller_identity.current: Read complete after 0s [id=740667376104]
+data.aws_caller_identity.current: Read complete after 0s [id=740667376104]
+module.account_baseline[0].data.aws_caller_identity.current: Read complete after 0s [id=740667376104]
+module.network.data.aws_availability_zones.available: Read complete after 0s [id=ap-southeast-2]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_budgets_budget.monthly will be created
+  + resource "aws_budgets_budget" "monthly" {
+      + account_id        = (known after apply)
+      + arn               = (known after apply)
+      + budget_type       = "COST"
+      + id                = (known after apply)
+      + limit_amount      = "100"
+      + limit_unit        = "USD"
+      + name              = "cobble-dev-monthly-cost"
+      + name_prefix       = (known after apply)
+      + tags_all          = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + time_period_end   = "2087-06-15_00:00"
+      + time_period_start = (known after apply)
+      + time_unit         = "MONTHLY"
+
+      + cost_filter (known after apply)
+
+      + cost_types (known after apply)
+
+      + notification {
+          + comparison_operator        = "GREATER_THAN"
+          + notification_type          = "ACTUAL"
+          + subscriber_email_addresses = [
+              + "n11543027@qut.edu.au",
+            ]
+          + subscriber_sns_topic_arns  = []
+          + threshold                  = 80
+          + threshold_type             = "PERCENTAGE"
+        }
+      + notification {
+          + comparison_operator        = "GREATER_THAN"
+          + notification_type          = "FORECASTED"
+          + subscriber_email_addresses = [
+              + "n11543027@qut.edu.au",
+            ]
+          + subscriber_sns_topic_arns  = []
+          + threshold                  = 100
+          + threshold_type             = "PERCENTAGE"
+        }
+    }
+
+  # aws_kms_alias.this will be created
+  + resource "aws_kms_alias" "this" {
+      + arn            = (known after apply)
+      + id             = (known after apply)
+      + name           = "alias/cobble-dev"
+      + name_prefix    = (known after apply)
+      + target_key_arn = (known after apply)
+      + target_key_id  = (known after apply)
+    }
+
+  # aws_kms_key.this will be created
+  + resource "aws_kms_key" "this" {
+      + arn                                = (known after apply)
+      + bypass_policy_lockout_safety_check = false
+      + customer_master_key_spec           = "SYMMETRIC_DEFAULT"
+      + deletion_window_in_days            = 7
+      + description                        = "cobble-dev: data and log encryption"
+      + enable_key_rotation                = true
+      + id                                 = (known after apply)
+      + is_enabled                         = true
+      + key_id                             = (known after apply)
+      + key_usage                          = "ENCRYPT_DECRYPT"
+      + multi_region                       = (known after apply)
+      + policy                             = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "kms:*"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + AWS = "arn:aws:iam::740667376104:root"
+                        }
+                      + Resource  = "*"
+                      + Sid       = "EnableIAMPolicies"
+                    },
+                  + {
+                      + Action    = [
+                          + "kms:Encrypt",
+                          + "kms:Decrypt",
+                          + "kms:ReEncrypt*",
+                          + "kms:GenerateDataKey*",
+                          + "kms:DescribeKey",
+                        ]
+                      + Condition = {
+                          + ArnLike = {
+                              + "kms:EncryptionContext:aws:logs:arn" = "arn:aws:logs:ap-southeast-2:740667376104:*"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "logs.ap-southeast-2.amazonaws.com"
+                        }
+                      + Resource  = "*"
+                      + Sid       = "AllowCloudWatchLogs"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + rotation_period_in_days            = (known after apply)
+      + tags_all                           = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+    }
+
+  # module.access_logs.aws_s3_bucket.this will be created
+  + resource "aws_s3_bucket" "this" {
+      + acceleration_status         = (known after apply)
+      + acl                         = (known after apply)
+      + arn                         = (known after apply)
+      + bucket                      = "cobble-dev-access-logs-740667376104"
+      + bucket_domain_name          = (known after apply)
+      + bucket_prefix               = (known after apply)
+      + bucket_regional_domain_name = (known after apply)
+      + force_destroy               = true
+      + hosted_zone_id              = (known after apply)
+      + id                          = (known after apply)
+      + object_lock_enabled         = (known after apply)
+      + policy                      = (known after apply)
+      + region                      = (known after apply)
+      + request_payer               = (known after apply)
+      + tags_all                    = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + website_domain              = (known after apply)
+      + website_endpoint            = (known after apply)
+
+      + cors_rule (known after apply)
+
+      + grant (known after apply)
+
+      + lifecycle_rule (known after apply)
+
+      + logging (known after apply)
+
+      + object_lock_configuration (known after apply)
+
+      + replication_configuration (known after apply)
+
+      + server_side_encryption_configuration (known after apply)
+
+      + versioning (known after apply)
+
+      + website (known after apply)
+    }
+
+  # module.access_logs.aws_s3_bucket_lifecycle_configuration.this will be created
+  + resource "aws_s3_bucket_lifecycle_configuration" "this" {
+      + bucket                                 = (known after apply)
+      + expected_bucket_owner                  = (known after apply)
+      + id                                     = (known after apply)
+      + transition_default_minimum_object_size = "all_storage_classes_128K"
+
+      + rule {
+          + id     = "expire-old-logs"
+          + status = "Enabled"
+            # (1 unchanged attribute hidden)
+
+          + abort_incomplete_multipart_upload {
+              + days_after_initiation = 7
+            }
+
+          + expiration {
+              + days                         = 365
+              + expired_object_delete_marker = false
+            }
+
+          + filter {
+                # (1 unchanged attribute hidden)
+            }
+
+          + noncurrent_version_expiration {
+              + noncurrent_days = 30
+            }
+        }
+    }
+
+  # module.access_logs.aws_s3_bucket_policy.this will be created
+  + resource "aws_s3_bucket_policy" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+      + policy = (known after apply)
+    }
+
+  # module.access_logs.aws_s3_bucket_public_access_block.this will be created
+  + resource "aws_s3_bucket_public_access_block" "this" {
+      + block_public_acls       = true
+      + block_public_policy     = true
+      + bucket                  = (known after apply)
+      + id                      = (known after apply)
+      + ignore_public_acls      = true
+      + restrict_public_buckets = true
+    }
+
+  # module.access_logs.aws_s3_bucket_server_side_encryption_configuration.this will be created
+  + resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + rule {
+          + apply_server_side_encryption_by_default {
+              + sse_algorithm     = "AES256"
+                # (1 unchanged attribute hidden)
+            }
+        }
+    }
+
+  # module.access_logs.aws_s3_bucket_versioning.this will be created
+  + resource "aws_s3_bucket_versioning" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + versioning_configuration {
+          + mfa_delete = (known after apply)
+          + status     = "Enabled"
+        }
+    }
+
+  # module.account_baseline[0].aws_config_configuration_recorder.this will be created
+  + resource "aws_config_configuration_recorder" "this" {
+      + id       = (known after apply)
+      + name     = "cobble-dev-recorder"
+      + role_arn = (known after apply)
+
+      + recording_group {
+          + all_supported                 = true
+          + include_global_resource_types = true
+
+          + exclusion_by_resource_types (known after apply)
+
+          + recording_strategy (known after apply)
+        }
+
+      + recording_mode (known after apply)
+    }
+
+  # module.account_baseline[0].aws_config_configuration_recorder_status.this will be created
+  + resource "aws_config_configuration_recorder_status" "this" {
+      + id         = (known after apply)
+      + is_enabled = true
+      + name       = "cobble-dev-recorder"
+    }
+
+  # module.account_baseline[0].aws_config_delivery_channel.this will be created
+  + resource "aws_config_delivery_channel" "this" {
+      + id             = (known after apply)
+      + name           = "cobble-dev-delivery"
+      + s3_bucket_name = "cobble-config-history-021407434891"
+      + s3_kms_key_arn = "arn:aws:kms:ap-southeast-2:021407434891:key/5714ea95-9547-45d6-9b62-46dcfd8011e0"
+    }
+
+  # module.account_baseline[0].aws_ebs_encryption_by_default.this will be created
+  + resource "aws_ebs_encryption_by_default" "this" {
+      + enabled = true
+      + id      = (known after apply)
+    }
+
+  # module.account_baseline[0].aws_iam_account_password_policy.this will be created
+  + resource "aws_iam_account_password_policy" "this" {
+      + allow_users_to_change_password = true
+      + expire_passwords               = (known after apply)
+      + hard_expiry                    = (known after apply)
+      + id                             = (known after apply)
+      + max_password_age               = 90
+      + minimum_password_length        = 14
+      + password_reuse_prevention      = 24
+      + require_lowercase_characters   = true
+      + require_numbers                = true
+      + require_symbols                = true
+      + require_uppercase_characters   = true
+    }
+
+  # module.account_baseline[0].aws_iam_role.config will be created
+  + resource "aws_iam_role" "config" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "config.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "cobble-dev-config-recorder"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.account_baseline[0].aws_iam_role_policy.config_delivery will be created
+  + resource "aws_iam_role_policy" "config_delivery" {
+      + id          = (known after apply)
+      + name        = "cobble-dev-config-delivery"
+      + name_prefix = (known after apply)
+      + policy      = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = "s3:GetBucketAcl"
+                      + Effect   = "Allow"
+                      + Resource = "arn:aws:s3:::cobble-config-history-021407434891"
+                    },
+                  + {
+                      + Action   = "s3:PutObject"
+                      + Effect   = "Allow"
+                      + Resource = "arn:aws:s3:::cobble-config-history-021407434891/AWSLogs/740667376104/Config/*"
+                    },
+                  + {
+                      + Action   = [
+                          + "kms:GenerateDataKey",
+                          + "kms:Decrypt",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "arn:aws:kms:ap-southeast-2:021407434891:key/5714ea95-9547-45d6-9b62-46dcfd8011e0"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + role        = (known after apply)
+    }
+
+  # module.account_baseline[0].aws_iam_role_policy_attachment.config will be created
+  + resource "aws_iam_role_policy_attachment" "config" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"
+      + role       = "cobble-dev-config-recorder"
+    }
+
+  # module.account_baseline[0].aws_s3_account_public_access_block.this will be created
+  + resource "aws_s3_account_public_access_block" "this" {
+      + account_id              = (known after apply)
+      + block_public_acls       = true
+      + block_public_policy     = true
+      + id                      = (known after apply)
+      + ignore_public_acls      = true
+      + restrict_public_buckets = true
+    }
+
+  # module.app.aws_appautoscaling_policy.cpu[0] will be created
+  + resource "aws_appautoscaling_policy" "cpu" {
+      + alarm_arns         = (known after apply)
+      + arn                = (known after apply)
+      + id                 = (known after apply)
+      + name               = "cobble-dev-cpu"
+      + policy_type        = "TargetTrackingScaling"
+      + resource_id        = "service/cobble-dev/cobble-dev"
+      + scalable_dimension = "ecs:service:DesiredCount"
+      + service_namespace  = "ecs"
+
+      + target_tracking_scaling_policy_configuration {
+          + disable_scale_in = false
+          + target_value     = 60
+
+          + predefined_metric_specification {
+              + predefined_metric_type = "ECSServiceAverageCPUUtilization"
+            }
+        }
+    }
+
+  # module.app.aws_appautoscaling_target.this[0] will be created
+  + resource "aws_appautoscaling_target" "this" {
+      + arn                = (known after apply)
+      + id                 = (known after apply)
+      + max_capacity       = 2
+      + min_capacity       = 1
+      + resource_id        = "service/cobble-dev/cobble-dev"
+      + role_arn           = (known after apply)
+      + scalable_dimension = "ecs:service:DesiredCount"
+      + service_namespace  = "ecs"
+      + tags_all           = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+
+      + suspended_state (known after apply)
+    }
+
+  # module.app.aws_cloudwatch_log_group.this will be created
+  + resource "aws_cloudwatch_log_group" "this" {
+      + arn               = (known after apply)
+      + id                = (known after apply)
+      + kms_key_id        = (known after apply)
+      + log_group_class   = (known after apply)
+      + name              = "/cobble-dev/app"
+      + name_prefix       = (known after apply)
+      + retention_in_days = 30
+      + skip_destroy      = false
+      + tags_all          = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+    }
+
+  # module.app.aws_ecs_cluster.this will be created
+  + resource "aws_ecs_cluster" "this" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + name     = "cobble-dev"
+      + tags_all = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+
+      + setting {
+          + name  = "containerInsights"
+          + value = "disabled"
+        }
+    }
+
+  # module.app.aws_ecs_service.this will be created
+  + resource "aws_ecs_service" "this" {
+      + availability_zone_rebalancing      = "DISABLED"
+      + cluster                            = (known after apply)
+      + deployment_maximum_percent         = 200
+      + deployment_minimum_healthy_percent = 100
+      + desired_count                      = 1
+      + enable_ecs_managed_tags            = false
+      + enable_execute_command             = false
+      + health_check_grace_period_seconds  = 60
+      + iam_role                           = (known after apply)
+      + id                                 = (known after apply)
+      + launch_type                        = "FARGATE"
+      + name                               = "cobble-dev"
+      + platform_version                   = (known after apply)
+      + propagate_tags                     = "SERVICE"
+      + scheduling_strategy                = "REPLICA"
+      + tags_all                           = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + task_definition                    = (known after apply)
+      + triggers                           = (known after apply)
+      + wait_for_steady_state              = false
+
+      + deployment_circuit_breaker {
+          + enable   = true
+          + rollback = true
+        }
+
+      + load_balancer {
+          + container_name   = "app"
+          + container_port   = 80
+          + target_group_arn = (known after apply)
+            # (1 unchanged attribute hidden)
+        }
+
+      + network_configuration {
+          + assign_public_ip = false
+          + security_groups  = (known after apply)
+          + subnets          = (known after apply)
+        }
+    }
+
+  # module.app.aws_ecs_task_definition.this will be created
+  + resource "aws_ecs_task_definition" "this" {
+      + arn                      = (known after apply)
+      + arn_without_revision     = (known after apply)
+      + container_definitions    = (known after apply)
+      + cpu                      = "256"
+      + enable_fault_injection   = (known after apply)
+      + execution_role_arn       = (known after apply)
+      + family                   = "cobble-dev"
+      + id                       = (known after apply)
+      + memory                   = "512"
+      + network_mode             = "awsvpc"
+      + requires_compatibilities = [
+          + "FARGATE",
+        ]
+      + revision                 = (known after apply)
+      + skip_destroy             = false
+      + tags_all                 = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + task_role_arn            = (known after apply)
+      + track_latest             = false
+    }
+
+  # module.app.aws_iam_role.execution will be created
+  + resource "aws_iam_role" "execution" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "ecs-tasks.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "cobble-dev-task-execution"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.app.aws_iam_role.task will be created
+  + resource "aws_iam_role" "task" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "ecs-tasks.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "cobble-dev-task"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.app.aws_iam_role_policy.execution_secrets[0] will be created
+  + resource "aws_iam_role_policy" "execution_secrets" {
+      + id          = (known after apply)
+      + name        = "cobble-dev-read-secrets"
+      + name_prefix = (known after apply)
+      + policy      = (known after apply)
+      + role        = (known after apply)
+    }
+
+  # module.app.aws_iam_role_policy.task[0] will be created
+  + resource "aws_iam_role_policy" "task" {
+      + id          = (known after apply)
+      + name        = "cobble-dev-app-permissions"
+      + name_prefix = (known after apply)
+      + policy      = (known after apply)
+      + role        = (known after apply)
+    }
+
+  # module.app.aws_iam_role_policy_attachment.execution will be created
+  + resource "aws_iam_role_policy_attachment" "execution" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+      + role       = "cobble-dev-task-execution"
+    }
+
+  # module.app.aws_lb.this will be created
+  + resource "aws_lb" "this" {
+      + arn                                                          = (known after apply)
+      + arn_suffix                                                   = (known after apply)
+      + client_keep_alive                                            = 3600
+      + desync_mitigation_mode                                       = "defensive"
+      + dns_name                                                     = (known after apply)
+      + drop_invalid_header_fields                                   = true
+      + enable_deletion_protection                                   = false
+      + enable_http2                                                 = true
+      + enable_tls_version_and_cipher_suite_headers                  = false
+      + enable_waf_fail_open                                         = false
+      + enable_xff_client_port                                       = false
+      + enable_zonal_shift                                           = false
+      + enforce_security_group_inbound_rules_on_private_link_traffic = (known after apply)
+      + id                                                           = (known after apply)
+      + idle_timeout                                                 = 60
+      + internal                                                     = false
+      + ip_address_type                                              = (known after apply)
+      + load_balancer_type                                           = "application"
+      + name                                                         = "cobble-dev-alb"
+      + name_prefix                                                  = (known after apply)
+      + preserve_host_header                                         = false
+      + security_groups                                              = (known after apply)
+      + subnets                                                      = (known after apply)
+      + tags_all                                                     = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + vpc_id                                                       = (known after apply)
+      + xff_header_processing_mode                                   = "append"
+      + zone_id                                                      = (known after apply)
+
+      + access_logs (known after apply)
+
+      + subnet_mapping (known after apply)
+    }
+
+  # module.app.aws_lb_listener.http_forward[0] will be created
+  + resource "aws_lb_listener" "http_forward" {
+      + arn                                                                   = (known after apply)
+      + id                                                                    = (known after apply)
+      + load_balancer_arn                                                     = (known after apply)
+      + port                                                                  = 80
+      + protocol                                                              = "HTTP"
+      + routing_http_request_x_amzn_mtls_clientcert_header_name               = (known after apply)
+      + routing_http_request_x_amzn_mtls_clientcert_issuer_header_name        = (known after apply)
+      + routing_http_request_x_amzn_mtls_clientcert_leaf_header_name          = (known after apply)
+      + routing_http_request_x_amzn_mtls_clientcert_serial_number_header_name = (known after apply)
+      + routing_http_request_x_amzn_mtls_clientcert_subject_header_name       = (known after apply)
+      + routing_http_request_x_amzn_mtls_clientcert_validity_header_name      = (known after apply)
+      + routing_http_request_x_amzn_tls_cipher_suite_header_name              = (known after apply)
+      + routing_http_request_x_amzn_tls_version_header_name                   = (known after apply)
+      + routing_http_response_access_control_allow_credentials_header_value   = (known after apply)
+      + routing_http_response_access_control_allow_headers_header_value       = (known after apply)
+      + routing_http_response_access_control_allow_methods_header_value       = (known after apply)
+      + routing_http_response_access_control_allow_origin_header_value        = (known after apply)
+      + routing_http_response_access_control_expose_headers_header_value      = (known after apply)
+      + routing_http_response_access_control_max_age_header_value             = (known after apply)
+      + routing_http_response_content_security_policy_header_value            = (known after apply)
+      + routing_http_response_server_enabled                                  = (known after apply)
+      + routing_http_response_strict_transport_security_header_value          = (known after apply)
+      + routing_http_response_x_content_type_options_header_value             = (known after apply)
+      + routing_http_response_x_frame_options_header_value                    = (known after apply)
+      + ssl_policy                                                            = (known after apply)
+      + tags_all                                                              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + tcp_idle_timeout_seconds                                              = (known after apply)
+
+      + default_action {
+          + order            = (known after apply)
+          + target_group_arn = (known after apply)
+          + type             = "forward"
+        }
+
+      + mutual_authentication (known after apply)
+    }
+
+  # module.app.aws_lb_target_group.this will be created
+  + resource "aws_lb_target_group" "this" {
+      + arn                                = (known after apply)
+      + arn_suffix                         = (known after apply)
+      + connection_termination             = (known after apply)
+      + deregistration_delay               = "300"
+      + id                                 = (known after apply)
+      + ip_address_type                    = (known after apply)
+      + lambda_multi_value_headers_enabled = false
+      + load_balancer_arns                 = (known after apply)
+      + load_balancing_algorithm_type      = (known after apply)
+      + load_balancing_anomaly_mitigation  = (known after apply)
+      + load_balancing_cross_zone_enabled  = (known after apply)
+      + name                               = "cobble-dev-tg"
+      + name_prefix                        = (known after apply)
+      + port                               = 80
+      + preserve_client_ip                 = (known after apply)
+      + protocol                           = "HTTP"
+      + protocol_version                   = (known after apply)
+      + proxy_protocol_v2                  = false
+      + slow_start                         = 0
+      + tags_all                           = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + target_type                        = "ip"
+      + vpc_id                             = (known after apply)
+
+      + health_check {
+          + enabled             = true
+          + healthy_threshold   = 2
+          + interval            = 30
+          + matcher             = "200-399"
+          + path                = "/"
+          + port                = "traffic-port"
+          + protocol            = "HTTP"
+          + timeout             = (known after apply)
+          + unhealthy_threshold = 3
+        }
+
+      + stickiness (known after apply)
+
+      + target_failover (known after apply)
+
+      + target_group_health (known after apply)
+
+      + target_health_state (known after apply)
+    }
+
+  # module.app.aws_security_group.load_balancer will be created
+  + resource "aws_security_group" "load_balancer" {
+      + arn                    = (known after apply)
+      + description            = "Load balancer: accepts web traffic from the internet"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = "cobble-dev-alb"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "cobble-dev-alb"
+        }
+      + tags_all               = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-alb"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.app.aws_security_group.tasks will be created
+  + resource "aws_security_group" "tasks" {
+      + arn                    = (known after apply)
+      + description            = "Containers: accept traffic only from the load balancer"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = "cobble-dev-tasks"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "cobble-dev-tasks"
+        }
+      + tags_all               = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-tasks"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.app.aws_vpc_security_group_egress_rule.load_balancer_to_tasks will be created
+  + resource "aws_vpc_security_group_egress_rule" "load_balancer_to_tasks" {
+      + arn                          = (known after apply)
+      + description                  = "Forward requests to the containers"
+      + from_port                    = 80
+      + id                           = (known after apply)
+      + ip_protocol                  = "tcp"
+      + referenced_security_group_id = (known after apply)
+      + security_group_id            = (known after apply)
+      + security_group_rule_id       = (known after apply)
+      + tags_all                     = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + to_port                      = 80
+    }
+
+  # module.app.aws_vpc_security_group_egress_rule.tasks_https_out will be created
+  + resource "aws_vpc_security_group_egress_rule" "tasks_https_out" {
+      + arn                    = (known after apply)
+      + cidr_ipv4              = "0.0.0.0/0"
+      + description            = "HTTPS out: image pulls, AWS APIs, Secrets Manager"
+      + from_port              = 443
+      + id                     = (known after apply)
+      + ip_protocol            = "tcp"
+      + security_group_id      = (known after apply)
+      + security_group_rule_id = (known after apply)
+      + tags_all               = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + to_port                = 443
+    }
+
+  # module.app.aws_vpc_security_group_ingress_rule.load_balancer_http will be created
+  + resource "aws_vpc_security_group_ingress_rule" "load_balancer_http" {
+      + arn                    = (known after apply)
+      + cidr_ipv4              = "0.0.0.0/0"
+      + description            = "HTTP from the internet (redirected to HTTPS when a certificate is set)"
+      + from_port              = 80
+      + id                     = (known after apply)
+      + ip_protocol            = "tcp"
+      + security_group_id      = (known after apply)
+      + security_group_rule_id = (known after apply)
+      + tags_all               = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + to_port                = 80
+    }
+
+  # module.app.aws_vpc_security_group_ingress_rule.tasks_from_load_balancer will be created
+  + resource "aws_vpc_security_group_ingress_rule" "tasks_from_load_balancer" {
+      + arn                          = (known after apply)
+      + description                  = "Requests from the load balancer only"
+      + from_port                    = 80
+      + id                           = (known after apply)
+      + ip_protocol                  = "tcp"
+      + referenced_security_group_id = (known after apply)
+      + security_group_id            = (known after apply)
+      + security_group_rule_id       = (known after apply)
+      + tags_all                     = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + to_port                      = 80
+    }
+
+  # module.data_bucket.aws_s3_bucket.this will be created
+  + resource "aws_s3_bucket" "this" {
+      + acceleration_status         = (known after apply)
+      + acl                         = (known after apply)
+      + arn                         = (known after apply)
+      + bucket                      = "cobble-dev-data-740667376104"
+      + bucket_domain_name          = (known after apply)
+      + bucket_prefix               = (known after apply)
+      + bucket_regional_domain_name = (known after apply)
+      + force_destroy               = true
+      + hosted_zone_id              = (known after apply)
+      + id                          = (known after apply)
+      + object_lock_enabled         = (known after apply)
+      + policy                      = (known after apply)
+      + region                      = (known after apply)
+      + request_payer               = (known after apply)
+      + tags_all                    = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + website_domain              = (known after apply)
+      + website_endpoint            = (known after apply)
+
+      + cors_rule (known after apply)
+
+      + grant (known after apply)
+
+      + lifecycle_rule (known after apply)
+
+      + logging (known after apply)
+
+      + object_lock_configuration (known after apply)
+
+      + replication_configuration (known after apply)
+
+      + server_side_encryption_configuration (known after apply)
+
+      + versioning (known after apply)
+
+      + website (known after apply)
+    }
+
+  # module.data_bucket.aws_s3_bucket_lifecycle_configuration.this[0] will be created
+  + resource "aws_s3_bucket_lifecycle_configuration" "this" {
+      + bucket                                 = (known after apply)
+      + expected_bucket_owner                  = (known after apply)
+      + id                                     = (known after apply)
+      + transition_default_minimum_object_size = "all_storage_classes_128K"
+
+      + rule {
+          + id     = "tidy-up"
+          + status = "Enabled"
+            # (1 unchanged attribute hidden)
+
+          + abort_incomplete_multipart_upload {
+              + days_after_initiation = 7
+            }
+
+          + filter {
+                # (1 unchanged attribute hidden)
+            }
+
+          + noncurrent_version_expiration {
+              + noncurrent_days = 90
+            }
+        }
+    }
+
+  # module.data_bucket.aws_s3_bucket_logging.this will be created
+  + resource "aws_s3_bucket_logging" "this" {
+      + bucket        = (known after apply)
+      + id            = (known after apply)
+      + target_bucket = (known after apply)
+      + target_prefix = "data-bucket/"
+    }
+
+  # module.data_bucket.aws_s3_bucket_public_access_block.this will be created
+  + resource "aws_s3_bucket_public_access_block" "this" {
+      + block_public_acls       = true
+      + block_public_policy     = true
+      + bucket                  = (known after apply)
+      + id                      = (known after apply)
+      + ignore_public_acls      = true
+      + restrict_public_buckets = true
+    }
+
+  # module.data_bucket.aws_s3_bucket_server_side_encryption_configuration.this will be created
+  + resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + rule {
+          + bucket_key_enabled = true
+
+          + apply_server_side_encryption_by_default {
+              + kms_master_key_id = (known after apply)
+              + sse_algorithm     = "aws:kms"
+            }
+        }
+    }
+
+  # module.data_bucket.aws_s3_bucket_versioning.this will be created
+  + resource "aws_s3_bucket_versioning" "this" {
+      + bucket = (known after apply)
+      + id     = (known after apply)
+
+      + versioning_configuration {
+          + mfa_delete = (known after apply)
+          + status     = "Enabled"
+        }
+    }
+
+  # module.database.aws_db_instance.this will be created
+  + resource "aws_db_instance" "this" {
+      + address                               = (known after apply)
+      + allocated_storage                     = 20
+      + apply_immediately                     = false
+      + arn                                   = (known after apply)
+      + auto_minor_version_upgrade            = true
+      + availability_zone                     = (known after apply)
+      + backup_retention_period               = 7
+      + backup_target                         = (known after apply)
+      + backup_window                         = (known after apply)
+      + ca_cert_identifier                    = (known after apply)
+      + character_set_name                    = (known after apply)
+      + copy_tags_to_snapshot                 = true
+      + database_insights_mode                = (known after apply)
+      + db_name                               = "cobble"
+      + db_subnet_group_name                  = "cobble-dev"
+      + dedicated_log_volume                  = false
+      + delete_automated_backups              = true
+      + deletion_protection                   = false
+      + domain_fqdn                           = (known after apply)
+      + enabled_cloudwatch_logs_exports       = [
+          + "postgresql",
+          + "upgrade",
+        ]
+      + endpoint                              = (known after apply)
+      + engine                                = "postgres"
+      + engine_lifecycle_support              = (known after apply)
+      + engine_version                        = "16"
+      + engine_version_actual                 = (known after apply)
+      + hosted_zone_id                        = (known after apply)
+      + iam_database_authentication_enabled   = true
+      + id                                    = (known after apply)
+      + identifier                            = "cobble-dev"
+      + identifier_prefix                     = (known after apply)
+      + instance_class                        = "db.t4g.micro"
+      + iops                                  = (known after apply)
+      + kms_key_id                            = (known after apply)
+      + latest_restorable_time                = (known after apply)
+      + license_model                         = (known after apply)
+      + listener_endpoint                     = (known after apply)
+      + maintenance_window                    = (known after apply)
+      + manage_master_user_password           = true
+      + master_user_secret                    = (known after apply)
+      + master_user_secret_kms_key_id         = (known after apply)
+      + max_allocated_storage                 = 100
+      + monitoring_interval                   = 0
+      + monitoring_role_arn                   = (known after apply)
+      + multi_az                              = false
+      + nchar_character_set_name              = (known after apply)
+      + network_type                          = (known after apply)
+      + option_group_name                     = (known after apply)
+      + parameter_group_name                  = "cobble-dev-postgres16"
+      + password_wo                           = (write-only attribute)
+      + performance_insights_enabled          = false
+      + performance_insights_kms_key_id       = (known after apply)
+      + performance_insights_retention_period = (known after apply)
+      + port                                  = (known after apply)
+      + publicly_accessible                   = false
+      + replica_mode                          = (known after apply)
+      + replicas                              = (known after apply)
+      + resource_id                           = (known after apply)
+      + skip_final_snapshot                   = true
+      + snapshot_identifier                   = (known after apply)
+      + status                                = (known after apply)
+      + storage_encrypted                     = true
+      + storage_throughput                    = (known after apply)
+      + storage_type                          = "gp3"
+      + tags_all                              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + timezone                              = (known after apply)
+      + username                              = "cobble_admin"
+      + vpc_security_group_ids                = (known after apply)
+    }
+
+  # module.database.aws_db_parameter_group.this will be created
+  + resource "aws_db_parameter_group" "this" {
+      + arn          = (known after apply)
+      + description  = "Managed by Terraform"
+      + family       = "postgres16"
+      + id           = (known after apply)
+      + name         = "cobble-dev-postgres16"
+      + name_prefix  = (known after apply)
+      + skip_destroy = false
+      + tags_all     = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+
+      + parameter {
+          + apply_method = "immediate"
+          + name         = "log_connections"
+          + value        = "1"
+        }
+      + parameter {
+          + apply_method = "immediate"
+          + name         = "log_min_duration_statement"
+          + value        = "1000"
+        }
+      + parameter {
+          + apply_method = "pending-reboot"
+          + name         = "rds.force_ssl"
+          + value        = "1"
+        }
+    }
+
+  # module.database.aws_db_subnet_group.this will be created
+  + resource "aws_db_subnet_group" "this" {
+      + arn                     = (known after apply)
+      + description             = "Managed by Terraform"
+      + id                      = (known after apply)
+      + name                    = "cobble-dev"
+      + name_prefix             = (known after apply)
+      + subnet_ids              = (known after apply)
+      + supported_network_types = (known after apply)
+      + tags_all                = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + vpc_id                  = (known after apply)
+    }
+
+  # module.database.aws_security_group.this will be created
+  + resource "aws_security_group" "this" {
+      + arn                    = (known after apply)
+      + description            = "Database: accepts PostgreSQL connections only from the application"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = "cobble-dev-db"
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "cobble-dev-db"
+        }
+      + tags_all               = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-db"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.database.aws_vpc_security_group_ingress_rule.from_allowed[0] will be created
+  + resource "aws_vpc_security_group_ingress_rule" "from_allowed" {
+      + arn                          = (known after apply)
+      + description                  = "PostgreSQL from the application"
+      + from_port                    = 5432
+      + id                           = (known after apply)
+      + ip_protocol                  = "tcp"
+      + referenced_security_group_id = (known after apply)
+      + security_group_id            = (known after apply)
+      + security_group_rule_id       = (known after apply)
+      + tags_all                     = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + to_port                      = 5432
+    }
+
+  # module.network.aws_default_security_group.this[0] will be created
+  + resource "aws_default_security_group" "this" {
+      + arn                    = (known after apply)
+      + description            = (known after apply)
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = (known after apply)
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "cobble-dev-default-do-not-use"
+        }
+      + tags_all               = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-default-do-not-use"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.network.aws_eip.nat[0] will be created
+  + resource "aws_eip" "nat" {
+      + allocation_id        = (known after apply)
+      + arn                  = (known after apply)
+      + association_id       = (known after apply)
+      + carrier_ip           = (known after apply)
+      + customer_owned_ip    = (known after apply)
+      + domain               = "vpc"
+      + id                   = (known after apply)
+      + instance             = (known after apply)
+      + ipam_pool_id         = (known after apply)
+      + network_border_group = (known after apply)
+      + network_interface    = (known after apply)
+      + private_dns          = (known after apply)
+      + private_ip           = (known after apply)
+      + ptr_record           = (known after apply)
+      + public_dns           = (known after apply)
+      + public_ip            = (known after apply)
+      + public_ipv4_pool     = (known after apply)
+      + tags                 = {
+          + "Name" = "cobble-dev-nat-0"
+        }
+      + tags_all             = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-nat-0"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + vpc                  = (known after apply)
+    }
+
+  # module.network.aws_flow_log.this will be created
+  + resource "aws_flow_log" "this" {
+      + arn                      = (known after apply)
+      + iam_role_arn             = (known after apply)
+      + id                       = (known after apply)
+      + log_destination          = (known after apply)
+      + log_destination_type     = "cloud-watch-logs"
+      + log_format               = (known after apply)
+      + log_group_name           = (known after apply)
+      + max_aggregation_interval = 60
+      + tags_all                 = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + traffic_type             = "ALL"
+      + vpc_id                   = (known after apply)
+    }
+
+  # module.network.aws_internet_gateway.this will be created
+  + resource "aws_internet_gateway" "this" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + owner_id = (known after apply)
+      + tags     = {
+          + "Name" = "cobble-dev-igw"
+        }
+      + tags_all = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-igw"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + vpc_id   = (known after apply)
+    }
+
+  # module.network.aws_nat_gateway.this[0] will be created
+  + resource "aws_nat_gateway" "this" {
+      + allocation_id                      = (known after apply)
+      + association_id                     = (known after apply)
+      + connectivity_type                  = "public"
+      + id                                 = (known after apply)
+      + network_interface_id               = (known after apply)
+      + private_ip                         = (known after apply)
+      + public_ip                          = (known after apply)
+      + secondary_private_ip_address_count = (known after apply)
+      + secondary_private_ip_addresses     = (known after apply)
+      + subnet_id                          = (known after apply)
+      + tags                               = {
+          + "Name" = "cobble-dev-nat-0"
+        }
+      + tags_all                           = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-nat-0"
+          + "Owner"       = "Cyber Security Centre"
+        }
+    }
+
+  # module.network.aws_route.private_to_nat[0] will be created
+  + resource "aws_route" "private_to_nat" {
+      + destination_cidr_block = "0.0.0.0/0"
+      + id                     = (known after apply)
+      + instance_id            = (known after apply)
+      + instance_owner_id      = (known after apply)
+      + nat_gateway_id         = (known after apply)
+      + network_interface_id   = (known after apply)
+      + origin                 = (known after apply)
+      + route_table_id         = (known after apply)
+      + state                  = (known after apply)
+    }
+
+  # module.network.aws_route_table.database[0] will be created
+  + resource "aws_route_table" "database" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + route            = (known after apply)
+      + tags             = {
+          + "Name" = "cobble-dev-database-rt"
+        }
+      + tags_all         = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-database-rt"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # module.network.aws_route_table.private will be created
+  + resource "aws_route_table" "private" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + route            = (known after apply)
+      + tags             = {
+          + "Name" = "cobble-dev-private-rt"
+        }
+      + tags_all         = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-private-rt"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # module.network.aws_route_table.public will be created
+  + resource "aws_route_table" "public" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + route            = [
+          + {
+              + cidr_block                 = "0.0.0.0/0"
+              + gateway_id                 = (known after apply)
+                # (11 unchanged attributes hidden)
+            },
+        ]
+      + tags             = {
+          + "Name" = "cobble-dev-public-rt"
+        }
+      + tags_all         = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-public-rt"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # module.network.aws_route_table_association.database[0] will be created
+  + resource "aws_route_table_association" "database" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.network.aws_route_table_association.database[1] will be created
+  + resource "aws_route_table_association" "database" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.network.aws_route_table_association.private[0] will be created
+  + resource "aws_route_table_association" "private" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.network.aws_route_table_association.private[1] will be created
+  + resource "aws_route_table_association" "private" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.network.aws_route_table_association.public[0] will be created
+  + resource "aws_route_table_association" "public" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.network.aws_route_table_association.public[1] will be created
+  + resource "aws_route_table_association" "public" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.network.aws_subnet.database[0] will be created
+  + resource "aws_subnet" "database" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "ap-southeast-2a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.28.20.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name" = "cobble-dev-database-0"
+          + "Tier" = "database"
+        }
+      + tags_all                                       = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-database-0"
+          + "Owner"       = "Cyber Security Centre"
+          + "Tier"        = "database"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.network.aws_subnet.database[1] will be created
+  + resource "aws_subnet" "database" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "ap-southeast-2b"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.28.21.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name" = "cobble-dev-database-1"
+          + "Tier" = "database"
+        }
+      + tags_all                                       = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-database-1"
+          + "Owner"       = "Cyber Security Centre"
+          + "Tier"        = "database"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.network.aws_subnet.private[0] will be created
+  + resource "aws_subnet" "private" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "ap-southeast-2a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.28.10.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name" = "cobble-dev-private-0"
+          + "Tier" = "private"
+        }
+      + tags_all                                       = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-private-0"
+          + "Owner"       = "Cyber Security Centre"
+          + "Tier"        = "private"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.network.aws_subnet.private[1] will be created
+  + resource "aws_subnet" "private" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "ap-southeast-2b"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.28.11.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name" = "cobble-dev-private-1"
+          + "Tier" = "private"
+        }
+      + tags_all                                       = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-private-1"
+          + "Owner"       = "Cyber Security Centre"
+          + "Tier"        = "private"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.network.aws_subnet.public[0] will be created
+  + resource "aws_subnet" "public" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "ap-southeast-2a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.28.0.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = true
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name" = "cobble-dev-public-0"
+          + "Tier" = "public"
+        }
+      + tags_all                                       = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-public-0"
+          + "Owner"       = "Cyber Security Centre"
+          + "Tier"        = "public"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.network.aws_subnet.public[1] will be created
+  + resource "aws_subnet" "public" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "ap-southeast-2b"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.28.1.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = true
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name" = "cobble-dev-public-1"
+          + "Tier" = "public"
+        }
+      + tags_all                                       = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-public-1"
+          + "Owner"       = "Cyber Security Centre"
+          + "Tier"        = "public"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.network.aws_vpc.this will be created
+  + resource "aws_vpc" "this" {
+      + arn                                  = (known after apply)
+      + cidr_block                           = "10.28.0.0/16"
+      + default_network_acl_id               = (known after apply)
+      + default_route_table_id               = (known after apply)
+      + default_security_group_id            = (known after apply)
+      + dhcp_options_id                      = (known after apply)
+      + enable_dns_hostnames                 = true
+      + enable_dns_support                   = true
+      + enable_network_address_usage_metrics = (known after apply)
+      + id                                   = (known after apply)
+      + instance_tenancy                     = "default"
+      + ipv6_association_id                  = (known after apply)
+      + ipv6_cidr_block                      = (known after apply)
+      + ipv6_cidr_block_network_border_group = (known after apply)
+      + main_route_table_id                  = (known after apply)
+      + owner_id                             = (known after apply)
+      + tags                                 = {
+          + "Name" = "cobble-dev-vpc"
+        }
+      + tags_all                             = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-vpc"
+          + "Owner"       = "Cyber Security Centre"
+        }
+    }
+
+  # module.network.aws_vpc_endpoint.s3[0] will be created
+  + resource "aws_vpc_endpoint" "s3" {
+      + arn                   = (known after apply)
+      + cidr_blocks           = (known after apply)
+      + dns_entry             = (known after apply)
+      + id                    = (known after apply)
+      + ip_address_type       = (known after apply)
+      + network_interface_ids = (known after apply)
+      + owner_id              = (known after apply)
+      + policy                = (known after apply)
+      + prefix_list_id        = (known after apply)
+      + private_dns_enabled   = (known after apply)
+      + requester_managed     = (known after apply)
+      + route_table_ids       = (known after apply)
+      + security_group_ids    = (known after apply)
+      + service_name          = "com.amazonaws.ap-southeast-2.s3"
+      + service_region        = (known after apply)
+      + state                 = (known after apply)
+      + subnet_ids            = (known after apply)
+      + tags                  = {
+          + "Name" = "cobble-dev-s3-endpoint"
+        }
+      + tags_all              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Name"        = "cobble-dev-s3-endpoint"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + vpc_endpoint_type     = "Gateway"
+      + vpc_id                = (known after apply)
+
+      + dns_options (known after apply)
+
+      + subnet_configuration (known after apply)
+    }
+
+  # module.network.module.flow_log_destination.aws_cloudwatch_log_group.this will be created
+  + resource "aws_cloudwatch_log_group" "this" {
+      + arn               = (known after apply)
+      + id                = (known after apply)
+      + kms_key_id        = (known after apply)
+      + log_group_class   = (known after apply)
+      + name              = "/cobble-dev/vpc-flow-logs"
+      + name_prefix       = (known after apply)
+      + retention_in_days = 30
+      + skip_destroy      = false
+      + tags_all          = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+    }
+
+  # module.network.module.flow_log_destination.aws_iam_role.this will be created
+  + resource "aws_iam_role" "this" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "vpc-flow-logs.amazonaws.com"
+                        }
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = false
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "cobble-dev-vpc-flow-logs"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Application" = "Cobbled"
+          + "CostCentre"  = "Cobble"
+          + "Criticality" = "Low"
+          + "DataClass"   = "Internal"
+          + "Environment" = "dev"
+          + "ManagedBy"   = "IaC"
+          + "Owner"       = "Cyber Security Centre"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.network.module.flow_log_destination.aws_iam_role_policy.this will be created
+  + resource "aws_iam_role_policy" "this" {
+      + id          = (known after apply)
+      + name        = "cobble-dev-vpc-flow-logs"
+      + name_prefix = (known after apply)
+      + policy      = (known after apply)
+      + role        = (known after apply)
+    }
+
+Plan: 75 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + app_url                = (known after apply)
+  + data_bucket_name       = "cobble-dev-data-740667376104"
+  + database_endpoint      = (known after apply)
+  + kms_key_arn            = (known after apply)
+  + load_balancer_dns_name = (known after apply)
+module.account_baseline[0].aws_ebs_encryption_by_default.this: Creating...
+module.account_baseline[0].aws_iam_account_password_policy.this: Creating...
+module.account_baseline[0].aws_iam_role.config: Creating...
+module.network.module.flow_log_destination.aws_iam_role.this: Creating...
+aws_kms_key.this: Creating...
+module.app.aws_iam_role.execution: Creating...
+module.app.aws_ecs_cluster.this: Creating...
+module.network.aws_eip.nat[0]: Creating...
+module.database.aws_db_parameter_group.this: Creating...
+aws_budgets_budget.monthly: Creating...
+module.account_baseline[0].aws_ebs_encryption_by_default.this: Creation complete after 0s [id=terraform-20261019072040143100000001]
+module.app.aws_iam_role.task: Creating...
+module.network.aws_eip.nat[0]: Creation complete after 1s [id=eipalloc-0ba28c90849d92b65]
+module.network.aws_vpc.this: Creating...
+module.database.aws_db_parameter_group.this: Creation complete after 1s [id=cobble-dev-postgres16]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Creating...
+module.account_baseline[0].aws_iam_account_password_policy.this: Creation complete after 2s [id=iam-account-password-policy]
+module.access_logs.aws_s3_bucket.this: Creating...
+module.network.module.flow_log_destination.aws_iam_role.this: Creation complete after 2s [id=cobble-dev-vpc-flow-logs]
+module.data_bucket.aws_s3_bucket.this: Creating...
+module.app.aws_iam_role.execution: Creation complete after 2s [id=cobble-dev-task-execution]
+module.app.aws_iam_role_policy_attachment.execution: Creating...
+module.account_baseline[0].aws_iam_role.config: Creation complete after 2s [id=cobble-dev-config-recorder]
+module.account_baseline[0].aws_iam_role_policy.config_delivery: Creating...
+module.app.aws_iam_role.task: Creation complete after 2s [id=cobble-dev-task]
+module.account_baseline[0].aws_config_configuration_recorder.this: Creating...
+module.app.aws_iam_role_policy_attachment.execution: Creation complete after 1s [id=cobble-dev-task-execution-20261019072042472200000002]
+module.account_baseline[0].aws_iam_role_policy_attachment.config: Creating...
+module.account_baseline[0].aws_config_configuration_recorder.this: Creation complete after 1s [id=cobble-dev-recorder]
+module.account_baseline[0].aws_config_delivery_channel.this: Creating...
+module.account_baseline[0].aws_iam_role_policy.config_delivery: Creation complete after 1s [id=cobble-dev-config-recorder:cobble-dev-config-delivery]
+module.account_baseline[0].aws_iam_role_policy_attachment.config: Creation complete after 0s [id=cobble-dev-config-recorder-20261019072043101000000003]
+module.access_logs.aws_s3_bucket.this: Creation complete after 2s [id=cobble-dev-access-logs-740667376104]
+module.access_logs.aws_s3_bucket_public_access_block.this: Creating...
+module.access_logs.aws_s3_bucket_versioning.this: Creating...
+module.access_logs.aws_s3_bucket_server_side_encryption_configuration.this: Creating...
+module.access_logs.aws_s3_bucket_public_access_block.this: Creation complete after 0s [id=cobble-dev-access-logs-740667376104]
+module.access_logs.aws_s3_bucket_policy.this: Creating...
+module.data_bucket.aws_s3_bucket.this: Creation complete after 2s [id=cobble-dev-data-740667376104]
+module.data_bucket.aws_s3_bucket_public_access_block.this: Creating...
+module.data_bucket.aws_s3_bucket_public_access_block.this: Creation complete after 1s [id=cobble-dev-data-740667376104]
+module.data_bucket.aws_s3_bucket_versioning.this: Creating...
+module.access_logs.aws_s3_bucket_policy.this: Creation complete after 1s [id=cobble-dev-access-logs-740667376104]
+module.data_bucket.aws_s3_bucket_logging.this: Creating...
+module.access_logs.aws_s3_bucket_server_side_encryption_configuration.this: Creation complete after 1s [id=cobble-dev-access-logs-740667376104]
+module.data_bucket.aws_s3_bucket_logging.this: Creation complete after 0s [id=cobble-dev-data-740667376104]
+module.access_logs.aws_s3_bucket_versioning.this: Creation complete after 2s [id=cobble-dev-access-logs-740667376104]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Creating...
+module.data_bucket.aws_s3_bucket_versioning.this: Creation complete after 1s [id=cobble-dev-data-740667376104]
+module.data_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Creating...
+aws_kms_key.this: Still creating... [00m10s elapsed]
+module.app.aws_ecs_cluster.this: Still creating... [00m10s elapsed]
+aws_budgets_budget.monthly: Still creating... [00m10s elapsed]
+aws_budgets_budget.monthly: Creation complete after 10s [id=740667376104:cobble-dev-monthly-cost]
+module.app.aws_ecs_cluster.this: Creation complete after 11s [id=arn:aws:ecs:ap-southeast-2:740667376104:cluster/cobble-dev]
+module.network.aws_vpc.this: Still creating... [00m10s elapsed]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Still creating... [00m10s elapsed]
+module.network.aws_vpc.this: Creation complete after 12s [id=vpc-072de134831f068c4]
+module.network.aws_internet_gateway.this: Creating...
+module.network.aws_route_table.private: Creating...
+module.network.aws_subnet.private[1]: Creating...
+module.network.aws_subnet.private[0]: Creating...
+module.network.aws_subnet.public[1]: Creating...
+module.account_baseline[0].aws_config_delivery_channel.this: Still creating... [00m10s elapsed]
+aws_kms_key.this: Creation complete after 13s [id=9c8810bf-e667-438c-bed8-e2f95dd34331]
+module.network.aws_subnet.public[0]: Creating...
+module.network.aws_internet_gateway.this: Creation complete after 0s [id=igw-0dff024127a30e502]
+module.network.aws_route_table.database[0]: Creating...
+module.network.aws_route_table.private: Creation complete after 0s [id=rtb-0557c9709a9ebb408]
+module.network.aws_default_security_group.this[0]: Creating...
+module.network.aws_subnet.private[1]: Creation complete after 0s [id=subnet-0a715642576caa1f5]
+module.network.aws_subnet.database[1]: Creating...
+module.network.aws_subnet.private[0]: Creation complete after 1s [id=subnet-0d67887aac5143bd8]
+module.network.aws_subnet.database[0]: Creating...
+module.network.aws_route_table.database[0]: Creation complete after 1s [id=rtb-0149c6ade25fb496c]
+aws_kms_alias.this: Creating...
+aws_kms_alias.this: Creation complete after 0s [id=alias/cobble-dev]
+module.account_baseline[0].aws_config_delivery_channel.this: Creation complete after 11s [id=cobble-dev-delivery]
+module.network.aws_route_table.public: Creating...
+module.app.aws_security_group.load_balancer: Creating...
+module.network.aws_subnet.database[1]: Creation complete after 1s [id=subnet-06b70be7c3d6265d9]
+module.network.aws_subnet.database[0]: Creation complete after 0s [id=subnet-093a58726bdb23935]
+module.app.aws_lb_target_group.this: Creating...
+module.app.aws_security_group.tasks: Creating...
+module.network.aws_route_table.public: Creation complete after 1s [id=rtb-0d6bc29d07ca0458a]
+module.database.aws_security_group.this: Creating...
+module.network.aws_default_security_group.this[0]: Creation complete after 2s [id=sg-0a945f94bfd7c46f5]
+module.network.aws_vpc_endpoint.s3[0]: Creating...
+module.app.aws_lb_target_group.this: Creation complete after 1s [id=arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:targetgroup/cobble-dev-tg/6a6e3c3048481b5c]
+module.app.aws_cloudwatch_log_group.this: Creating...
+module.app.aws_security_group.load_balancer: Creation complete after 1s [id=sg-03e7a859c6480adba]
+module.app.aws_iam_role_policy.task[0]: Creating...
+module.app.aws_security_group.tasks: Creation complete after 2s [id=sg-06c8ad1bdde0daf88]
+module.data_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Creating...
+module.app.aws_cloudwatch_log_group.this: Creation complete after 1s [id=/cobble-dev/app]
+module.account_baseline[0].aws_config_configuration_recorder_status.this: Creating...
+module.account_baseline[0].aws_config_configuration_recorder_status.this: Creation complete after 0s [id=cobble-dev-recorder]
+module.network.aws_route_table_association.private[1]: Creating...
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Still creating... [00m10s elapsed]
+module.network.aws_route_table_association.private[1]: Creation complete after 0s [id=rtbassoc-0bda69cbc3b358ead]
+module.network.aws_route_table_association.private[0]: Creating...
+module.app.aws_iam_role_policy.task[0]: Creation complete after 1s [id=cobble-dev-task:cobble-dev-app-permissions]
+module.network.aws_route_table_association.database[1]: Creating...
+module.data_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Creation complete after 0s [id=cobble-dev-data-740667376104]
+module.network.aws_route_table_association.database[0]: Creating...
+module.database.aws_security_group.this: Creation complete after 1s [id=sg-01ca12214d2354207]
+module.network.module.flow_log_destination.aws_cloudwatch_log_group.this: Creating...
+module.data_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m10s elapsed]
+module.network.aws_route_table_association.private[0]: Creation complete after 0s [id=rtbassoc-024390d7a4fa85822]
+module.app.aws_vpc_security_group_ingress_rule.load_balancer_http: Creating...
+module.network.module.flow_log_destination.aws_cloudwatch_log_group.this: Creation complete after 1s [id=/cobble-dev/vpc-flow-logs]
+module.app.aws_vpc_security_group_egress_rule.load_balancer_to_tasks: Creating...
+module.network.aws_route_table_association.database[1]: Creation complete after 1s [id=rtbassoc-0eafa2071fdcdb534]
+module.app.aws_vpc_security_group_egress_rule.tasks_https_out: Creating...
+module.network.aws_route_table_association.database[0]: Creation complete after 1s [id=rtbassoc-090b0b6874115d248]
+module.app.aws_vpc_security_group_ingress_rule.tasks_from_load_balancer: Creating...
+module.app.aws_vpc_security_group_ingress_rule.load_balancer_http: Creation complete after 0s [id=sgr-0aeaf244a6fa331eb]
+module.network.module.flow_log_destination.aws_iam_role_policy.this: Creating...
+module.app.aws_vpc_security_group_egress_rule.load_balancer_to_tasks: Creation complete after 0s [id=sgr-0ac28e571f140f737]
+module.database.aws_db_subnet_group.this: Creating...
+module.app.aws_vpc_security_group_egress_rule.tasks_https_out: Creation complete after 0s [id=sgr-05edcd7d23e7d8781]
+module.network.aws_flow_log.this: Creating...
+module.app.aws_vpc_security_group_ingress_rule.tasks_from_load_balancer: Creation complete after 0s [id=sgr-04b05a5cd313bebaa]
+module.database.aws_vpc_security_group_ingress_rule.from_allowed[0]: Creating...
+module.network.aws_flow_log.this: Creation complete after 0s [id=fl-04bb6cd794819d44e]
+module.database.aws_vpc_security_group_ingress_rule.from_allowed[0]: Creation complete after 0s [id=sgr-07f4e0606ab741541]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Creation complete after 17s [id=740667376104]
+module.network.module.flow_log_destination.aws_iam_role_policy.this: Creation complete after 1s [id=cobble-dev-vpc-flow-logs:cobble-dev-vpc-flow-logs]
+module.database.aws_db_subnet_group.this: Creation complete after 1s [id=cobble-dev]
+module.database.aws_db_instance.this: Creating...
+module.network.aws_vpc_endpoint.s3[0]: Creation complete after 6s [id=vpce-03ec52c28e870e9ba]
+module.network.aws_subnet.public[1]: Still creating... [00m10s elapsed]
+module.network.aws_subnet.public[0]: Still creating... [00m10s elapsed]
+module.network.aws_subnet.public[1]: Creation complete after 11s [id=subnet-011c0aeff29c95c77]
+module.network.aws_subnet.public[0]: Creation complete after 11s [id=subnet-080a6a8829afb6fce]
+module.network.aws_route_table_association.public[1]: Creating...
+module.network.aws_route_table_association.public[0]: Creating...
+module.network.aws_nat_gateway.this[0]: Creating...
+module.app.aws_lb.this: Creating...
+module.network.aws_route_table_association.public[1]: Creation complete after 0s [id=rtbassoc-0f9125f7dc11c9fd0]
+module.network.aws_route_table_association.public[0]: Creation complete after 0s [id=rtbassoc-07cb18d6613d52c7c]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Still creating... [00m20s elapsed]
+module.data_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m20s elapsed]
+module.database.aws_db_instance.this: Still creating... [00m10s elapsed]
+module.network.aws_nat_gateway.this[0]: Still creating... [00m10s elapsed]
+module.app.aws_lb.this: Still creating... [00m10s elapsed]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Still creating... [00m30s elapsed]
+module.data_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m30s elapsed]
+module.database.aws_db_instance.this: Still creating... [00m20s elapsed]
+module.network.aws_nat_gateway.this[0]: Still creating... [00m20s elapsed]
+module.app.aws_lb.this: Still creating... [00m20s elapsed]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Still creating... [00m40s elapsed]
+module.data_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m40s elapsed]
+module.database.aws_db_instance.this: Still creating... [00m30s elapsed]
+module.network.aws_nat_gateway.this[0]: Still creating... [00m30s elapsed]
+module.app.aws_lb.this: Still creating... [00m30s elapsed]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Still creating... [00m50s elapsed]
+module.data_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Still creating... [00m50s elapsed]
+module.database.aws_db_instance.this: Still creating... [00m40s elapsed]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Creation complete after 56s [id=cobble-dev-access-logs-740667376104]
+module.data_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Creation complete after 57s [id=cobble-dev-data-740667376104]
+module.network.aws_nat_gateway.this[0]: Still creating... [00m40s elapsed]
+module.app.aws_lb.this: Still creating... [00m40s elapsed]
+module.database.aws_db_instance.this: Still creating... [00m50s elapsed]
+module.network.aws_nat_gateway.this[0]: Still creating... [00m50s elapsed]
+module.app.aws_lb.this: Still creating... [00m50s elapsed]
+module.database.aws_db_instance.this: Still creating... [01m00s elapsed]
+module.network.aws_nat_gateway.this[0]: Still creating... [01m00s elapsed]
+module.app.aws_lb.this: Still creating... [01m00s elapsed]
+module.database.aws_db_instance.this: Still creating... [01m10s elapsed]
+module.network.aws_nat_gateway.this[0]: Still creating... [01m10s elapsed]
+module.app.aws_lb.this: Still creating... [01m10s elapsed]
+module.database.aws_db_instance.this: Still creating... [01m20s elapsed]
+module.network.aws_nat_gateway.this[0]: Still creating... [01m20s elapsed]
+module.app.aws_lb.this: Still creating... [01m20s elapsed]
+module.database.aws_db_instance.this: Still creating... [01m30s elapsed]
+module.network.aws_nat_gateway.this[0]: Still creating... [01m30s elapsed]
+module.app.aws_lb.this: Still creating... [01m30s elapsed]
+module.database.aws_db_instance.this: Still creating... [01m40s elapsed]
+module.network.aws_nat_gateway.this[0]: Still creating... [01m40s elapsed]
+module.app.aws_lb.this: Still creating... [01m40s elapsed]
+module.database.aws_db_instance.this: Still creating... [01m50s elapsed]
+module.network.aws_nat_gateway.this[0]: Still creating... [01m50s elapsed]
+module.app.aws_lb.this: Still creating... [01m50s elapsed]
+module.database.aws_db_instance.this: Still creating... [02m00s elapsed]
+module.network.aws_nat_gateway.this[0]: Creation complete after 1m54s [id=nat-04040ccae1a70ae7d]
+module.network.aws_route.private_to_nat[0]: Creating...
+module.network.aws_route.private_to_nat[0]: Creation complete after 1s [id=r-rtb-0557c9709a9ebb4081080289494]
+module.app.aws_lb.this: Still creating... [02m00s elapsed]
+module.database.aws_db_instance.this: Still creating... [02m10s elapsed]
+module.app.aws_lb.this: Still creating... [02m10s elapsed]
+module.database.aws_db_instance.this: Still creating... [02m20s elapsed]
+module.app.aws_lb.this: Still creating... [02m20s elapsed]
+module.database.aws_db_instance.this: Still creating... [02m30s elapsed]
+module.app.aws_lb.this: Still creating... [02m30s elapsed]
+module.app.aws_lb.this: Creation complete after 2m32s [id=arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:loadbalancer/app/cobble-dev-alb/d8fbac0630fa51a4]
+module.app.aws_lb_listener.http_forward[0]: Creating...
+module.app.aws_lb_listener.http_forward[0]: Creation complete after 1s [id=arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:listener/app/cobble-dev-alb/d8fbac0630fa51a4/14991cfc313bf776]
+module.database.aws_db_instance.this: Still creating... [02m40s elapsed]
+module.database.aws_db_instance.this: Still creating... [02m50s elapsed]
+module.database.aws_db_instance.this: Still creating... [03m00s elapsed]
+module.database.aws_db_instance.this: Still creating... [03m10s elapsed]
+module.database.aws_db_instance.this: Still creating... [03m20s elapsed]
+module.database.aws_db_instance.this: Still creating... [03m30s elapsed]
+module.database.aws_db_instance.this: Still creating... [03m40s elapsed]
+module.database.aws_db_instance.this: Still creating... [03m50s elapsed]
+module.database.aws_db_instance.this: Still creating... [04m00s elapsed]
+module.database.aws_db_instance.this: Still creating... [04m10s elapsed]
+module.database.aws_db_instance.this: Still creating... [04m20s elapsed]
+module.database.aws_db_instance.this: Still creating... [04m30s elapsed]
+module.database.aws_db_instance.this: Still creating... [04m40s elapsed]
+module.database.aws_db_instance.this: Still creating... [04m50s elapsed]
+module.database.aws_db_instance.this: Still creating... [05m00s elapsed]
+module.database.aws_db_instance.this: Still creating... [05m10s elapsed]
+module.database.aws_db_instance.this: Still creating... [05m20s elapsed]
+module.database.aws_db_instance.this: Still creating... [05m30s elapsed]
+module.database.aws_db_instance.this: Still creating... [05m40s elapsed]
+module.database.aws_db_instance.this: Still creating... [05m50s elapsed]
+module.database.aws_db_instance.this: Still creating... [06m00s elapsed]
+module.database.aws_db_instance.this: Still creating... [06m10s elapsed]
+module.database.aws_db_instance.this: Still creating... [06m20s elapsed]
+module.database.aws_db_instance.this: Still creating... [06m30s elapsed]
+module.database.aws_db_instance.this: Still creating... [06m40s elapsed]
+module.database.aws_db_instance.this: Still creating... [06m50s elapsed]
+module.database.aws_db_instance.this: Still creating... [07m00s elapsed]
+module.database.aws_db_instance.this: Still creating... [07m10s elapsed]
+module.database.aws_db_instance.this: Still creating... [07m20s elapsed]
+module.database.aws_db_instance.this: Still creating... [07m30s elapsed]
+module.database.aws_db_instance.this: Still creating... [07m40s elapsed]
+module.database.aws_db_instance.this: Still creating... [07m50s elapsed]
+module.database.aws_db_instance.this: Still creating... [08m00s elapsed]
+module.database.aws_db_instance.this: Still creating... [08m10s elapsed]
+module.database.aws_db_instance.this: Still creating... [08m20s elapsed]
+module.database.aws_db_instance.this: Creation complete after 8m29s [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU]
+module.app.aws_iam_role_policy.execution_secrets[0]: Creating...
+module.app.aws_ecs_task_definition.this: Creating...
+module.app.aws_ecs_task_definition.this: Creation complete after 1s [id=cobble-dev]
+module.app.aws_ecs_service.this: Creating...
+module.app.aws_ecs_service.this: Creation complete after 1s [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev]
+module.app.aws_appautoscaling_target.this[0]: Creating...
+module.app.aws_appautoscaling_target.this[0]: Creation complete after 0s [id=service/cobble-dev/cobble-dev]
+module.app.aws_appautoscaling_policy.cpu[0]: Creating...
+module.app.aws_appautoscaling_policy.cpu[0]: Creation complete after 1s [id=cobble-dev-cpu]
+module.app.aws_iam_role_policy.execution_secrets[0]: Creation complete after 3s [id=cobble-dev-task-execution:cobble-dev-read-secrets]
+
+Apply complete! Resources: 75 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+app_url = "http://cobble-dev-alb-386072235.ap-southeast-2.elb.amazonaws.com"
+data_bucket_name = "cobble-dev-data-740667376104"
+database_endpoint = "cobble-dev.c5g44imkq062.ap-southeast-2.rds.amazonaws.com"
+kms_key_arn = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331"
+load_balancer_dns_name = "cobble-dev-alb-386072235.ap-southeast-2.elb.amazonaws.com"

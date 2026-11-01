@@ -62,3 +62,7 @@ infrastructure/modules/**/.terraform.lock.hcl
 
 # Demo recordings are too big for GitHub (100 MB limit); share them separately.
 *.mp4
+
+# Earlier presentation drafts (~9 MB each), kept on the team's machines only.
+docs/Presentation/Cobble-AWS-Platform-updated.pptx
+docs/Presentation/Cobble-AWS-Platform-v*.pptx
