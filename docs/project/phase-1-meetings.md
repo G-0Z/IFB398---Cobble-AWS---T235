@@ -29,7 +29,7 @@ where the minutes name one ("Team" where they don't), and the next meeting.
 
 ---
 
-## Sprint 1 (Weeks 5–6)
+## Sprint 1 (Week 6)
 
 ### Week 6: team meeting 1
 

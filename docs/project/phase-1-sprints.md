@@ -1,7 +1,8 @@
 # Phase 1 sprint record (IFB398, Semester 2 2026)
 
-Phase 1 ran as six two-week sprints, from Week 5 of QUT's Semester 2 2026
-to the end of the study and exam period.
+Phase 1 ran as six sprints, from Week 6 of QUT's Semester 2 2026 to the end
+of the study and exam period: a one-week set-up sprint, then five of two
+weeks. The repository was prepared in Weeks 4 and 5, before kick-off.
 Each sprint followed the Scrum pattern:
 
 | Event | When | Where |
@@ -38,8 +39,8 @@ That way, every sprint review was about finished work.
 
 ![Phase 1 on the GitHub Projects board: the six sprints across the top, with each bar a numbered sub-issue placed in the sprint it was done](../media/screenshots/board-phase-1-roadmap.png)
 
-*Phase 1 on the board. The six two-week sprints run across the top, from
-repository set-up in Week 5 to finalising deliverables after Week 13.
+*Phase 1 on the board. The six sprints run across the top, from the
+set-up sprint in Week 6 to finalising deliverables after Week 13.
 Each bar is a numbered sub-issue of a deliverable.*
 
 ![Deliverable 2, the landing zone design, as a parent issue with seven numbered sub-issues](../media/screenshots/board-deliverable-2.png)
@@ -53,7 +54,7 @@ through building and deploying it (2.4, 2.5), to the lessons that followed
 
 | Sprint | QUT weeks | Goal | Result |
 |---|---|---|---|
-| [1](#sprint-1-repository-and-workflow) | 5–6 | Repository and workflow set up | Repository, CI and pull request workflow live; first client meeting |
+| [1](#sprint-1-repository-and-workflow) | 6 | Repository and workflow set up | Repository, CI and pull request workflow live; first client meeting |
 | [2](#sprint-2-research-services-and-pricing) | 7–8 | Research: services and pricing | ECS vs EKS and pricing comparisons; architecture diagram for the client |
 | [3](#sprint-3-client-meeting-aws-account-deliverables-scoped) | 9 and mid-semester break | Client meeting, AWS account, deliverables scoped | Wayne's five requests; deliverables on the tracker; own AWS organisation |
 | [4](#sprint-4-terraform-proof-of-concept-solutions-a-and-b) | 10–11 | Terraform proof of concept, Solutions A and B | Solution B deployed (43 resources); Solution A validated with 71 tests |
@@ -64,7 +65,7 @@ through building and deploying it (2.4, 2.5), to the lessons that followed
 
 ## Sprint 1: Repository and workflow
 
-**Weeks 5–6**
+**Week 6** (the repository was prepared in Weeks 4 and 5, before kick-off)
 
 **Sprint goal:** set up the repository and delivery workflow, so every later
 change goes through a pull request and automated checks.

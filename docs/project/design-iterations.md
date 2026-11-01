@@ -31,7 +31,7 @@ Dates are 2026. The sprint record and meeting minutes have the detail:
 
 | When | What happened | What it changed |
 |---|---|---|
-| 16 to 18 Aug (Sprint 1) | Repository, folder structure and automatic checks set up; pull request workflow tested | GitHub Free can't enforce branch protection on a private repository, so review became a team rule and the gap is written down ([scan findings](../deliverables/security-controls.md#scan-findings-register)) |
+| 16 to 18 Aug (before kick-off) | Repository, folder structure and automatic checks set up; pull request workflow tested | GitHub Free can't enforce branch protection on a private repository, so review became a team rule and the gap is written down ([scan findings](../deliverables/security-controls.md#scan-findings-register)) |
 | 27 Aug | First client meeting with Wayne | We raised scope, the AWS account and budget, NDA and IP paperwork, and repository visibility |
 | 31 Aug to 13 Sep (Sprint 2) | Research: ECS against EKS, and prices across AWS services. First architecture diagram | ECS on Fargate chosen for a small team ([decision 3](../deliverables/landing-zone-design.md#key-decisions)) |
 | 14 Sep | Second client meeting: Wayne reviews the design | Five requests that reshaped the project (rows F1 to F7 below) |
