@@ -31,12 +31,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [dev, staging, prod]
+        include:
+          - environment: dev
+            plan_role_var: SOLUTION_A_DEV_PLAN_ROLE_ARN
+          - environment: staging
+            plan_role_var: SOLUTION_A_STAGING_PLAN_ROLE_ARN
+          - environment: prod
+            plan_role_var: SOLUTION_A_PROD_PLAN_ROLE_ARN
     defaults:
       run:
         working-directory: infrastructure/solution-a/workload
     env:
-      PLAN_ROLE_ARN: ${{ vars[format('SOLUTION_A_{0}_PLAN_ROLE_ARN', matrix.environment)] }}
+      PLAN_ROLE_ARN: ${{ vars[matrix.plan_role_var] }}
     steps:
       - name: Skip if this environment isn't set up yet
         id: enabled
