@@ -67,16 +67,19 @@ function Remove-StaleDelegatedAdmins {
   }
 }
 
+function Show-Row($name, $id) {
+  $gd  = aws guardduty list-detectors --query DetectorIds --output text
+  $sh  = cmd /c "aws securityhub describe-hub --query HubArn --output text 2>nul"
+  $cfg = aws configservice describe-configuration-recorders --query "ConfigurationRecorders[].name" --output text
+  "{0,-16} {1}  GuardDuty: {2,-5}  SecurityHub: {3,-5}  Config: {4}" -f $name, $id, [bool]$gd, [bool]$sh, [bool]$cfg
+}
+
 function Show-Status {
   "Delegated admins: $(aws organizations list-delegated-administrators --query 'DelegatedAdministrators[].Id' --output text)"
-  foreach ($p in $ids.PSObject.Properties) {
-    Invoke-InAccount $p.Value {
-      $gd  = aws guardduty list-detectors --query DetectorIds --output text
-      $sh  = cmd /c "aws securityhub describe-hub --query HubArn --output text 2>nul"
-      $cfg = aws configservice describe-configuration-recorders --query "ConfigurationRecorders[].name" --output text
-      "{0,-16} {1}  GuardDuty: {2,-5}  SecurityHub: {3,-5}  Config: {4}" -f $p.Name, $p.Value, [bool]$gd, [bool]$sh, [bool]$cfg
-    }
-  }
+  # account_ids lists member accounts only; the management account uses the current sign-in.
+  Show-Row 'management' $mgmt
+  foreach ($p in $ids.PSObject.Properties) { Invoke-InAccount $p.Value { Show-Row $p.Name $p.Value } }
+  'management GuardDuty is True while Solution B is deployed: it owns that detector.'
   $url = cmd /c "terraform -chdir=`"$workload`" output -raw app_url 2>nul"
   if (-not $LASTEXITCODE -and $url) { "Dev app: $url" } else { 'Dev app: not deployed' }
 }
@@ -155,6 +158,15 @@ switch ($Action) {
         cmd /c "aws securityhub disable-security-hub 2>nul" | Out-Null
       }
     }
+    # The management account isn't in account_ids, so 7.3 missed it and its detector kept billing.
+    # Leave Solution B's detector alone (tagged Environment=poc); anything else is the landing zone's.
+    foreach ($d in (aws guardduty list-detectors --query DetectorIds --output text) -split '\s+') {
+      if ($d -and (aws guardduty get-detector --detector-id $d --query Tags.Environment --output text) -ne 'poc') {
+        "Deleting landing-zone GuardDuty detector $d in the management account" | log
+        aws guardduty delete-detector --detector-id $d
+      }
+    }
+    cmd /c "aws securityhub disable-security-hub 2>nul" | Out-Null
     "`nDown. Everything below should be False; the accounts stay for the next run:"
     Show-Status
   }

@@ -97,7 +97,9 @@ aws sso login --profile AdministratorAccess-669591255093   # if it's been a few 
 ```
 
 It ends with a table. **Every column must read `False`.** If one says
-`True`, run `.\lz-dev.ps1 down` again.
+`True`, run `.\lz-dev.ps1 down` again. The one exception is `management`
+GuardDuty while Solution B is deployed: Solution B owns that detector, and
+`down` leaves it alone.
 
 The accounts, sign-in and guardrails stay. They're free, and the next
 `up` reuses them.
