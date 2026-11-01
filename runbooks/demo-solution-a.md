@@ -27,7 +27,7 @@ passing automatic checks on every folder.
 ## Before you start
 
 Same as Solution B: Terraform, the AWS CLI, and a sign-in to the team's
-account ([deploy.md](deploy.md#sign-in)). Check
+account ([deploy-solution-b.md](deploy-solution-b.md#sign-in)). Check
 `aws sts get-caller-identity` shows account `669591255093`.
 
 ## Deploy
@@ -66,13 +66,13 @@ before deleting it.
 
 To prove it's repeatable, run the deploy steps again: you should get the
 same 66 resources and the same page. Record it in the
-[evidence log](../docs/04-iac-evidence/README.md#evidence-log).
+[evidence log](../docs/deliverables/evidence.md#evidence-log).
 
 ## If something goes wrong
 
 | Symptom | Cause | Fix |
 |---|---|---|
 | `AWS account ID not allowed` | Signed in to the wrong account | Sign in to 669591255093 |
-| `AccessDenied` creating ECS, load balancer or RDS resources | Your IAM user's permissions only cover Solution B | Use single sign-on with an admin role, or add those services to your IAM user's policy |
+| `AccessDenied` creating ECS, load balancer or RDS resources | Signed in with a role that can't create them, such as a read-only one | Use single sign-on with an admin role. Don't fall back to the team's IAM users: single sign-on is the supported sign-in, and the IAM users go at Phase 2 milestone M1 |
 | The load balancer returns 503 for more than 5 minutes | The web server can't start | ECS > the service > Tasks > a stopped task: read the reason, then the log group `/cobble-demo/app` |
 | Tear down fails on a bucket | Files were added by hand | Run the tear down again. Buckets outside prod empty themselves |

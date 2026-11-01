@@ -6,7 +6,7 @@ the whole team shares one up-to-date copy.
 
 | | |
 |---|---|
-| **Builds** | One S3 bucket: versioned, encrypted, never public, protected from deletion |
+| **Builds** | One S3 bucket: versioned, encrypted, never public, and not force-destroyable: Terraform won't delete it while it holds state files |
 | **Run it** | Once per AWS account, by hand, before anything else. The team's account already has it (`cobble-tfstate-669591255093`) |
 | **Runbook** | [runbooks/bootstrap.md](../../runbooks/bootstrap.md) |
 
@@ -18,7 +18,8 @@ a git-ignored `terraform.tfstate` file here) and only ever creates the
 bucket.
 
 The bucket also handles locking, so two people can't change the same thing
-at once (Terraform 1.10 or later).
+at once (Terraform 1.10 or later, like the rest of the repo; bootstrap
+itself accepts 1.7).
 
 ## For Solution A
 

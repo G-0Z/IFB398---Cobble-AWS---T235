@@ -1,0 +1,29 @@
+name: Documentation request
+description: A page is missing, wrong, out of date or hard to follow
+labels: ["documentation"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Which page
+      description: Path or link. Leave blank if the page doesn't exist yet.
+      placeholder: docs/handbook/operations.md
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What's the problem
+      options: [Wrong or out of date, Contradicts another page or the code, Hard to follow, Missing]
+    validations:
+      required: true
+  - type: textarea
+    id: detail
+    attributes:
+      label: Details
+      description: What it says now, what it should say, and how you know (a file, log or command output).
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [handbook, standards, deliverables, runbooks, module READMEs, project records]

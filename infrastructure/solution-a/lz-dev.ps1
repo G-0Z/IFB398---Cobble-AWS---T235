@@ -23,11 +23,14 @@ $ev       = "$PSScriptRoot\evidence"
 $log      = "$ev\lz-dev-$Action-$(Get-Date -Format yyyyMMdd-HHmm).txt"
 New-Item -ItemType Directory -Force $ev | Out-Null
 
+# Shows each line and appends it to $log as UTF-8 (5.1's Tee-Object writes UTF-16, which GitHub shows as binary).
+filter log { $_; Add-Content -LiteralPath $log -Value $_ -Encoding UTF8 }
+
 # Runs terraform in $dir, shows and logs its output, stops on failure.
 # cmd /c because PowerShell 5.1 turns a native command's stderr into errors.
 function tf($dir, $cmd) {
-  "`n>> terraform $cmd   ($(Split-Path $dir -Leaf))" | Tee-Object -Append $log
-  cmd /c "terraform -chdir=`"$dir`" $cmd 2>&1" | Tee-Object -Append $log
+  "`n>> terraform $cmd   ($(Split-Path $dir -Leaf))" | log
+  cmd /c "terraform -chdir=`"$dir`" $cmd 2>&1" | log
   if ($LASTEXITCODE) { throw "terraform $cmd failed in $dir (exit $LASTEXITCODE). Log: $log" }
 }
 
@@ -57,23 +60,26 @@ function Remove-StaleDelegatedAdmins {
   $active = aws organizations list-accounts --query "Accounts[?Status=='ACTIVE'].Id" --output json | ConvertFrom-Json
   $admins = aws organizations list-delegated-administrators --query "DelegatedAdministrators[].Id" --output json | ConvertFrom-Json
   foreach ($a in $admins | Where-Object { $active -notcontains $_ }) {
-    "Removing stale delegated administrator $a" | Tee-Object -Append $log
+    "Removing stale delegated administrator $a" | log
     foreach ($s in 'guardduty.amazonaws.com', 'securityhub.amazonaws.com', 'config.amazonaws.com', 'access-analyzer.amazonaws.com') {
       cmd /c "aws organizations deregister-delegated-administrator --account-id $a --service-principal $s 2>nul"
     }
   }
 }
 
+function Show-Row($name, $id) {
+  $gd  = aws guardduty list-detectors --query DetectorIds --output text
+  $sh  = cmd /c "aws securityhub describe-hub --query HubArn --output text 2>nul"
+  $cfg = aws configservice describe-configuration-recorders --query "ConfigurationRecorders[].name" --output text
+  "{0,-16} {1}  GuardDuty: {2,-5}  SecurityHub: {3,-5}  Config: {4}" -f $name, $id, [bool]$gd, [bool]$sh, [bool]$cfg
+}
+
 function Show-Status {
   "Delegated admins: $(aws organizations list-delegated-administrators --query 'DelegatedAdministrators[].Id' --output text)"
-  foreach ($p in $ids.PSObject.Properties) {
-    Invoke-InAccount $p.Value {
-      $gd  = aws guardduty list-detectors --query DetectorIds --output text
-      $sh  = cmd /c "aws securityhub describe-hub --query HubArn --output text 2>nul"
-      $cfg = aws configservice describe-configuration-recorders --query "ConfigurationRecorders[].name" --output text
-      "{0,-16} {1}  GuardDuty: {2,-5}  SecurityHub: {3,-5}  Config: {4}" -f $p.Name, $p.Value, [bool]$gd, [bool]$sh, [bool]$cfg
-    }
-  }
+  # account_ids lists member accounts only; the management account uses the current sign-in.
+  Show-Row 'management' $mgmt
+  foreach ($p in $ids.PSObject.Properties) { Invoke-InAccount $p.Value { Show-Row $p.Name $p.Value } }
+  'management GuardDuty is True while Solution B is deployed: it owns that detector.'
   $url = cmd /c "terraform -chdir=`"$workload`" output -raw app_url 2>nul"
   if (-not $LASTEXITCODE -and $url) { "Dev app: $url" } else { 'Dev app: not deployed' }
 }
@@ -125,8 +131,8 @@ switch ($Action) {
       if ($i -eq 20) { Write-Warning "$url isn't answering 200 yet. ECS > service > Tasks shows why." }
       Start-Sleep 30
     }
-    "`nUp. App: $url"
-    'Confirm the "AWS Notification - Subscription Confirmation" email in n11543027@qut.edu.au, or no alerts arrive.'
+    "`nUp. App: $url" | log
+    'Confirm the "AWS Notification - Subscription Confirmation" email in n11543027@qut.edu.au, or no alerts arrive.' | log
   }
 
   'down' {
@@ -140,7 +146,7 @@ switch ($Action) {
       if ($d -and $d -ne 'None') { aws guardduty update-organization-configuration --detector-id $d --auto-enable-organization-members NONE }
     }
     try { tf $sec "destroy -auto-approve -input=false -no-color -var security_account_id=$($ids.security)" }
-    catch { 'Retrying security destroy once' | Tee-Object -Append $log
+    catch { 'Retrying security destroy once' | log
             tf $sec "destroy -auto-approve -input=false -no-color -var security_account_id=$($ids.security)" }
 
     # 7.3 Handing GuardDuty and Security Hub back leaves them on (and billing) in each member.
@@ -152,9 +158,18 @@ switch ($Action) {
         cmd /c "aws securityhub disable-security-hub 2>nul" | Out-Null
       }
     }
-    "`nDown. Everything below should be False; the accounts stay for the next run:"
-    Show-Status
+    # The management account isn't in account_ids, so 7.3 missed it and its detector kept billing.
+    # Leave Solution B's detector alone (tagged Environment=poc); anything else is the landing zone's.
+    foreach ($d in (aws guardduty list-detectors --query DetectorIds --output text) -split '\s+') {
+      if ($d -and (aws guardduty get-detector --detector-id $d --query Tags.Environment --output text) -ne 'poc') {
+        "Deleting landing-zone GuardDuty detector $d in the management account" | log
+        aws guardduty delete-detector --detector-id $d
+      }
+    }
+    cmd /c "aws securityhub disable-security-hub 2>nul" | Out-Null
+    "`nDown. Everything below should be False; the accounts stay for the next run:" | log
+    Show-Status | log
   }
 
-  'status' { $ids = Get-AccountIds; Show-Status }
+  'status' { $ids = Get-AccountIds; Show-Status | log }
 }

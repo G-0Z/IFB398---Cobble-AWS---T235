@@ -23,6 +23,11 @@ jobs:
   drift:
     name: Drift check (${{ matrix.environment }})
     runs-on: ubuntu-latest
+    # One run per environment at a time: a manual run waits for the nightly one
+    # rather than racing it for the state lock.
+    concurrency:
+      group: drift-${{ matrix.environment }}
+      cancel-in-progress: false
     strategy:
       fail-fast: false
       matrix:
@@ -46,6 +51,7 @@ jobs:
         if: steps.enabled.outputs.enabled == 'true'
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
         with:
+          terraform_version: 1.16.2 # same as ci.yml and the lock files
           terraform_wrapper: false # keep plan's real exit code
 
       - name: Sign in to AWS (read-only plan role)

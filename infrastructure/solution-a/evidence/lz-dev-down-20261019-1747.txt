@@ -1,0 +1,2827 @@
+
+>> terraform init -input=false -no-color   (1-organization)
+Initializing the backend...
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/aws v5.100.0
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+>> terraform init -input=false -no-color   (2-security)
+Initializing the backend...
+
+Initializing modules...
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/aws v5.100.0
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+>> terraform init -input=false -no-color -reconfigure -backend-config=key=solution-a/workload/dev/terraform.tfstate   (workload)
+Initializing the backend...
+
+Successfully configured the backend "s3"! Terraform will automatically
+use this backend unless the backend configuration changes.
+
+Initializing modules...
+
+Initializing provider plugins...
+- Reusing previous version of hashicorp/tls from the dependency lock file
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/tls v4.4.1
+- Using previously-installed hashicorp/aws v5.100.0
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+>> terraform destroy -auto-approve -input=false -no-color -var-file=dev.tfvars -var account_id=740667376104 -var assume_role_name=OrganizationAccountAccessRole -var container_image=public.ecr.aws/nginx/nginx:stable -var read_only_root_filesystem=false -var enable_github_deploy=false -var app_max_count=2 -var alert_email=n11543027@qut.edu.au -var config_bucket_name=cobble-config-history-021407434891 -var config_kms_key_arn=arn:aws:kms:ap-southeast-2:021407434891:key/5714ea95-9547-45d6-9b62-46dcfd8011e0   (workload)
+data.aws_region.current: Reading...
+module.access_logs.data.aws_elb_service_account.current: Reading...
+module.app.aws_iam_role.execution: Refreshing state... [id=cobble-dev-task-execution]
+aws_budgets_budget.monthly: Refreshing state... [id=740667376104:cobble-dev-monthly-cost]
+module.account_baseline[0].aws_iam_account_password_policy.this: Refreshing state... [id=iam-account-password-policy]
+module.database.aws_db_parameter_group.this: Refreshing state... [id=cobble-dev-postgres16]
+data.aws_caller_identity.current: Reading...
+module.network.aws_eip.nat[0]: Refreshing state... [id=eipalloc-0ba28c90849d92b65]
+module.account_baseline[0].data.aws_caller_identity.current: Reading...
+module.access_logs.data.aws_elb_service_account.current: Read complete after 0s [id=783225319266]
+data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.access_logs.data.aws_caller_identity.current: Reading...
+module.network.data.aws_region.current: Reading...
+module.network.data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.app.aws_iam_role.task: Refreshing state... [id=cobble-dev-task]
+module.app.data.aws_region.current: Reading...
+module.app.data.aws_region.current: Read complete after 0s [id=ap-southeast-2]
+module.network.data.aws_availability_zones.available: Reading...
+module.account_baseline[0].data.aws_caller_identity.current: Read complete after 0s [id=740667376104]
+module.account_baseline[0].aws_iam_role.config: Refreshing state... [id=cobble-dev-config-recorder]
+data.aws_caller_identity.current: Read complete after 0s [id=740667376104]
+module.network.module.flow_log_destination.aws_iam_role.this: Refreshing state... [id=cobble-dev-vpc-flow-logs]
+module.access_logs.data.aws_caller_identity.current: Read complete after 0s [id=740667376104]
+module.account_baseline[0].aws_ebs_encryption_by_default.this: Refreshing state... [id=terraform-20261019072040143100000001]
+module.network.data.aws_availability_zones.available: Read complete after 0s [id=ap-southeast-2]
+module.app.aws_ecs_cluster.this: Refreshing state... [id=arn:aws:ecs:ap-southeast-2:740667376104:cluster/cobble-dev]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Refreshing state... [id=740667376104]
+module.network.aws_vpc.this: Refreshing state... [id=vpc-072de134831f068c4]
+aws_kms_key.this: Refreshing state... [id=9c8810bf-e667-438c-bed8-e2f95dd34331]
+module.data_bucket.aws_s3_bucket.this: Refreshing state... [id=cobble-dev-data-740667376104]
+module.access_logs.aws_s3_bucket.this: Refreshing state... [id=cobble-dev-access-logs-740667376104]
+aws_kms_alias.this: Refreshing state... [id=alias/cobble-dev]
+module.app.aws_cloudwatch_log_group.this: Refreshing state... [id=/cobble-dev/app]
+module.network.aws_subnet.public[0]: Refreshing state... [id=subnet-080a6a8829afb6fce]
+module.network.aws_subnet.public[1]: Refreshing state... [id=subnet-011c0aeff29c95c77]
+module.network.aws_internet_gateway.this: Refreshing state... [id=igw-0dff024127a30e502]
+module.network.aws_route_table.database[0]: Refreshing state... [id=rtb-0149c6ade25fb496c]
+module.network.aws_route_table.private: Refreshing state... [id=rtb-0557c9709a9ebb408]
+module.network.aws_subnet.database[0]: Refreshing state... [id=subnet-093a58726bdb23935]
+module.network.aws_subnet.database[1]: Refreshing state... [id=subnet-06b70be7c3d6265d9]
+module.network.module.flow_log_destination.aws_cloudwatch_log_group.this: Refreshing state... [id=/cobble-dev/vpc-flow-logs]
+module.network.aws_default_security_group.this[0]: Refreshing state... [id=sg-0a945f94bfd7c46f5]
+module.network.aws_subnet.private[0]: Refreshing state... [id=subnet-0d67887aac5143bd8]
+module.network.aws_subnet.private[1]: Refreshing state... [id=subnet-0a715642576caa1f5]
+module.network.aws_route_table.public: Refreshing state... [id=rtb-0d6bc29d07ca0458a]
+module.network.aws_nat_gateway.this[0]: Refreshing state... [id=nat-04040ccae1a70ae7d]
+module.data_bucket.aws_s3_bucket_versioning.this: Refreshing state... [id=cobble-dev-data-740667376104]
+module.data_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cobble-dev-data-740667376104]
+module.data_bucket.aws_s3_bucket_public_access_block.this: Refreshing state... [id=cobble-dev-data-740667376104]
+module.network.aws_vpc_endpoint.s3[0]: Refreshing state... [id=vpce-03ec52c28e870e9ba]
+module.access_logs.aws_s3_bucket_server_side_encryption_configuration.this: Refreshing state... [id=cobble-dev-access-logs-740667376104]
+module.access_logs.aws_s3_bucket_public_access_block.this: Refreshing state... [id=cobble-dev-access-logs-740667376104]
+module.access_logs.aws_s3_bucket_versioning.this: Refreshing state... [id=cobble-dev-access-logs-740667376104]
+module.database.aws_security_group.this: Refreshing state... [id=sg-01ca12214d2354207]
+module.app.aws_lb_target_group.this: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:targetgroup/cobble-dev-tg/6a6e3c3048481b5c]
+module.app.aws_security_group.load_balancer: Refreshing state... [id=sg-03e7a859c6480adba]
+module.app.aws_security_group.tasks: Refreshing state... [id=sg-06c8ad1bdde0daf88]
+module.network.aws_route_table_association.database[0]: Refreshing state... [id=rtbassoc-090b0b6874115d248]
+module.network.aws_route_table_association.database[1]: Refreshing state... [id=rtbassoc-0eafa2071fdcdb534]
+module.network.aws_route_table_association.public[0]: Refreshing state... [id=rtbassoc-07cb18d6613d52c7c]
+module.network.aws_route_table_association.public[1]: Refreshing state... [id=rtbassoc-0f9125f7dc11c9fd0]
+module.network.aws_route_table_association.private[0]: Refreshing state... [id=rtbassoc-024390d7a4fa85822]
+module.network.aws_route_table_association.private[1]: Refreshing state... [id=rtbassoc-0bda69cbc3b358ead]
+module.network.aws_route.private_to_nat[0]: Refreshing state... [id=r-rtb-0557c9709a9ebb4081080289494]
+module.access_logs.aws_s3_bucket_policy.this: Refreshing state... [id=cobble-dev-access-logs-740667376104]
+module.app.aws_vpc_security_group_ingress_rule.load_balancer_http: Refreshing state... [id=sgr-0aeaf244a6fa331eb]
+module.app.aws_vpc_security_group_egress_rule.tasks_https_out: Refreshing state... [id=sgr-05edcd7d23e7d8781]
+module.app.aws_vpc_security_group_egress_rule.load_balancer_to_tasks: Refreshing state... [id=sgr-0ac28e571f140f737]
+module.app.aws_vpc_security_group_ingress_rule.tasks_from_load_balancer: Refreshing state... [id=sgr-04b05a5cd313bebaa]
+module.account_baseline[0].aws_iam_role_policy_attachment.config: Refreshing state... [id=cobble-dev-config-recorder-20261019072043101000000003]
+module.account_baseline[0].aws_iam_role_policy.config_delivery: Refreshing state... [id=cobble-dev-config-recorder:cobble-dev-config-delivery]
+module.account_baseline[0].aws_config_configuration_recorder.this: Refreshing state... [id=cobble-dev-recorder]
+module.data_bucket.aws_s3_bucket_logging.this: Refreshing state... [id=cobble-dev-data-740667376104]
+module.app.aws_lb.this: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:loadbalancer/app/cobble-dev-alb/d8fbac0630fa51a4]
+module.database.aws_db_subnet_group.this: Refreshing state... [id=cobble-dev]
+module.network.module.flow_log_destination.aws_iam_role_policy.this: Refreshing state... [id=cobble-dev-vpc-flow-logs:cobble-dev-vpc-flow-logs]
+module.app.aws_iam_role_policy_attachment.execution: Refreshing state... [id=cobble-dev-task-execution-20261019072042472200000002]
+module.app.aws_iam_role_policy.task[0]: Refreshing state... [id=cobble-dev-task:cobble-dev-app-permissions]
+module.network.aws_flow_log.this: Refreshing state... [id=fl-04bb6cd794819d44e]
+module.database.aws_vpc_security_group_ingress_rule.from_allowed[0]: Refreshing state... [id=sgr-07f4e0606ab741541]
+module.database.aws_db_instance.this: Refreshing state... [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU]
+module.account_baseline[0].aws_config_delivery_channel.this: Refreshing state... [id=cobble-dev-delivery]
+module.app.aws_lb_listener.http_forward[0]: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:listener/app/cobble-dev-alb/d8fbac0630fa51a4/14991cfc313bf776]
+module.account_baseline[0].aws_config_configuration_recorder_status.this: Refreshing state... [id=cobble-dev-recorder]
+module.app.aws_iam_role_policy.execution_secrets[0]: Refreshing state... [id=cobble-dev-task-execution:cobble-dev-read-secrets]
+module.app.aws_ecs_task_definition.this: Refreshing state... [id=cobble-dev]
+module.data_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Refreshing state... [id=cobble-dev-data-740667376104]
+module.app.aws_ecs_service.this: Refreshing state... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Refreshing state... [id=cobble-dev-access-logs-740667376104]
+module.app.aws_appautoscaling_target.this[0]: Refreshing state... [id=service/cobble-dev/cobble-dev]
+module.app.aws_appautoscaling_policy.cpu[0]: Refreshing state... [id=cobble-dev-cpu]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_budgets_budget.monthly will be destroyed
+  - resource "aws_budgets_budget" "monthly" {
+      - account_id        = "740667376104" -> null
+      - arn               = "arn:aws:budgets::740667376104:budget/cobble-dev-monthly-cost" -> null
+      - budget_type       = "COST" -> null
+      - id                = "740667376104:cobble-dev-monthly-cost" -> null
+      - limit_amount      = "100.0" -> null
+      - limit_unit        = "USD" -> null
+      - name              = "cobble-dev-monthly-cost" -> null
+      - tags              = {} -> null
+      - tags_all          = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - time_period_end   = "2087-06-15_00:00" -> null
+      - time_period_start = "2026-10-01_00:00" -> null
+      - time_unit         = "MONTHLY" -> null
+        # (1 unchanged attribute hidden)
+
+      - cost_types {
+          - include_credit             = true -> null
+          - include_discount           = true -> null
+          - include_other_subscription = true -> null
+          - include_recurring          = true -> null
+          - include_refund             = true -> null
+          - include_subscription       = true -> null
+          - include_support            = true -> null
+          - include_tax                = true -> null
+          - include_upfront            = true -> null
+          - use_amortized              = false -> null
+          - use_blended                = false -> null
+        }
+
+      - notification {
+          - comparison_operator        = "GREATER_THAN" -> null
+          - notification_type          = "ACTUAL" -> null
+          - subscriber_email_addresses = [
+              - "n11543027@qut.edu.au",
+            ] -> null
+          - subscriber_sns_topic_arns  = [] -> null
+          - threshold                  = 80 -> null
+          - threshold_type             = "PERCENTAGE" -> null
+        }
+      - notification {
+          - comparison_operator        = "GREATER_THAN" -> null
+          - notification_type          = "FORECASTED" -> null
+          - subscriber_email_addresses = [
+              - "n11543027@qut.edu.au",
+            ] -> null
+          - subscriber_sns_topic_arns  = [] -> null
+          - threshold                  = 100 -> null
+          - threshold_type             = "PERCENTAGE" -> null
+        }
+    }
+
+  # aws_kms_alias.this will be destroyed
+  - resource "aws_kms_alias" "this" {
+      - arn            = "arn:aws:kms:ap-southeast-2:740667376104:alias/cobble-dev" -> null
+      - id             = "alias/cobble-dev" -> null
+      - name           = "alias/cobble-dev" -> null
+      - target_key_arn = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331" -> null
+      - target_key_id  = "9c8810bf-e667-438c-bed8-e2f95dd34331" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # aws_kms_key.this will be destroyed
+  - resource "aws_kms_key" "this" {
+      - arn                                = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331" -> null
+      - bypass_policy_lockout_safety_check = false -> null
+      - customer_master_key_spec           = "SYMMETRIC_DEFAULT" -> null
+      - deletion_window_in_days            = 7 -> null
+      - description                        = "cobble-dev: data and log encryption" -> null
+      - enable_key_rotation                = true -> null
+      - id                                 = "9c8810bf-e667-438c-bed8-e2f95dd34331" -> null
+      - is_enabled                         = true -> null
+      - key_id                             = "9c8810bf-e667-438c-bed8-e2f95dd34331" -> null
+      - key_usage                          = "ENCRYPT_DECRYPT" -> null
+      - multi_region                       = false -> null
+      - policy                             = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "kms:*"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - AWS = "arn:aws:iam::740667376104:root"
+                        }
+                      - Resource  = "*"
+                      - Sid       = "EnableIAMPolicies"
+                    },
+                  - {
+                      - Action    = [
+                          - "kms:Encrypt",
+                          - "kms:Decrypt",
+                          - "kms:ReEncrypt*",
+                          - "kms:GenerateDataKey*",
+                          - "kms:DescribeKey",
+                        ]
+                      - Condition = {
+                          - ArnLike = {
+                              - "kms:EncryptionContext:aws:logs:arn" = "arn:aws:logs:ap-southeast-2:740667376104:*"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "logs.ap-southeast-2.amazonaws.com"
+                        }
+                      - Resource  = "*"
+                      - Sid       = "AllowCloudWatchLogs"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - rotation_period_in_days            = 365 -> null
+      - tags                               = {} -> null
+      - tags_all                           = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.access_logs.aws_s3_bucket.this will be destroyed
+  - resource "aws_s3_bucket" "this" {
+      - arn                         = "arn:aws:s3:::cobble-dev-access-logs-740667376104" -> null
+      - bucket                      = "cobble-dev-access-logs-740667376104" -> null
+      - bucket_domain_name          = "cobble-dev-access-logs-740667376104.s3.amazonaws.com" -> null
+      - bucket_regional_domain_name = "cobble-dev-access-logs-740667376104.s3.ap-southeast-2.amazonaws.com" -> null
+      - force_destroy               = true -> null
+      - hosted_zone_id              = "Z1WCIGYICN2BYD" -> null
+      - id                          = "cobble-dev-access-logs-740667376104" -> null
+      - object_lock_enabled         = false -> null
+      - policy                      = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringEquals = {
+                              - "aws:SourceAccount" = "740667376104"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "logging.s3.amazonaws.com"
+                        }
+                      - Resource  = "arn:aws:s3:::cobble-dev-access-logs-740667376104/*"
+                      - Sid       = "S3ServerAccessLogs"
+                    },
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - AWS = "arn:aws:iam::783225319266:root"
+                        }
+                      - Resource  = "arn:aws:s3:::cobble-dev-access-logs-740667376104/alb/AWSLogs/740667376104/*"
+                      - Sid       = "LoadBalancerAccessLogs"
+                    },
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - "aws:SecureTransport" = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = [
+                          - "arn:aws:s3:::cobble-dev-access-logs-740667376104",
+                          - "arn:aws:s3:::cobble-dev-access-logs-740667376104/*",
+                        ]
+                      - Sid       = "DenyInsecureTransport"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - region                      = "ap-southeast-2" -> null
+      - request_payer               = "BucketOwner" -> null
+      - tags                        = {} -> null
+      - tags_all                    = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+        # (2 unchanged attributes hidden)
+
+      - grant {
+          - id          = "a943b8541ab6297644c4943e9e6dca28bc5d1face3014e65c78010f2a61aa12a" -> null
+          - permissions = [
+              - "FULL_CONTROL",
+            ] -> null
+          - type        = "CanonicalUser" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - lifecycle_rule {
+          - abort_incomplete_multipart_upload_days = 7 -> null
+          - enabled                                = true -> null
+          - id                                     = "expire-old-logs" -> null
+          - tags                                   = {} -> null
+            # (1 unchanged attribute hidden)
+
+          - expiration {
+              - days                         = 365 -> null
+              - expired_object_delete_marker = false -> null
+                # (1 unchanged attribute hidden)
+            }
+
+          - noncurrent_version_expiration {
+              - days = 30 -> null
+            }
+        }
+
+      - server_side_encryption_configuration {
+          - rule {
+              - bucket_key_enabled = false -> null
+
+              - apply_server_side_encryption_by_default {
+                  - sse_algorithm     = "AES256" -> null
+                    # (1 unchanged attribute hidden)
+                }
+            }
+        }
+
+      - versioning {
+          - enabled    = true -> null
+          - mfa_delete = false -> null
+        }
+    }
+
+  # module.access_logs.aws_s3_bucket_lifecycle_configuration.this will be destroyed
+  - resource "aws_s3_bucket_lifecycle_configuration" "this" {
+      - bucket                                 = "cobble-dev-access-logs-740667376104" -> null
+      - id                                     = "cobble-dev-access-logs-740667376104" -> null
+      - transition_default_minimum_object_size = "all_storage_classes_128K" -> null
+        # (1 unchanged attribute hidden)
+
+      - rule {
+          - id     = "expire-old-logs" -> null
+          - status = "Enabled" -> null
+            # (1 unchanged attribute hidden)
+
+          - abort_incomplete_multipart_upload {
+              - days_after_initiation = 7 -> null
+            }
+
+          - expiration {
+              - days                         = 365 -> null
+              - expired_object_delete_marker = false -> null
+            }
+
+          - filter {
+                # (1 unchanged attribute hidden)
+            }
+
+          - noncurrent_version_expiration {
+              - noncurrent_days = 30 -> null
+            }
+        }
+    }
+
+  # module.access_logs.aws_s3_bucket_policy.this will be destroyed
+  - resource "aws_s3_bucket_policy" "this" {
+      - bucket = "cobble-dev-access-logs-740667376104" -> null
+      - id     = "cobble-dev-access-logs-740667376104" -> null
+      - policy = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Condition = {
+                          - StringEquals = {
+                              - "aws:SourceAccount" = "740667376104"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "logging.s3.amazonaws.com"
+                        }
+                      - Resource  = "arn:aws:s3:::cobble-dev-access-logs-740667376104/*"
+                      - Sid       = "S3ServerAccessLogs"
+                    },
+                  - {
+                      - Action    = "s3:PutObject"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - AWS = "arn:aws:iam::783225319266:root"
+                        }
+                      - Resource  = "arn:aws:s3:::cobble-dev-access-logs-740667376104/alb/AWSLogs/740667376104/*"
+                      - Sid       = "LoadBalancerAccessLogs"
+                    },
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - "aws:SecureTransport" = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = "*"
+                      - Resource  = [
+                          - "arn:aws:s3:::cobble-dev-access-logs-740667376104",
+                          - "arn:aws:s3:::cobble-dev-access-logs-740667376104/*",
+                        ]
+                      - Sid       = "DenyInsecureTransport"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+    }
+
+  # module.access_logs.aws_s3_bucket_public_access_block.this will be destroyed
+  - resource "aws_s3_bucket_public_access_block" "this" {
+      - block_public_acls       = true -> null
+      - block_public_policy     = true -> null
+      - bucket                  = "cobble-dev-access-logs-740667376104" -> null
+      - id                      = "cobble-dev-access-logs-740667376104" -> null
+      - ignore_public_acls      = true -> null
+      - restrict_public_buckets = true -> null
+    }
+
+  # module.access_logs.aws_s3_bucket_server_side_encryption_configuration.this will be destroyed
+  - resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+      - bucket                = "cobble-dev-access-logs-740667376104" -> null
+      - id                    = "cobble-dev-access-logs-740667376104" -> null
+        # (1 unchanged attribute hidden)
+
+      - rule {
+          - bucket_key_enabled = false -> null
+
+          - apply_server_side_encryption_by_default {
+              - sse_algorithm     = "AES256" -> null
+                # (1 unchanged attribute hidden)
+            }
+        }
+    }
+
+  # module.access_logs.aws_s3_bucket_versioning.this will be destroyed
+  - resource "aws_s3_bucket_versioning" "this" {
+      - bucket                = "cobble-dev-access-logs-740667376104" -> null
+      - id                    = "cobble-dev-access-logs-740667376104" -> null
+        # (1 unchanged attribute hidden)
+
+      - versioning_configuration {
+          - status     = "Enabled" -> null
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+  # module.account_baseline[0].aws_config_configuration_recorder.this will be destroyed
+  - resource "aws_config_configuration_recorder" "this" {
+      - id       = "cobble-dev-recorder" -> null
+      - name     = "cobble-dev-recorder" -> null
+      - role_arn = "arn:aws:iam::740667376104:role/cobble-dev-config-recorder" -> null
+
+      - recording_group {
+          - all_supported                 = true -> null
+          - include_global_resource_types = true -> null
+          - resource_types                = [] -> null
+
+          - exclusion_by_resource_types {
+              - resource_types = [] -> null
+            }
+
+          - recording_strategy {
+              - use_only = "ALL_SUPPORTED_RESOURCE_TYPES" -> null
+            }
+        }
+
+      - recording_mode {
+          - recording_frequency = "CONTINUOUS" -> null
+        }
+    }
+
+  # module.account_baseline[0].aws_config_configuration_recorder_status.this will be destroyed
+  - resource "aws_config_configuration_recorder_status" "this" {
+      - id         = "cobble-dev-recorder" -> null
+      - is_enabled = true -> null
+      - name       = "cobble-dev-recorder" -> null
+    }
+
+  # module.account_baseline[0].aws_config_delivery_channel.this will be destroyed
+  - resource "aws_config_delivery_channel" "this" {
+      - id             = "cobble-dev-delivery" -> null
+      - name           = "cobble-dev-delivery" -> null
+      - s3_bucket_name = "cobble-config-history-021407434891" -> null
+      - s3_kms_key_arn = "arn:aws:kms:ap-southeast-2:021407434891:key/5714ea95-9547-45d6-9b62-46dcfd8011e0" -> null
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.account_baseline[0].aws_ebs_encryption_by_default.this will be destroyed
+  - resource "aws_ebs_encryption_by_default" "this" {
+      - enabled = true -> null
+      - id      = "terraform-20261019072040143100000001" -> null
+    }
+
+  # module.account_baseline[0].aws_iam_account_password_policy.this will be destroyed
+  - resource "aws_iam_account_password_policy" "this" {
+      - allow_users_to_change_password = true -> null
+      - expire_passwords               = true -> null
+      - hard_expiry                    = false -> null
+      - id                             = "iam-account-password-policy" -> null
+      - max_password_age               = 90 -> null
+      - minimum_password_length        = 14 -> null
+      - password_reuse_prevention      = 24 -> null
+      - require_lowercase_characters   = true -> null
+      - require_numbers                = true -> null
+      - require_symbols                = true -> null
+      - require_uppercase_characters   = true -> null
+    }
+
+  # module.account_baseline[0].aws_iam_role.config will be destroyed
+  - resource "aws_iam_role" "config" {
+      - arn                   = "arn:aws:iam::740667376104:role/cobble-dev-config-recorder" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "config.amazonaws.com"
+                        }
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-10-19T07:20:40Z" -> null
+      - force_detach_policies = false -> null
+      - id                    = "cobble-dev-config-recorder" -> null
+      - managed_policy_arns   = [
+          - "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole",
+        ] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "cobble-dev-config-recorder" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - unique_id             = "AROA2Y4ZXIHUPELWET3XT" -> null
+        # (3 unchanged attributes hidden)
+
+      - inline_policy {
+          - name   = "cobble-dev-config-delivery" -> null
+          - policy = jsonencode(
+                {
+                  - Statement = [
+                      - {
+                          - Action   = "s3:GetBucketAcl"
+                          - Effect   = "Allow"
+                          - Resource = "arn:aws:s3:::cobble-config-history-021407434891"
+                        },
+                      - {
+                          - Action   = "s3:PutObject"
+                          - Effect   = "Allow"
+                          - Resource = "arn:aws:s3:::cobble-config-history-021407434891/AWSLogs/740667376104/Config/*"
+                        },
+                      - {
+                          - Action   = [
+                              - "kms:GenerateDataKey",
+                              - "kms:Decrypt",
+                            ]
+                          - Effect   = "Allow"
+                          - Resource = "arn:aws:kms:ap-southeast-2:021407434891:key/5714ea95-9547-45d6-9b62-46dcfd8011e0"
+                        },
+                    ]
+                  - Version   = "2012-10-17"
+                }
+            ) -> null
+        }
+    }
+
+  # module.account_baseline[0].aws_iam_role_policy.config_delivery will be destroyed
+  - resource "aws_iam_role_policy" "config_delivery" {
+      - id          = "cobble-dev-config-recorder:cobble-dev-config-delivery" -> null
+      - name        = "cobble-dev-config-delivery" -> null
+      - policy      = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action   = "s3:GetBucketAcl"
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:s3:::cobble-config-history-021407434891"
+                    },
+                  - {
+                      - Action   = "s3:PutObject"
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:s3:::cobble-config-history-021407434891/AWSLogs/740667376104/Config/*"
+                    },
+                  - {
+                      - Action   = [
+                          - "kms:GenerateDataKey",
+                          - "kms:Decrypt",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:kms:ap-southeast-2:021407434891:key/5714ea95-9547-45d6-9b62-46dcfd8011e0"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - role        = "cobble-dev-config-recorder" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.account_baseline[0].aws_iam_role_policy_attachment.config will be destroyed
+  - resource "aws_iam_role_policy_attachment" "config" {
+      - id         = "cobble-dev-config-recorder-20261019072043101000000003" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole" -> null
+      - role       = "cobble-dev-config-recorder" -> null
+    }
+
+  # module.account_baseline[0].aws_s3_account_public_access_block.this will be destroyed
+  - resource "aws_s3_account_public_access_block" "this" {
+      - account_id              = "740667376104" -> null
+      - block_public_acls       = true -> null
+      - block_public_policy     = true -> null
+      - id                      = "740667376104" -> null
+      - ignore_public_acls      = true -> null
+      - restrict_public_buckets = true -> null
+    }
+
+  # module.app.aws_appautoscaling_policy.cpu[0] will be destroyed
+  - resource "aws_appautoscaling_policy" "cpu" {
+      - alarm_arns         = [
+          - "arn:aws:cloudwatch:ap-southeast-2:740667376104:alarm:TargetTracking-service/cobble-dev/cobble-dev-AlarmHigh-148cca13-38c1-4a1c-8341-51581ddc23b6",
+          - "arn:aws:cloudwatch:ap-southeast-2:740667376104:alarm:TargetTracking-service/cobble-dev/cobble-dev-AlarmLow-11419754-55ae-4cdb-b9e2-1eed4c726c6d",
+        ] -> null
+      - arn                = "arn:aws:autoscaling:ap-southeast-2:740667376104:scalingPolicy:10bbc985-c892-4308-94dd-410d575be243:resource/ecs/service/cobble-dev/cobble-dev:policyName/cobble-dev-cpu" -> null
+      - id                 = "cobble-dev-cpu" -> null
+      - name               = "cobble-dev-cpu" -> null
+      - policy_type        = "TargetTrackingScaling" -> null
+      - resource_id        = "service/cobble-dev/cobble-dev" -> null
+      - scalable_dimension = "ecs:service:DesiredCount" -> null
+      - service_namespace  = "ecs" -> null
+
+      - target_tracking_scaling_policy_configuration {
+          - disable_scale_in   = false -> null
+          - scale_in_cooldown  = 0 -> null
+          - scale_out_cooldown = 0 -> null
+          - target_value       = 60 -> null
+
+          - predefined_metric_specification {
+              - predefined_metric_type = "ECSServiceAverageCPUUtilization" -> null
+                # (1 unchanged attribute hidden)
+            }
+        }
+    }
+
+  # module.app.aws_appautoscaling_target.this[0] will be destroyed
+  - resource "aws_appautoscaling_target" "this" {
+      - arn                = "arn:aws:application-autoscaling:ap-southeast-2:740667376104:scalable-target/0ec510bbc985c892430894dd410d575be243" -> null
+      - id                 = "service/cobble-dev/cobble-dev" -> null
+      - max_capacity       = 2 -> null
+      - min_capacity       = 1 -> null
+      - resource_id        = "service/cobble-dev/cobble-dev" -> null
+      - role_arn           = "arn:aws:iam::740667376104:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService" -> null
+      - scalable_dimension = "ecs:service:DesiredCount" -> null
+      - service_namespace  = "ecs" -> null
+      - tags               = {} -> null
+      - tags_all           = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+
+      - suspended_state {
+          - dynamic_scaling_in_suspended  = false -> null
+          - dynamic_scaling_out_suspended = false -> null
+          - scheduled_scaling_suspended   = false -> null
+        }
+    }
+
+  # module.app.aws_cloudwatch_log_group.this will be destroyed
+  - resource "aws_cloudwatch_log_group" "this" {
+      - arn               = "arn:aws:logs:ap-southeast-2:740667376104:log-group:/cobble-dev/app" -> null
+      - id                = "/cobble-dev/app" -> null
+      - kms_key_id        = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331" -> null
+      - log_group_class   = "STANDARD" -> null
+      - name              = "/cobble-dev/app" -> null
+      - retention_in_days = 30 -> null
+      - skip_destroy      = false -> null
+      - tags              = {} -> null
+      - tags_all          = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.app.aws_ecs_cluster.this will be destroyed
+  - resource "aws_ecs_cluster" "this" {
+      - arn      = "arn:aws:ecs:ap-southeast-2:740667376104:cluster/cobble-dev" -> null
+      - id       = "arn:aws:ecs:ap-southeast-2:740667376104:cluster/cobble-dev" -> null
+      - name     = "cobble-dev" -> null
+      - tags     = {} -> null
+      - tags_all = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+
+      - setting {
+          - name  = "containerInsights" -> null
+          - value = "disabled" -> null
+        }
+    }
+
+  # module.app.aws_ecs_service.this will be destroyed
+  - resource "aws_ecs_service" "this" {
+      - availability_zone_rebalancing      = "DISABLED" -> null
+      - cluster                            = "arn:aws:ecs:ap-southeast-2:740667376104:cluster/cobble-dev" -> null
+      - deployment_maximum_percent         = 200 -> null
+      - deployment_minimum_healthy_percent = 100 -> null
+      - desired_count                      = 1 -> null
+      - enable_ecs_managed_tags            = false -> null
+      - enable_execute_command             = false -> null
+      - health_check_grace_period_seconds  = 60 -> null
+      - iam_role                           = "/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS" -> null
+      - id                                 = "arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev" -> null
+      - launch_type                        = "FARGATE" -> null
+      - name                               = "cobble-dev" -> null
+      - platform_version                   = "LATEST" -> null
+      - propagate_tags                     = "SERVICE" -> null
+      - scheduling_strategy                = "REPLICA" -> null
+      - tags                               = {} -> null
+      - tags_all                           = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - task_definition                    = "arn:aws:ecs:ap-southeast-2:740667376104:task-definition/cobble-dev:6" -> null
+      - triggers                           = {} -> null
+      - wait_for_steady_state              = false -> null
+
+      - deployment_circuit_breaker {
+          - enable   = true -> null
+          - rollback = true -> null
+        }
+
+      - deployment_controller {
+          - type = "ECS" -> null
+        }
+
+      - load_balancer {
+          - container_name   = "app" -> null
+          - container_port   = 80 -> null
+          - target_group_arn = "arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:targetgroup/cobble-dev-tg/6a6e3c3048481b5c" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - network_configuration {
+          - assign_public_ip = false -> null
+          - security_groups  = [
+              - "sg-06c8ad1bdde0daf88",
+            ] -> null
+          - subnets          = [
+              - "subnet-0a715642576caa1f5",
+              - "subnet-0d67887aac5143bd8",
+            ] -> null
+        }
+    }
+
+  # module.app.aws_ecs_task_definition.this will be destroyed
+  - resource "aws_ecs_task_definition" "this" {
+      - arn                      = "arn:aws:ecs:ap-southeast-2:740667376104:task-definition/cobble-dev:6" -> null
+      - arn_without_revision     = "arn:aws:ecs:ap-southeast-2:740667376104:task-definition/cobble-dev" -> null
+      - container_definitions    = jsonencode(
+            [
+              - {
+                  - environment            = [
+                      - {
+                          - name  = "DATA_BUCKET"
+                          - value = "cobble-dev-data-740667376104"
+                        },
+                      - {
+                          - name  = "DB_HOST"
+                          - value = "cobble-dev.c5g44imkq062.ap-southeast-2.rds.amazonaws.com"
+                        },
+                      - {
+                          - name  = "DB_NAME"
+                          - value = "cobble"
+                        },
+                      - {
+                          - name  = "DB_PORT"
+                          - value = "5432"
+                        },
+                    ]
+                  - essential              = true
+                  - image                  = "public.ecr.aws/nginx/nginx:stable"
+                  - logConfiguration       = {
+                      - logDriver = "awslogs"
+                      - options   = {
+                          - awslogs-group         = "/cobble-dev/app"
+                          - awslogs-region        = "ap-southeast-2"
+                          - awslogs-stream-prefix = "app"
+                        }
+                    }
+                  - mountPoints            = []
+                  - name                   = "app"
+                  - portMappings           = [
+                      - {
+                          - containerPort = 80
+                          - hostPort      = 80
+                          - protocol      = "tcp"
+                        },
+                    ]
+                  - readonlyRootFilesystem = false
+                  - secrets                = [
+                      - {
+                          - name      = "DB_PASSWORD"
+                          - valueFrom = "arn:aws:secretsmanager:ap-southeast-2:740667376104:secret:rds!db-0b526106-0df0-4335-8456-07c1bdf57bad-hEBvKy:password::"
+                        },
+                      - {
+                          - name      = "DB_USERNAME"
+                          - valueFrom = "arn:aws:secretsmanager:ap-southeast-2:740667376104:secret:rds!db-0b526106-0df0-4335-8456-07c1bdf57bad-hEBvKy:username::"
+                        },
+                    ]
+                  - systemControls         = []
+                  - volumesFrom            = []
+                },
+            ]
+        ) -> null
+      - cpu                      = "256" -> null
+      - enable_fault_injection   = false -> null
+      - execution_role_arn       = "arn:aws:iam::740667376104:role/cobble-dev-task-execution" -> null
+      - family                   = "cobble-dev" -> null
+      - id                       = "cobble-dev" -> null
+      - memory                   = "512" -> null
+      - network_mode             = "awsvpc" -> null
+      - requires_compatibilities = [
+          - "FARGATE",
+        ] -> null
+      - revision                 = 6 -> null
+      - skip_destroy             = false -> null
+      - tags                     = {} -> null
+      - tags_all                 = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - task_role_arn            = "arn:aws:iam::740667376104:role/cobble-dev-task" -> null
+      - track_latest             = false -> null
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.app.aws_iam_role.execution will be destroyed
+  - resource "aws_iam_role" "execution" {
+      - arn                   = "arn:aws:iam::740667376104:role/cobble-dev-task-execution" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "ecs-tasks.amazonaws.com"
+                        }
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-10-19T07:20:40Z" -> null
+      - force_detach_policies = false -> null
+      - id                    = "cobble-dev-task-execution" -> null
+      - managed_policy_arns   = [
+          - "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+        ] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "cobble-dev-task-execution" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - unique_id             = "AROA2Y4ZXIHUFNCZCTJE3" -> null
+        # (3 unchanged attributes hidden)
+
+      - inline_policy {
+          - name   = "cobble-dev-read-secrets" -> null
+          - policy = jsonencode(
+                {
+                  - Statement = [
+                      - {
+                          - Action   = "secretsmanager:GetSecretValue"
+                          - Effect   = "Allow"
+                          - Resource = [
+                              - "arn:aws:secretsmanager:ap-southeast-2:740667376104:secret:rds!db-0b526106-0df0-4335-8456-07c1bdf57bad-hEBvKy",
+                            ]
+                        },
+                      - {
+                          - Action   = "kms:Decrypt"
+                          - Effect   = "Allow"
+                          - Resource = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331"
+                        },
+                    ]
+                  - Version   = "2012-10-17"
+                }
+            ) -> null
+        }
+    }
+
+  # module.app.aws_iam_role.task will be destroyed
+  - resource "aws_iam_role" "task" {
+      - arn                   = "arn:aws:iam::740667376104:role/cobble-dev-task" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "ecs-tasks.amazonaws.com"
+                        }
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-10-19T07:20:40Z" -> null
+      - force_detach_policies = false -> null
+      - id                    = "cobble-dev-task" -> null
+      - managed_policy_arns   = [] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "cobble-dev-task" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - unique_id             = "AROA2Y4ZXIHUATZ7QXLPR" -> null
+        # (3 unchanged attributes hidden)
+
+      - inline_policy {
+          - name   = "cobble-dev-app-permissions" -> null
+          - policy = jsonencode(
+                {
+                  - Statement = [
+                      - {
+                          - Action   = [
+                              - "s3:ListBucket",
+                            ]
+                          - Effect   = "Allow"
+                          - Resource = "arn:aws:s3:::cobble-dev-data-740667376104"
+                        },
+                      - {
+                          - Action   = [
+                              - "s3:GetObject",
+                              - "s3:PutObject",
+                              - "s3:DeleteObject",
+                            ]
+                          - Effect   = "Allow"
+                          - Resource = "arn:aws:s3:::cobble-dev-data-740667376104/*"
+                        },
+                      - {
+                          - Action   = [
+                              - "kms:Decrypt",
+                              - "kms:GenerateDataKey",
+                            ]
+                          - Effect   = "Allow"
+                          - Resource = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331"
+                        },
+                    ]
+                  - Version   = "2012-10-17"
+                }
+            ) -> null
+        }
+    }
+
+  # module.app.aws_iam_role_policy.execution_secrets[0] will be destroyed
+  - resource "aws_iam_role_policy" "execution_secrets" {
+      - id          = "cobble-dev-task-execution:cobble-dev-read-secrets" -> null
+      - name        = "cobble-dev-read-secrets" -> null
+      - policy      = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action   = "secretsmanager:GetSecretValue"
+                      - Effect   = "Allow"
+                      - Resource = [
+                          - "arn:aws:secretsmanager:ap-southeast-2:740667376104:secret:rds!db-0b526106-0df0-4335-8456-07c1bdf57bad-hEBvKy",
+                        ]
+                    },
+                  - {
+                      - Action   = "kms:Decrypt"
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - role        = "cobble-dev-task-execution" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.app.aws_iam_role_policy.task[0] will be destroyed
+  - resource "aws_iam_role_policy" "task" {
+      - id          = "cobble-dev-task:cobble-dev-app-permissions" -> null
+      - name        = "cobble-dev-app-permissions" -> null
+      - policy      = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action   = [
+                          - "s3:ListBucket",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:s3:::cobble-dev-data-740667376104"
+                    },
+                  - {
+                      - Action   = [
+                          - "s3:GetObject",
+                          - "s3:PutObject",
+                          - "s3:DeleteObject",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:s3:::cobble-dev-data-740667376104/*"
+                    },
+                  - {
+                      - Action   = [
+                          - "kms:Decrypt",
+                          - "kms:GenerateDataKey",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - role        = "cobble-dev-task" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.app.aws_iam_role_policy_attachment.execution will be destroyed
+  - resource "aws_iam_role_policy_attachment" "execution" {
+      - id         = "cobble-dev-task-execution-20261019072042472200000002" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy" -> null
+      - role       = "cobble-dev-task-execution" -> null
+    }
+
+  # module.app.aws_lb.this will be destroyed
+  - resource "aws_lb" "this" {
+      - arn                                                          = "arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:loadbalancer/app/cobble-dev-alb/d8fbac0630fa51a4" -> null
+      - arn_suffix                                                   = "app/cobble-dev-alb/d8fbac0630fa51a4" -> null
+      - client_keep_alive                                            = 3600 -> null
+      - desync_mitigation_mode                                       = "defensive" -> null
+      - dns_name                                                     = "cobble-dev-alb-386072235.ap-southeast-2.elb.amazonaws.com" -> null
+      - drop_invalid_header_fields                                   = true -> null
+      - enable_cross_zone_load_balancing                             = true -> null
+      - enable_deletion_protection                                   = false -> null
+      - enable_http2                                                 = true -> null
+      - enable_tls_version_and_cipher_suite_headers                  = false -> null
+      - enable_waf_fail_open                                         = false -> null
+      - enable_xff_client_port                                       = false -> null
+      - enable_zonal_shift                                           = false -> null
+      - id                                                           = "arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:loadbalancer/app/cobble-dev-alb/d8fbac0630fa51a4" -> null
+      - idle_timeout                                                 = 60 -> null
+      - internal                                                     = false -> null
+      - ip_address_type                                              = "ipv4" -> null
+      - load_balancer_type                                           = "application" -> null
+      - name                                                         = "cobble-dev-alb" -> null
+      - preserve_host_header                                         = false -> null
+      - security_groups                                              = [
+          - "sg-03e7a859c6480adba",
+        ] -> null
+      - subnets                                                      = [
+          - "subnet-011c0aeff29c95c77",
+          - "subnet-080a6a8829afb6fce",
+        ] -> null
+      - tags                                                         = {} -> null
+      - tags_all                                                     = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - vpc_id                                                       = "vpc-072de134831f068c4" -> null
+      - xff_header_processing_mode                                   = "append" -> null
+      - zone_id                                                      = "Z1GM3OXH4ZPM65" -> null
+        # (3 unchanged attributes hidden)
+
+      - access_logs {
+          - bucket  = "cobble-dev-access-logs-740667376104" -> null
+          - enabled = true -> null
+          - prefix  = "alb" -> null
+        }
+
+      - connection_logs {
+          - enabled = false -> null
+            # (2 unchanged attributes hidden)
+        }
+
+      - subnet_mapping {
+          - subnet_id            = "subnet-011c0aeff29c95c77" -> null
+            # (4 unchanged attributes hidden)
+        }
+      - subnet_mapping {
+          - subnet_id            = "subnet-080a6a8829afb6fce" -> null
+            # (4 unchanged attributes hidden)
+        }
+    }
+
+  # module.app.aws_lb_listener.http_forward[0] will be destroyed
+  - resource "aws_lb_listener" "http_forward" {
+      - arn                                                                 = "arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:listener/app/cobble-dev-alb/d8fbac0630fa51a4/14991cfc313bf776" -> null
+      - id                                                                  = "arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:listener/app/cobble-dev-alb/d8fbac0630fa51a4/14991cfc313bf776" -> null
+      - load_balancer_arn                                                   = "arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:loadbalancer/app/cobble-dev-alb/d8fbac0630fa51a4" -> null
+      - port                                                                = 80 -> null
+      - protocol                                                            = "HTTP" -> null
+      - routing_http_response_server_enabled                                = true -> null
+      - tags                                                                = {} -> null
+      - tags_all                                                            = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+        # (11 unchanged attributes hidden)
+
+      - default_action {
+          - order            = 1 -> null
+          - target_group_arn = "arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:targetgroup/cobble-dev-tg/6a6e3c3048481b5c" -> null
+          - type             = "forward" -> null
+        }
+    }
+
+  # module.app.aws_lb_target_group.this will be destroyed
+  - resource "aws_lb_target_group" "this" {
+      - arn                                = "arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:targetgroup/cobble-dev-tg/6a6e3c3048481b5c" -> null
+      - arn_suffix                         = "targetgroup/cobble-dev-tg/6a6e3c3048481b5c" -> null
+      - deregistration_delay               = "300" -> null
+      - id                                 = "arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:targetgroup/cobble-dev-tg/6a6e3c3048481b5c" -> null
+      - ip_address_type                    = "ipv4" -> null
+      - lambda_multi_value_headers_enabled = false -> null
+      - load_balancer_arns                 = [
+          - "arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:loadbalancer/app/cobble-dev-alb/d8fbac0630fa51a4",
+        ] -> null
+      - load_balancing_algorithm_type      = "round_robin" -> null
+      - load_balancing_anomaly_mitigation  = "off" -> null
+      - load_balancing_cross_zone_enabled  = "use_load_balancer_configuration" -> null
+      - name                               = "cobble-dev-tg" -> null
+      - port                               = 80 -> null
+      - protocol                           = "HTTP" -> null
+      - protocol_version                   = "HTTP1" -> null
+      - proxy_protocol_v2                  = false -> null
+      - slow_start                         = 0 -> null
+      - tags                               = {} -> null
+      - tags_all                           = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - target_type                        = "ip" -> null
+      - vpc_id                             = "vpc-072de134831f068c4" -> null
+        # (1 unchanged attribute hidden)
+
+      - health_check {
+          - enabled             = true -> null
+          - healthy_threshold   = 2 -> null
+          - interval            = 30 -> null
+          - matcher             = "200-399" -> null
+          - path                = "/" -> null
+          - port                = "traffic-port" -> null
+          - protocol            = "HTTP" -> null
+          - timeout             = 5 -> null
+          - unhealthy_threshold = 3 -> null
+        }
+
+      - stickiness {
+          - cookie_duration = 86400 -> null
+          - enabled         = false -> null
+          - type            = "lb_cookie" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - target_failover {}
+
+      - target_group_health {
+          - dns_failover {
+              - minimum_healthy_targets_count      = "1" -> null
+              - minimum_healthy_targets_percentage = "off" -> null
+            }
+          - unhealthy_state_routing {
+              - minimum_healthy_targets_count      = 1 -> null
+              - minimum_healthy_targets_percentage = "off" -> null
+            }
+        }
+
+      - target_health_state {}
+    }
+
+  # module.app.aws_security_group.load_balancer will be destroyed
+  - resource "aws_security_group" "load_balancer" {
+      - arn                    = "arn:aws:ec2:ap-southeast-2:740667376104:security-group/sg-03e7a859c6480adba" -> null
+      - description            = "Load balancer: accepts web traffic from the internet" -> null
+      - egress                 = [
+          - {
+              - cidr_blocks      = []
+              - description      = "Forward requests to the containers"
+              - from_port        = 80
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-06c8ad1bdde0daf88",
+                ]
+              - self             = false
+              - to_port          = 80
+            },
+        ] -> null
+      - id                     = "sg-03e7a859c6480adba" -> null
+      - ingress                = [
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = "HTTP from the internet (redirected to HTTPS when a certificate is set)"
+              - from_port        = 80
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 80
+            },
+        ] -> null
+      - name                   = "cobble-dev-alb" -> null
+      - owner_id               = "740667376104" -> null
+      - revoke_rules_on_delete = false -> null
+      - tags                   = {
+          - "Name" = "cobble-dev-alb"
+        } -> null
+      - tags_all               = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-alb"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - vpc_id                 = "vpc-072de134831f068c4" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.app.aws_security_group.tasks will be destroyed
+  - resource "aws_security_group" "tasks" {
+      - arn                    = "arn:aws:ec2:ap-southeast-2:740667376104:security-group/sg-06c8ad1bdde0daf88" -> null
+      - description            = "Containers: accept traffic only from the load balancer" -> null
+      - egress                 = [
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = "HTTPS out: image pulls, AWS APIs, Secrets Manager"
+              - from_port        = 443
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 443
+            },
+        ] -> null
+      - id                     = "sg-06c8ad1bdde0daf88" -> null
+      - ingress                = [
+          - {
+              - cidr_blocks      = []
+              - description      = "Requests from the load balancer only"
+              - from_port        = 80
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-03e7a859c6480adba",
+                ]
+              - self             = false
+              - to_port          = 80
+            },
+        ] -> null
+      - name                   = "cobble-dev-tasks" -> null
+      - owner_id               = "740667376104" -> null
+      - revoke_rules_on_delete = false -> null
+      - tags                   = {
+          - "Name" = "cobble-dev-tasks"
+        } -> null
+      - tags_all               = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-tasks"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - vpc_id                 = "vpc-072de134831f068c4" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.app.aws_vpc_security_group_egress_rule.load_balancer_to_tasks will be destroyed
+  - resource "aws_vpc_security_group_egress_rule" "load_balancer_to_tasks" {
+      - arn                          = "arn:aws:ec2:ap-southeast-2:740667376104:security-group-rule/sgr-0ac28e571f140f737" -> null
+      - description                  = "Forward requests to the containers" -> null
+      - from_port                    = 80 -> null
+      - id                           = "sgr-0ac28e571f140f737" -> null
+      - ip_protocol                  = "tcp" -> null
+      - referenced_security_group_id = "sg-06c8ad1bdde0daf88" -> null
+      - security_group_id            = "sg-03e7a859c6480adba" -> null
+      - security_group_rule_id       = "sgr-0ac28e571f140f737" -> null
+      - tags_all                     = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - to_port                      = 80 -> null
+    }
+
+  # module.app.aws_vpc_security_group_egress_rule.tasks_https_out will be destroyed
+  - resource "aws_vpc_security_group_egress_rule" "tasks_https_out" {
+      - arn                    = "arn:aws:ec2:ap-southeast-2:740667376104:security-group-rule/sgr-05edcd7d23e7d8781" -> null
+      - cidr_ipv4              = "0.0.0.0/0" -> null
+      - description            = "HTTPS out: image pulls, AWS APIs, Secrets Manager" -> null
+      - from_port              = 443 -> null
+      - id                     = "sgr-05edcd7d23e7d8781" -> null
+      - ip_protocol            = "tcp" -> null
+      - security_group_id      = "sg-06c8ad1bdde0daf88" -> null
+      - security_group_rule_id = "sgr-05edcd7d23e7d8781" -> null
+      - tags_all               = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - to_port                = 443 -> null
+    }
+
+  # module.app.aws_vpc_security_group_ingress_rule.load_balancer_http will be destroyed
+  - resource "aws_vpc_security_group_ingress_rule" "load_balancer_http" {
+      - arn                    = "arn:aws:ec2:ap-southeast-2:740667376104:security-group-rule/sgr-0aeaf244a6fa331eb" -> null
+      - cidr_ipv4              = "0.0.0.0/0" -> null
+      - description            = "HTTP from the internet (redirected to HTTPS when a certificate is set)" -> null
+      - from_port              = 80 -> null
+      - id                     = "sgr-0aeaf244a6fa331eb" -> null
+      - ip_protocol            = "tcp" -> null
+      - security_group_id      = "sg-03e7a859c6480adba" -> null
+      - security_group_rule_id = "sgr-0aeaf244a6fa331eb" -> null
+      - tags_all               = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - to_port                = 80 -> null
+    }
+
+  # module.app.aws_vpc_security_group_ingress_rule.tasks_from_load_balancer will be destroyed
+  - resource "aws_vpc_security_group_ingress_rule" "tasks_from_load_balancer" {
+      - arn                          = "arn:aws:ec2:ap-southeast-2:740667376104:security-group-rule/sgr-04b05a5cd313bebaa" -> null
+      - description                  = "Requests from the load balancer only" -> null
+      - from_port                    = 80 -> null
+      - id                           = "sgr-04b05a5cd313bebaa" -> null
+      - ip_protocol                  = "tcp" -> null
+      - referenced_security_group_id = "sg-03e7a859c6480adba" -> null
+      - security_group_id            = "sg-06c8ad1bdde0daf88" -> null
+      - security_group_rule_id       = "sgr-04b05a5cd313bebaa" -> null
+      - tags_all                     = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - to_port                      = 80 -> null
+    }
+
+  # module.data_bucket.aws_s3_bucket.this will be destroyed
+  - resource "aws_s3_bucket" "this" {
+      - arn                         = "arn:aws:s3:::cobble-dev-data-740667376104" -> null
+      - bucket                      = "cobble-dev-data-740667376104" -> null
+      - bucket_domain_name          = "cobble-dev-data-740667376104.s3.amazonaws.com" -> null
+      - bucket_regional_domain_name = "cobble-dev-data-740667376104.s3.ap-southeast-2.amazonaws.com" -> null
+      - force_destroy               = true -> null
+      - hosted_zone_id              = "Z1WCIGYICN2BYD" -> null
+      - id                          = "cobble-dev-data-740667376104" -> null
+      - object_lock_enabled         = false -> null
+      - region                      = "ap-southeast-2" -> null
+      - request_payer               = "BucketOwner" -> null
+      - tags                        = {} -> null
+      - tags_all                    = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+        # (3 unchanged attributes hidden)
+
+      - grant {
+          - id          = "a943b8541ab6297644c4943e9e6dca28bc5d1face3014e65c78010f2a61aa12a" -> null
+          - permissions = [
+              - "FULL_CONTROL",
+            ] -> null
+          - type        = "CanonicalUser" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - lifecycle_rule {
+          - abort_incomplete_multipart_upload_days = 7 -> null
+          - enabled                                = true -> null
+          - id                                     = "tidy-up" -> null
+          - tags                                   = {} -> null
+            # (1 unchanged attribute hidden)
+
+          - noncurrent_version_expiration {
+              - days = 90 -> null
+            }
+        }
+
+      - logging {
+          - target_bucket = "cobble-dev-access-logs-740667376104" -> null
+          - target_prefix = "data-bucket/" -> null
+        }
+
+      - server_side_encryption_configuration {
+          - rule {
+              - bucket_key_enabled = true -> null
+
+              - apply_server_side_encryption_by_default {
+                  - kms_master_key_id = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331" -> null
+                  - sse_algorithm     = "aws:kms" -> null
+                }
+            }
+        }
+
+      - versioning {
+          - enabled    = true -> null
+          - mfa_delete = false -> null
+        }
+    }
+
+  # module.data_bucket.aws_s3_bucket_lifecycle_configuration.this[0] will be destroyed
+  - resource "aws_s3_bucket_lifecycle_configuration" "this" {
+      - bucket                                 = "cobble-dev-data-740667376104" -> null
+      - id                                     = "cobble-dev-data-740667376104" -> null
+      - transition_default_minimum_object_size = "all_storage_classes_128K" -> null
+        # (1 unchanged attribute hidden)
+
+      - rule {
+          - id     = "tidy-up" -> null
+          - status = "Enabled" -> null
+            # (1 unchanged attribute hidden)
+
+          - abort_incomplete_multipart_upload {
+              - days_after_initiation = 7 -> null
+            }
+
+          - filter {
+                # (1 unchanged attribute hidden)
+            }
+
+          - noncurrent_version_expiration {
+              - noncurrent_days = 90 -> null
+            }
+        }
+    }
+
+  # module.data_bucket.aws_s3_bucket_logging.this will be destroyed
+  - resource "aws_s3_bucket_logging" "this" {
+      - bucket                = "cobble-dev-data-740667376104" -> null
+      - id                    = "cobble-dev-data-740667376104" -> null
+      - target_bucket         = "cobble-dev-access-logs-740667376104" -> null
+      - target_prefix         = "data-bucket/" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.data_bucket.aws_s3_bucket_public_access_block.this will be destroyed
+  - resource "aws_s3_bucket_public_access_block" "this" {
+      - block_public_acls       = true -> null
+      - block_public_policy     = true -> null
+      - bucket                  = "cobble-dev-data-740667376104" -> null
+      - id                      = "cobble-dev-data-740667376104" -> null
+      - ignore_public_acls      = true -> null
+      - restrict_public_buckets = true -> null
+    }
+
+  # module.data_bucket.aws_s3_bucket_server_side_encryption_configuration.this will be destroyed
+  - resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+      - bucket                = "cobble-dev-data-740667376104" -> null
+      - id                    = "cobble-dev-data-740667376104" -> null
+        # (1 unchanged attribute hidden)
+
+      - rule {
+          - bucket_key_enabled = true -> null
+
+          - apply_server_side_encryption_by_default {
+              - kms_master_key_id = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331" -> null
+              - sse_algorithm     = "aws:kms" -> null
+            }
+        }
+    }
+
+  # module.data_bucket.aws_s3_bucket_versioning.this will be destroyed
+  - resource "aws_s3_bucket_versioning" "this" {
+      - bucket                = "cobble-dev-data-740667376104" -> null
+      - id                    = "cobble-dev-data-740667376104" -> null
+        # (1 unchanged attribute hidden)
+
+      - versioning_configuration {
+          - status     = "Enabled" -> null
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+  # module.database.aws_db_instance.this will be destroyed
+  - resource "aws_db_instance" "this" {
+      - address                               = "cobble-dev.c5g44imkq062.ap-southeast-2.rds.amazonaws.com" -> null
+      - allocated_storage                     = 20 -> null
+      - apply_immediately                     = false -> null
+      - arn                                   = "arn:aws:rds:ap-southeast-2:740667376104:db:cobble-dev" -> null
+      - auto_minor_version_upgrade            = true -> null
+      - availability_zone                     = "ap-southeast-2a" -> null
+      - backup_retention_period               = 7 -> null
+      - backup_target                         = "region" -> null
+      - backup_window                         = "14:47-15:17" -> null
+      - ca_cert_identifier                    = "rds-ca-rsa2048-g1" -> null
+      - copy_tags_to_snapshot                 = true -> null
+      - customer_owned_ip_enabled             = false -> null
+      - database_insights_mode                = "standard" -> null
+      - db_name                               = "cobble" -> null
+      - db_subnet_group_name                  = "cobble-dev" -> null
+      - dedicated_log_volume                  = false -> null
+      - delete_automated_backups              = true -> null
+      - deletion_protection                   = false -> null
+      - domain_dns_ips                        = [] -> null
+      - enabled_cloudwatch_logs_exports       = [
+          - "postgresql",
+          - "upgrade",
+        ] -> null
+      - endpoint                              = "cobble-dev.c5g44imkq062.ap-southeast-2.rds.amazonaws.com:5432" -> null
+      - engine                                = "postgres" -> null
+      - engine_lifecycle_support              = "open-source-rds-extended-support" -> null
+      - engine_version                        = "16" -> null
+      - engine_version_actual                 = "16.13" -> null
+      - hosted_zone_id                        = "Z32T0VRHXEXS0V" -> null
+      - iam_database_authentication_enabled   = true -> null
+      - id                                    = "db-5KQDCFGT2RYNH7SHPRXOXLVZUU" -> null
+      - identifier                            = "cobble-dev" -> null
+      - instance_class                        = "db.t4g.micro" -> null
+      - iops                                  = 3000 -> null
+      - kms_key_id                            = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331" -> null
+      - latest_restorable_time                = "2026-10-19T07:45:21Z" -> null
+      - license_model                         = "postgresql-license" -> null
+      - listener_endpoint                     = [] -> null
+      - maintenance_window                    = "sat:13:21-sat:13:51" -> null
+      - manage_master_user_password           = true -> null
+      - master_user_secret                    = [
+          - {
+              - kms_key_id    = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331"
+              - secret_arn    = "arn:aws:secretsmanager:ap-southeast-2:740667376104:secret:rds!db-0b526106-0df0-4335-8456-07c1bdf57bad-hEBvKy"
+              - secret_status = "active"
+            },
+        ] -> null
+      - master_user_secret_kms_key_id         = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331" -> null
+      - max_allocated_storage                 = 100 -> null
+      - monitoring_interval                   = 0 -> null
+      - multi_az                              = false -> null
+      - network_type                          = "IPV4" -> null
+      - option_group_name                     = "default:postgres-16" -> null
+      - parameter_group_name                  = "cobble-dev-postgres16" -> null
+      - password_wo                           = (write-only attribute) -> null
+      - performance_insights_enabled          = false -> null
+      - performance_insights_retention_period = 0 -> null
+      - port                                  = 5432 -> null
+      - publicly_accessible                   = false -> null
+      - replicas                              = [] -> null
+      - resource_id                           = "db-5KQDCFGT2RYNH7SHPRXOXLVZUU" -> null
+      - skip_final_snapshot                   = true -> null
+      - status                                = "available" -> null
+      - storage_encrypted                     = true -> null
+      - storage_throughput                    = 125 -> null
+      - storage_type                          = "gp3" -> null
+      - tags                                  = {} -> null
+      - tags_all                              = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - username                              = "cobble_admin" -> null
+      - vpc_security_group_ids                = [
+          - "sg-01ca12214d2354207",
+        ] -> null
+        # (14 unchanged attributes hidden)
+    }
+
+  # module.database.aws_db_parameter_group.this will be destroyed
+  - resource "aws_db_parameter_group" "this" {
+      - arn          = "arn:aws:rds:ap-southeast-2:740667376104:pg:cobble-dev-postgres16" -> null
+      - description  = "Managed by Terraform" -> null
+      - family       = "postgres16" -> null
+      - id           = "cobble-dev-postgres16" -> null
+      - name         = "cobble-dev-postgres16" -> null
+      - skip_destroy = false -> null
+      - tags         = {} -> null
+      - tags_all     = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+        # (1 unchanged attribute hidden)
+
+      - parameter {
+          - apply_method = "immediate" -> null
+          - name         = "log_connections" -> null
+          - value        = "1" -> null
+        }
+      - parameter {
+          - apply_method = "immediate" -> null
+          - name         = "log_min_duration_statement" -> null
+          - value        = "1000" -> null
+        }
+      - parameter {
+          - apply_method = "pending-reboot" -> null
+          - name         = "rds.force_ssl" -> null
+          - value        = "1" -> null
+        }
+    }
+
+  # module.database.aws_db_subnet_group.this will be destroyed
+  - resource "aws_db_subnet_group" "this" {
+      - arn                     = "arn:aws:rds:ap-southeast-2:740667376104:subgrp:cobble-dev" -> null
+      - description             = "Managed by Terraform" -> null
+      - id                      = "cobble-dev" -> null
+      - name                    = "cobble-dev" -> null
+      - subnet_ids              = [
+          - "subnet-06b70be7c3d6265d9",
+          - "subnet-093a58726bdb23935",
+        ] -> null
+      - supported_network_types = [
+          - "IPV4",
+        ] -> null
+      - tags                    = {} -> null
+      - tags_all                = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - vpc_id                  = "vpc-072de134831f068c4" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.database.aws_security_group.this will be destroyed
+  - resource "aws_security_group" "this" {
+      - arn                    = "arn:aws:ec2:ap-southeast-2:740667376104:security-group/sg-01ca12214d2354207" -> null
+      - description            = "Database: accepts PostgreSQL connections only from the application" -> null
+      - egress                 = [] -> null
+      - id                     = "sg-01ca12214d2354207" -> null
+      - ingress                = [
+          - {
+              - cidr_blocks      = []
+              - description      = "PostgreSQL from the application"
+              - from_port        = 5432
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-06c8ad1bdde0daf88",
+                ]
+              - self             = false
+              - to_port          = 5432
+            },
+        ] -> null
+      - name                   = "cobble-dev-db" -> null
+      - owner_id               = "740667376104" -> null
+      - revoke_rules_on_delete = false -> null
+      - tags                   = {
+          - "Name" = "cobble-dev-db"
+        } -> null
+      - tags_all               = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-db"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - vpc_id                 = "vpc-072de134831f068c4" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.database.aws_vpc_security_group_ingress_rule.from_allowed[0] will be destroyed
+  - resource "aws_vpc_security_group_ingress_rule" "from_allowed" {
+      - arn                          = "arn:aws:ec2:ap-southeast-2:740667376104:security-group-rule/sgr-07f4e0606ab741541" -> null
+      - description                  = "PostgreSQL from the application" -> null
+      - from_port                    = 5432 -> null
+      - id                           = "sgr-07f4e0606ab741541" -> null
+      - ip_protocol                  = "tcp" -> null
+      - referenced_security_group_id = "sg-06c8ad1bdde0daf88" -> null
+      - security_group_id            = "sg-01ca12214d2354207" -> null
+      - security_group_rule_id       = "sgr-07f4e0606ab741541" -> null
+      - tags_all                     = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - to_port                      = 5432 -> null
+    }
+
+  # module.network.aws_default_security_group.this[0] will be destroyed
+  - resource "aws_default_security_group" "this" {
+      - arn                    = "arn:aws:ec2:ap-southeast-2:740667376104:security-group/sg-0a945f94bfd7c46f5" -> null
+      - description            = "default VPC security group" -> null
+      - egress                 = [] -> null
+      - id                     = "sg-0a945f94bfd7c46f5" -> null
+      - ingress                = [] -> null
+      - name                   = "default" -> null
+      - owner_id               = "740667376104" -> null
+      - revoke_rules_on_delete = false -> null
+      - tags                   = {
+          - "Name" = "cobble-dev-default-do-not-use"
+        } -> null
+      - tags_all               = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-default-do-not-use"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - vpc_id                 = "vpc-072de134831f068c4" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.network.aws_eip.nat[0] will be destroyed
+  - resource "aws_eip" "nat" {
+      - allocation_id            = "eipalloc-0ba28c90849d92b65" -> null
+      - arn                      = "arn:aws:ec2:ap-southeast-2:740667376104:elastic-ip/eipalloc-0ba28c90849d92b65" -> null
+      - association_id           = "eipassoc-0c93e953f00f4137d" -> null
+      - domain                   = "vpc" -> null
+      - id                       = "eipalloc-0ba28c90849d92b65" -> null
+      - network_border_group     = "ap-southeast-2" -> null
+      - network_interface        = "eni-06492120114a60dda" -> null
+      - private_dns              = "ip-10-28-0-130.ap-southeast-2.compute.internal" -> null
+      - private_ip               = "10.28.0.130" -> null
+      - public_dns               = "ec2-54-66-131-6.ap-southeast-2.compute.amazonaws.com" -> null
+      - public_ip                = "54.66.131.6" -> null
+      - public_ipv4_pool         = "amazon" -> null
+      - tags                     = {
+          - "Name" = "cobble-dev-nat-0"
+        } -> null
+      - tags_all                 = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-nat-0"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - vpc                      = true -> null
+        # (5 unchanged attributes hidden)
+    }
+
+  # module.network.aws_flow_log.this will be destroyed
+  - resource "aws_flow_log" "this" {
+      - arn                        = "arn:aws:ec2:ap-southeast-2:740667376104:vpc-flow-log/fl-04bb6cd794819d44e" -> null
+      - iam_role_arn               = "arn:aws:iam::740667376104:role/cobble-dev-vpc-flow-logs" -> null
+      - id                         = "fl-04bb6cd794819d44e" -> null
+      - log_destination            = "arn:aws:logs:ap-southeast-2:740667376104:log-group:/cobble-dev/vpc-flow-logs" -> null
+      - log_destination_type       = "cloud-watch-logs" -> null
+      - log_format                 = "${version} ${account-id} ${interface-id} ${srcaddr} ${dstaddr} ${srcport} ${dstport} ${protocol} ${packets} ${bytes} ${start} ${end} ${action} ${log-status}" -> null
+      - log_group_name             = "/cobble-dev/vpc-flow-logs" -> null
+      - max_aggregation_interval   = 60 -> null
+      - tags                       = {} -> null
+      - tags_all                   = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - traffic_type               = "ALL" -> null
+      - vpc_id                     = "vpc-072de134831f068c4" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.network.aws_internet_gateway.this will be destroyed
+  - resource "aws_internet_gateway" "this" {
+      - arn      = "arn:aws:ec2:ap-southeast-2:740667376104:internet-gateway/igw-0dff024127a30e502" -> null
+      - id       = "igw-0dff024127a30e502" -> null
+      - owner_id = "740667376104" -> null
+      - tags     = {
+          - "Name" = "cobble-dev-igw"
+        } -> null
+      - tags_all = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-igw"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - vpc_id   = "vpc-072de134831f068c4" -> null
+    }
+
+  # module.network.aws_nat_gateway.this[0] will be destroyed
+  - resource "aws_nat_gateway" "this" {
+      - allocation_id                      = "eipalloc-0ba28c90849d92b65" -> null
+      - association_id                     = "eipassoc-0c93e953f00f4137d" -> null
+      - connectivity_type                  = "public" -> null
+      - id                                 = "nat-04040ccae1a70ae7d" -> null
+      - network_interface_id               = "eni-06492120114a60dda" -> null
+      - private_ip                         = "10.28.0.130" -> null
+      - public_ip                          = "54.66.131.6" -> null
+      - secondary_allocation_ids           = [] -> null
+      - secondary_private_ip_address_count = 0 -> null
+      - secondary_private_ip_addresses     = [] -> null
+      - subnet_id                          = "subnet-080a6a8829afb6fce" -> null
+      - tags                               = {
+          - "Name" = "cobble-dev-nat-0"
+        } -> null
+      - tags_all                           = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-nat-0"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+    }
+
+  # module.network.aws_route.private_to_nat[0] will be destroyed
+  - resource "aws_route" "private_to_nat" {
+      - destination_cidr_block      = "0.0.0.0/0" -> null
+      - id                          = "r-rtb-0557c9709a9ebb4081080289494" -> null
+      - nat_gateway_id              = "nat-04040ccae1a70ae7d" -> null
+      - origin                      = "CreateRoute" -> null
+      - route_table_id              = "rtb-0557c9709a9ebb408" -> null
+      - state                       = "active" -> null
+        # (13 unchanged attributes hidden)
+    }
+
+  # module.network.aws_route_table.database[0] will be destroyed
+  - resource "aws_route_table" "database" {
+      - arn              = "arn:aws:ec2:ap-southeast-2:740667376104:route-table/rtb-0149c6ade25fb496c" -> null
+      - id               = "rtb-0149c6ade25fb496c" -> null
+      - owner_id         = "740667376104" -> null
+      - propagating_vgws = [] -> null
+      - route            = [] -> null
+      - tags             = {
+          - "Name" = "cobble-dev-database-rt"
+        } -> null
+      - tags_all         = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-database-rt"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - vpc_id           = "vpc-072de134831f068c4" -> null
+    }
+
+  # module.network.aws_route_table.private will be destroyed
+  - resource "aws_route_table" "private" {
+      - arn              = "arn:aws:ec2:ap-southeast-2:740667376104:route-table/rtb-0557c9709a9ebb408" -> null
+      - id               = "rtb-0557c9709a9ebb408" -> null
+      - owner_id         = "740667376104" -> null
+      - propagating_vgws = [] -> null
+      - route            = [
+          - {
+              - cidr_block                 = "0.0.0.0/0"
+              - nat_gateway_id             = "nat-04040ccae1a70ae7d"
+                # (11 unchanged attributes hidden)
+            },
+        ] -> null
+      - tags             = {
+          - "Name" = "cobble-dev-private-rt"
+        } -> null
+      - tags_all         = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-private-rt"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - vpc_id           = "vpc-072de134831f068c4" -> null
+    }
+
+  # module.network.aws_route_table.public will be destroyed
+  - resource "aws_route_table" "public" {
+      - arn              = "arn:aws:ec2:ap-southeast-2:740667376104:route-table/rtb-0d6bc29d07ca0458a" -> null
+      - id               = "rtb-0d6bc29d07ca0458a" -> null
+      - owner_id         = "740667376104" -> null
+      - propagating_vgws = [] -> null
+      - route            = [
+          - {
+              - cidr_block                 = "0.0.0.0/0"
+              - gateway_id                 = "igw-0dff024127a30e502"
+                # (11 unchanged attributes hidden)
+            },
+        ] -> null
+      - tags             = {
+          - "Name" = "cobble-dev-public-rt"
+        } -> null
+      - tags_all         = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-public-rt"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - vpc_id           = "vpc-072de134831f068c4" -> null
+    }
+
+  # module.network.aws_route_table_association.database[0] will be destroyed
+  - resource "aws_route_table_association" "database" {
+      - id             = "rtbassoc-090b0b6874115d248" -> null
+      - route_table_id = "rtb-0149c6ade25fb496c" -> null
+      - subnet_id      = "subnet-093a58726bdb23935" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.network.aws_route_table_association.database[1] will be destroyed
+  - resource "aws_route_table_association" "database" {
+      - id             = "rtbassoc-0eafa2071fdcdb534" -> null
+      - route_table_id = "rtb-0149c6ade25fb496c" -> null
+      - subnet_id      = "subnet-06b70be7c3d6265d9" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.network.aws_route_table_association.private[0] will be destroyed
+  - resource "aws_route_table_association" "private" {
+      - id             = "rtbassoc-024390d7a4fa85822" -> null
+      - route_table_id = "rtb-0557c9709a9ebb408" -> null
+      - subnet_id      = "subnet-0d67887aac5143bd8" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.network.aws_route_table_association.private[1] will be destroyed
+  - resource "aws_route_table_association" "private" {
+      - id             = "rtbassoc-0bda69cbc3b358ead" -> null
+      - route_table_id = "rtb-0557c9709a9ebb408" -> null
+      - subnet_id      = "subnet-0a715642576caa1f5" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.network.aws_route_table_association.public[0] will be destroyed
+  - resource "aws_route_table_association" "public" {
+      - id             = "rtbassoc-07cb18d6613d52c7c" -> null
+      - route_table_id = "rtb-0d6bc29d07ca0458a" -> null
+      - subnet_id      = "subnet-080a6a8829afb6fce" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.network.aws_route_table_association.public[1] will be destroyed
+  - resource "aws_route_table_association" "public" {
+      - id             = "rtbassoc-0f9125f7dc11c9fd0" -> null
+      - route_table_id = "rtb-0d6bc29d07ca0458a" -> null
+      - subnet_id      = "subnet-011c0aeff29c95c77" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.network.aws_subnet.database[0] will be destroyed
+  - resource "aws_subnet" "database" {
+      - arn                                            = "arn:aws:ec2:ap-southeast-2:740667376104:subnet/subnet-093a58726bdb23935" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-southeast-2a" -> null
+      - availability_zone_id                           = "apse2-az1" -> null
+      - cidr_block                                     = "10.28.20.0/24" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-093a58726bdb23935" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = false -> null
+      - owner_id                                       = "740667376104" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - tags                                           = {
+          - "Name" = "cobble-dev-database-0"
+          - "Tier" = "database"
+        } -> null
+      - tags_all                                       = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-database-0"
+          - "Owner"       = "Cyber Security Centre"
+          - "Tier"        = "database"
+        } -> null
+      - vpc_id                                         = "vpc-072de134831f068c4" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # module.network.aws_subnet.database[1] will be destroyed
+  - resource "aws_subnet" "database" {
+      - arn                                            = "arn:aws:ec2:ap-southeast-2:740667376104:subnet/subnet-06b70be7c3d6265d9" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-southeast-2b" -> null
+      - availability_zone_id                           = "apse2-az3" -> null
+      - cidr_block                                     = "10.28.21.0/24" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-06b70be7c3d6265d9" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = false -> null
+      - owner_id                                       = "740667376104" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - tags                                           = {
+          - "Name" = "cobble-dev-database-1"
+          - "Tier" = "database"
+        } -> null
+      - tags_all                                       = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-database-1"
+          - "Owner"       = "Cyber Security Centre"
+          - "Tier"        = "database"
+        } -> null
+      - vpc_id                                         = "vpc-072de134831f068c4" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # module.network.aws_subnet.private[0] will be destroyed
+  - resource "aws_subnet" "private" {
+      - arn                                            = "arn:aws:ec2:ap-southeast-2:740667376104:subnet/subnet-0d67887aac5143bd8" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-southeast-2a" -> null
+      - availability_zone_id                           = "apse2-az1" -> null
+      - cidr_block                                     = "10.28.10.0/24" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-0d67887aac5143bd8" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = false -> null
+      - owner_id                                       = "740667376104" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - tags                                           = {
+          - "Name" = "cobble-dev-private-0"
+          - "Tier" = "private"
+        } -> null
+      - tags_all                                       = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-private-0"
+          - "Owner"       = "Cyber Security Centre"
+          - "Tier"        = "private"
+        } -> null
+      - vpc_id                                         = "vpc-072de134831f068c4" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # module.network.aws_subnet.private[1] will be destroyed
+  - resource "aws_subnet" "private" {
+      - arn                                            = "arn:aws:ec2:ap-southeast-2:740667376104:subnet/subnet-0a715642576caa1f5" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-southeast-2b" -> null
+      - availability_zone_id                           = "apse2-az3" -> null
+      - cidr_block                                     = "10.28.11.0/24" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-0a715642576caa1f5" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = false -> null
+      - owner_id                                       = "740667376104" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - tags                                           = {
+          - "Name" = "cobble-dev-private-1"
+          - "Tier" = "private"
+        } -> null
+      - tags_all                                       = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-private-1"
+          - "Owner"       = "Cyber Security Centre"
+          - "Tier"        = "private"
+        } -> null
+      - vpc_id                                         = "vpc-072de134831f068c4" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # module.network.aws_subnet.public[0] will be destroyed
+  - resource "aws_subnet" "public" {
+      - arn                                            = "arn:aws:ec2:ap-southeast-2:740667376104:subnet/subnet-080a6a8829afb6fce" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-southeast-2a" -> null
+      - availability_zone_id                           = "apse2-az1" -> null
+      - cidr_block                                     = "10.28.0.0/24" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-080a6a8829afb6fce" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = true -> null
+      - owner_id                                       = "740667376104" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - tags                                           = {
+          - "Name" = "cobble-dev-public-0"
+          - "Tier" = "public"
+        } -> null
+      - tags_all                                       = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-public-0"
+          - "Owner"       = "Cyber Security Centre"
+          - "Tier"        = "public"
+        } -> null
+      - vpc_id                                         = "vpc-072de134831f068c4" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # module.network.aws_subnet.public[1] will be destroyed
+  - resource "aws_subnet" "public" {
+      - arn                                            = "arn:aws:ec2:ap-southeast-2:740667376104:subnet/subnet-011c0aeff29c95c77" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-southeast-2b" -> null
+      - availability_zone_id                           = "apse2-az3" -> null
+      - cidr_block                                     = "10.28.1.0/24" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-011c0aeff29c95c77" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = true -> null
+      - owner_id                                       = "740667376104" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - tags                                           = {
+          - "Name" = "cobble-dev-public-1"
+          - "Tier" = "public"
+        } -> null
+      - tags_all                                       = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-public-1"
+          - "Owner"       = "Cyber Security Centre"
+          - "Tier"        = "public"
+        } -> null
+      - vpc_id                                         = "vpc-072de134831f068c4" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # module.network.aws_vpc.this will be destroyed
+  - resource "aws_vpc" "this" {
+      - arn                                  = "arn:aws:ec2:ap-southeast-2:740667376104:vpc/vpc-072de134831f068c4" -> null
+      - assign_generated_ipv6_cidr_block     = false -> null
+      - cidr_block                           = "10.28.0.0/16" -> null
+      - default_network_acl_id               = "acl-09681f327a629a736" -> null
+      - default_route_table_id               = "rtb-0d7a1f29bb63655f2" -> null
+      - default_security_group_id            = "sg-0a945f94bfd7c46f5" -> null
+      - dhcp_options_id                      = "dopt-0129155e707aec32a" -> null
+      - enable_dns_hostnames                 = true -> null
+      - enable_dns_support                   = true -> null
+      - enable_network_address_usage_metrics = false -> null
+      - id                                   = "vpc-072de134831f068c4" -> null
+      - instance_tenancy                     = "default" -> null
+      - ipv6_netmask_length                  = 0 -> null
+      - main_route_table_id                  = "rtb-0d7a1f29bb63655f2" -> null
+      - owner_id                             = "740667376104" -> null
+      - tags                                 = {
+          - "Name" = "cobble-dev-vpc"
+        } -> null
+      - tags_all                             = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-vpc"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # module.network.aws_vpc_endpoint.s3[0] will be destroyed
+  - resource "aws_vpc_endpoint" "s3" {
+      - arn                        = "arn:aws:ec2:ap-southeast-2:740667376104:vpc-endpoint/vpce-03ec52c28e870e9ba" -> null
+      - cidr_blocks                = [
+          - "3.5.164.0/22",
+          - "16.12.74.0/24",
+          - "3.5.168.0/23",
+          - "52.95.128.0/21",
+        ] -> null
+      - dns_entry                  = [] -> null
+      - id                         = "vpce-03ec52c28e870e9ba" -> null
+      - ip_address_type            = "ipv4" -> null
+      - network_interface_ids      = [] -> null
+      - owner_id                   = "740667376104" -> null
+      - policy                     = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "*"
+                      - Effect    = "Allow"
+                      - Principal = "*"
+                      - Resource  = "*"
+                    },
+                ]
+              - Version   = "2008-10-17"
+            }
+        ) -> null
+      - prefix_list_id             = "pl-6ca54005" -> null
+      - private_dns_enabled        = false -> null
+      - requester_managed          = false -> null
+      - route_table_ids            = [
+          - "rtb-0149c6ade25fb496c",
+          - "rtb-0557c9709a9ebb408",
+        ] -> null
+      - security_group_ids         = [] -> null
+      - service_name               = "com.amazonaws.ap-southeast-2.s3" -> null
+      - service_region             = "ap-southeast-2" -> null
+      - state                      = "available" -> null
+      - subnet_ids                 = [] -> null
+      - tags                       = {
+          - "Name" = "cobble-dev-s3-endpoint"
+        } -> null
+      - tags_all                   = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Name"        = "cobble-dev-s3-endpoint"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - vpc_endpoint_type          = "Gateway" -> null
+      - vpc_id                     = "vpc-072de134831f068c4" -> null
+        # (2 unchanged attributes hidden)
+
+      - dns_options {
+          - dns_record_ip_type                             = "service-defined" -> null
+          - private_dns_only_for_inbound_resolver_endpoint = false -> null
+        }
+    }
+
+  # module.network.module.flow_log_destination.aws_cloudwatch_log_group.this will be destroyed
+  - resource "aws_cloudwatch_log_group" "this" {
+      - arn               = "arn:aws:logs:ap-southeast-2:740667376104:log-group:/cobble-dev/vpc-flow-logs" -> null
+      - id                = "/cobble-dev/vpc-flow-logs" -> null
+      - kms_key_id        = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331" -> null
+      - log_group_class   = "STANDARD" -> null
+      - name              = "/cobble-dev/vpc-flow-logs" -> null
+      - retention_in_days = 30 -> null
+      - skip_destroy      = false -> null
+      - tags              = {} -> null
+      - tags_all          = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.network.module.flow_log_destination.aws_iam_role.this will be destroyed
+  - resource "aws_iam_role" "this" {
+      - arn                   = "arn:aws:iam::740667376104:role/cobble-dev-vpc-flow-logs" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "vpc-flow-logs.amazonaws.com"
+                        }
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-10-19T07:20:40Z" -> null
+      - force_detach_policies = false -> null
+      - id                    = "cobble-dev-vpc-flow-logs" -> null
+      - managed_policy_arns   = [] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "cobble-dev-vpc-flow-logs" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Application" = "Cobbled"
+          - "CostCentre"  = "Cobble"
+          - "Criticality" = "Low"
+          - "DataClass"   = "Internal"
+          - "Environment" = "dev"
+          - "ManagedBy"   = "IaC"
+          - "Owner"       = "Cyber Security Centre"
+        } -> null
+      - unique_id             = "AROA2Y4ZXIHULXMEGRXS3" -> null
+        # (3 unchanged attributes hidden)
+
+      - inline_policy {
+          - name   = "cobble-dev-vpc-flow-logs" -> null
+          - policy = jsonencode(
+                {
+                  - Statement = [
+                      - {
+                          - Action   = [
+                              - "logs:CreateLogStream",
+                              - "logs:PutLogEvents",
+                            ]
+                          - Effect   = "Allow"
+                          - Resource = "arn:aws:logs:ap-southeast-2:740667376104:log-group:/cobble-dev/vpc-flow-logs:*"
+                        },
+                    ]
+                  - Version   = "2012-10-17"
+                }
+            ) -> null
+        }
+    }
+
+  # module.network.module.flow_log_destination.aws_iam_role_policy.this will be destroyed
+  - resource "aws_iam_role_policy" "this" {
+      - id          = "cobble-dev-vpc-flow-logs:cobble-dev-vpc-flow-logs" -> null
+      - name        = "cobble-dev-vpc-flow-logs" -> null
+      - policy      = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action   = [
+                          - "logs:CreateLogStream",
+                          - "logs:PutLogEvents",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:logs:ap-southeast-2:740667376104:log-group:/cobble-dev/vpc-flow-logs:*"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - role        = "cobble-dev-vpc-flow-logs" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+Plan: 0 to add, 0 to change, 75 to destroy.
+
+Changes to Outputs:
+  - app_url                = "http://cobble-dev-alb-386072235.ap-southeast-2.elb.amazonaws.com" -> null
+  - data_bucket_name       = "cobble-dev-data-740667376104" -> null
+  - database_endpoint      = "cobble-dev.c5g44imkq062.ap-southeast-2.rds.amazonaws.com" -> null
+  - kms_key_arn            = "arn:aws:kms:ap-southeast-2:740667376104:key/9c8810bf-e667-438c-bed8-e2f95dd34331" -> null
+  - load_balancer_dns_name = "cobble-dev-alb-386072235.ap-southeast-2.elb.amazonaws.com" -> null
+module.account_baseline[0].aws_ebs_encryption_by_default.this: Destroying... [id=terraform-20261019072040143100000001]
+module.network.aws_route.private_to_nat[0]: Destroying... [id=r-rtb-0557c9709a9ebb4081080289494]
+module.app.aws_vpc_security_group_ingress_rule.tasks_from_load_balancer: Destroying... [id=sgr-04b05a5cd313bebaa]
+module.network.aws_route_table_association.database[1]: Destroying... [id=rtbassoc-0eafa2071fdcdb534]
+module.account_baseline[0].aws_iam_role_policy_attachment.config: Destroying... [id=cobble-dev-config-recorder-20261019072043101000000003]
+module.network.aws_route_table_association.public[0]: Destroying... [id=rtbassoc-07cb18d6613d52c7c]
+module.data_bucket.aws_s3_bucket_public_access_block.this: Destroying... [id=cobble-dev-data-740667376104]
+module.database.aws_vpc_security_group_ingress_rule.from_allowed[0]: Destroying... [id=sgr-07f4e0606ab741541]
+module.app.aws_appautoscaling_policy.cpu[0]: Destroying... [id=cobble-dev-cpu]
+module.network.aws_vpc_endpoint.s3[0]: Destroying... [id=vpce-03ec52c28e870e9ba]
+module.account_baseline[0].aws_ebs_encryption_by_default.this: Destruction complete after 1s
+module.app.aws_vpc_security_group_ingress_rule.load_balancer_http: Destroying... [id=sgr-0aeaf244a6fa331eb]
+module.app.aws_vpc_security_group_ingress_rule.tasks_from_load_balancer: Destruction complete after 1s
+module.data_bucket.aws_s3_bucket_logging.this: Destroying... [id=cobble-dev-data-740667376104]
+module.network.aws_route_table_association.public[0]: Destruction complete after 1s
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Destroying... [id=cobble-dev-access-logs-740667376104]
+module.network.aws_route_table_association.database[1]: Destruction complete after 1s
+module.app.aws_vpc_security_group_egress_rule.tasks_https_out: Destroying... [id=sgr-05edcd7d23e7d8781]
+module.data_bucket.aws_s3_bucket_public_access_block.this: Destruction complete after 1s
+module.network.module.flow_log_destination.aws_iam_role_policy.this: Destroying... [id=cobble-dev-vpc-flow-logs:cobble-dev-vpc-flow-logs]
+module.app.aws_vpc_security_group_ingress_rule.load_balancer_http: Destruction complete after 0s
+module.account_baseline[0].aws_s3_account_public_access_block.this: Destroying... [id=740667376104]
+module.database.aws_vpc_security_group_ingress_rule.from_allowed[0]: Destruction complete after 1s
+module.network.aws_route.private_to_nat[0]: Destruction complete after 1s
+module.data_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Destroying... [id=cobble-dev-data-740667376104]
+module.network.aws_flow_log.this: Destroying... [id=fl-04bb6cd794819d44e]
+module.app.aws_appautoscaling_policy.cpu[0]: Destruction complete after 1s
+module.account_baseline[0].aws_iam_role_policy.config_delivery: Destroying... [id=cobble-dev-config-recorder:cobble-dev-config-delivery]
+module.app.aws_vpc_security_group_egress_rule.tasks_https_out: Destruction complete after 0s
+module.account_baseline[0].aws_config_configuration_recorder_status.this: Destroying... [id=cobble-dev-recorder]
+module.network.aws_flow_log.this: Destruction complete after 0s
+module.app.aws_iam_role_policy_attachment.execution: Destroying... [id=cobble-dev-task-execution-20261019072042472200000002]
+module.data_bucket.aws_s3_bucket_logging.this: Destruction complete after 0s
+module.app.aws_vpc_security_group_egress_rule.load_balancer_to_tasks: Destroying... [id=sgr-0ac28e571f140f737]
+module.account_baseline[0].aws_config_configuration_recorder_status.this: Destruction complete after 0s
+module.network.aws_route_table_association.public[1]: Destroying... [id=rtbassoc-0f9125f7dc11c9fd0]
+module.account_baseline[0].aws_iam_role_policy_attachment.config: Destruction complete after 2s
+module.account_baseline[0].aws_iam_account_password_policy.this: Destroying... [id=iam-account-password-policy]
+module.access_logs.aws_s3_bucket_lifecycle_configuration.this: Destruction complete after 1s
+module.app.aws_iam_role_policy.execution_secrets[0]: Destroying... [id=cobble-dev-task-execution:cobble-dev-read-secrets]
+module.data_bucket.aws_s3_bucket_lifecycle_configuration.this[0]: Destruction complete after 1s
+module.network.aws_route_table_association.private[0]: Destroying... [id=rtbassoc-024390d7a4fa85822]
+module.app.aws_vpc_security_group_egress_rule.load_balancer_to_tasks: Destruction complete after 1s
+module.data_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Destroying... [id=cobble-dev-data-740667376104]
+module.network.aws_route_table_association.public[1]: Destruction complete after 1s
+module.app.aws_iam_role_policy.task[0]: Destroying... [id=cobble-dev-task:cobble-dev-app-permissions]
+module.network.module.flow_log_destination.aws_iam_role_policy.this: Destruction complete after 1s
+module.access_logs.aws_s3_bucket_policy.this: Destroying... [id=cobble-dev-access-logs-740667376104]
+module.network.aws_route_table_association.private[0]: Destruction complete after 0s
+module.network.aws_route_table_association.private[1]: Destroying... [id=rtbassoc-0bda69cbc3b358ead]
+module.data_bucket.aws_s3_bucket_server_side_encryption_configuration.this: Destruction complete after 0s
+module.network.aws_route_table_association.database[0]: Destroying... [id=rtbassoc-090b0b6874115d248]
+module.account_baseline[0].aws_iam_role_policy.config_delivery: Destruction complete after 1s
+module.network.aws_default_security_group.this[0]: Destroying... [id=sg-0a945f94bfd7c46f5]
+module.network.aws_default_security_group.this[0]: Destruction complete after 0s
+aws_budgets_budget.monthly: Destroying... [id=740667376104:cobble-dev-monthly-cost]
+module.network.aws_route_table_association.private[1]: Destruction complete after 0s
+aws_kms_alias.this: Destroying... [id=alias/cobble-dev]
+module.app.aws_iam_role_policy_attachment.execution: Destruction complete after 1s
+module.access_logs.aws_s3_bucket_server_side_encryption_configuration.this: Destroying... [id=cobble-dev-access-logs-740667376104]
+aws_kms_alias.this: Destruction complete after 0s
+module.network.aws_nat_gateway.this[0]: Destroying... [id=nat-04040ccae1a70ae7d]
+module.account_baseline[0].aws_iam_account_password_policy.this: Destruction complete after 0s
+module.app.aws_appautoscaling_target.this[0]: Destroying... [id=service/cobble-dev/cobble-dev]
+module.access_logs.aws_s3_bucket_policy.this: Destruction complete after 0s
+module.account_baseline[0].aws_config_delivery_channel.this: Destroying... [id=cobble-dev-delivery]
+module.network.aws_route_table_association.database[0]: Destruction complete after 0s
+module.access_logs.aws_s3_bucket_versioning.this: Destroying... [id=cobble-dev-access-logs-740667376104]
+module.account_baseline[0].aws_config_delivery_channel.this: Destruction complete after 0s
+module.data_bucket.aws_s3_bucket_versioning.this: Destroying... [id=cobble-dev-data-740667376104]
+module.app.aws_iam_role_policy.task[0]: Destruction complete after 0s
+module.network.aws_route_table.public: Destroying... [id=rtb-0d6bc29d07ca0458a]
+module.app.aws_appautoscaling_target.this[0]: Destruction complete after 0s
+module.network.module.flow_log_destination.aws_iam_role.this: Destroying... [id=cobble-dev-vpc-flow-logs]
+module.access_logs.aws_s3_bucket_server_side_encryption_configuration.this: Destruction complete after 1s
+module.network.module.flow_log_destination.aws_cloudwatch_log_group.this: Destroying... [id=/cobble-dev/vpc-flow-logs]
+module.access_logs.aws_s3_bucket_versioning.this: Destruction complete after 1s
+module.access_logs.aws_s3_bucket_public_access_block.this: Destroying... [id=cobble-dev-access-logs-740667376104]
+module.data_bucket.aws_s3_bucket_versioning.this: Destruction complete after 1s
+module.account_baseline[0].aws_config_configuration_recorder.this: Destroying... [id=cobble-dev-recorder]
+module.account_baseline[0].aws_config_configuration_recorder.this: Destruction complete after 0s
+module.app.aws_ecs_service.this: Destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev]
+module.network.module.flow_log_destination.aws_cloudwatch_log_group.this: Destruction complete after 0s
+module.account_baseline[0].aws_iam_role.config: Destroying... [id=cobble-dev-config-recorder]
+module.network.aws_route_table.public: Destruction complete after 1s
+aws_budgets_budget.monthly: Destruction complete after 1s
+module.app.aws_iam_role_policy.execution_secrets[0]: Destruction complete after 1s
+module.access_logs.aws_s3_bucket_public_access_block.this: Destruction complete after 0s
+module.network.module.flow_log_destination.aws_iam_role.this: Destruction complete after 1s
+module.account_baseline[0].aws_iam_role.config: Destruction complete after 1s
+module.network.aws_vpc_endpoint.s3[0]: Destruction complete after 6s
+module.network.aws_route_table.database[0]: Destroying... [id=rtb-0149c6ade25fb496c]
+module.network.aws_route_table.private: Destroying... [id=rtb-0557c9709a9ebb408]
+module.network.aws_route_table.database[0]: Destruction complete after 1s
+module.network.aws_route_table.private: Destruction complete after 1s
+module.account_baseline[0].aws_s3_account_public_access_block.this: Still destroying... [id=740667376104, 00m10s elapsed]
+module.network.aws_nat_gateway.this[0]: Still destroying... [id=nat-04040ccae1a70ae7d, 00m10s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 00m10s elapsed]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Still destroying... [id=740667376104, 00m20s elapsed]
+module.network.aws_nat_gateway.this[0]: Still destroying... [id=nat-04040ccae1a70ae7d, 00m20s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 00m20s elapsed]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Still destroying... [id=740667376104, 00m30s elapsed]
+module.network.aws_nat_gateway.this[0]: Still destroying... [id=nat-04040ccae1a70ae7d, 00m30s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 00m30s elapsed]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Still destroying... [id=740667376104, 00m40s elapsed]
+module.network.aws_nat_gateway.this[0]: Still destroying... [id=nat-04040ccae1a70ae7d, 00m40s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 00m40s elapsed]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Still destroying... [id=740667376104, 00m50s elapsed]
+module.network.aws_nat_gateway.this[0]: Still destroying... [id=nat-04040ccae1a70ae7d, 00m50s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 00m50s elapsed]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Still destroying... [id=740667376104, 01m00s elapsed]
+module.network.aws_nat_gateway.this[0]: Still destroying... [id=nat-04040ccae1a70ae7d, 01m00s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 01m00s elapsed]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Still destroying... [id=740667376104, 01m10s elapsed]
+module.network.aws_nat_gateway.this[0]: Still destroying... [id=nat-04040ccae1a70ae7d, 01m10s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 01m10s elapsed]
+module.network.aws_nat_gateway.this[0]: Destruction complete after 1m11s
+module.network.aws_internet_gateway.this: Destroying... [id=igw-0dff024127a30e502]
+module.network.aws_eip.nat[0]: Destroying... [id=eipalloc-0ba28c90849d92b65]
+module.network.aws_eip.nat[0]: Destruction complete after 1s
+module.account_baseline[0].aws_s3_account_public_access_block.this: Still destroying... [id=740667376104, 01m20s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 01m20s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 00m10s elapsed]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Still destroying... [id=740667376104, 01m30s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 01m30s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 00m20s elapsed]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Still destroying... [id=740667376104, 01m40s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 01m40s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 00m30s elapsed]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Still destroying... [id=740667376104, 01m50s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 01m50s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 00m40s elapsed]
+module.account_baseline[0].aws_s3_account_public_access_block.this: Still destroying... [id=740667376104, 02m00s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 02m00s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 00m50s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 02m10s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 01m00s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 02m20s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 01m10s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 02m30s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 01m20s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 02m40s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 01m30s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 02m50s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 01m40s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 03m00s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 01m50s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 03m10s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 02m00s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 03m20s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 02m10s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 03m30s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 02m20s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 03m40s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 02m30s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 03m50s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 02m40s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 04m00s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 02m50s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 04m10s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 03m00s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 04m20s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 03m10s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 04m30s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 03m20s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 04m40s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 03m30s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 04m50s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 03m40s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 05m00s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 03m50s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 05m10s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 04m00s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 05m20s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 04m10s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 05m30s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 04m20s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 05m40s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 04m30s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 05m50s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 04m40s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 06m00s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 04m50s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 06m10s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 05m00s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 06m20s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 05m10s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 06m30s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 05m20s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 06m40s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 05m30s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 06m50s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 05m40s elapsed]
+module.app.aws_ecs_service.this: Still destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:service/cobble-dev/cobble-dev, 07m00s elapsed]
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 05m50s elapsed]
+module.app.aws_ecs_service.this: Destruction complete after 7m1s
+module.app.aws_security_group.tasks: Destroying... [id=sg-06c8ad1bdde0daf88]
+module.app.aws_ecs_cluster.this: Destroying... [id=arn:aws:ecs:ap-southeast-2:740667376104:cluster/cobble-dev]
+module.network.aws_subnet.private[1]: Destroying... [id=subnet-0a715642576caa1f5]
+module.app.aws_ecs_task_definition.this: Destroying... [id=cobble-dev]
+module.network.aws_subnet.private[0]: Destroying... [id=subnet-0d67887aac5143bd8]
+module.app.aws_lb_listener.http_forward[0]: Destroying... [id=arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:listener/app/cobble-dev-alb/d8fbac0630fa51a4/14991cfc313bf776]
+module.app.aws_ecs_task_definition.this: Destruction complete after 0s
+module.app.aws_cloudwatch_log_group.this: Destroying... [id=/cobble-dev/app]
+module.app.aws_iam_role.task: Destroying... [id=cobble-dev-task]
+module.data_bucket.aws_s3_bucket.this: Destroying... [id=cobble-dev-data-740667376104]
+module.database.aws_db_instance.this: Destroying... [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU]
+module.app.aws_ecs_cluster.this: Destruction complete after 1s
+module.app.aws_iam_role.execution: Destroying... [id=cobble-dev-task-execution]
+module.app.aws_lb_listener.http_forward[0]: Destruction complete after 1s
+module.app.aws_lb_target_group.this: Destroying... [id=arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:targetgroup/cobble-dev-tg/6a6e3c3048481b5c]
+module.app.aws_cloudwatch_log_group.this: Destruction complete after 1s
+module.app.aws_lb.this: Destroying... [id=arn:aws:elasticloadbalancing:ap-southeast-2:740667376104:loadbalancer/app/cobble-dev-alb/d8fbac0630fa51a4]
+module.network.aws_subnet.private[0]: Destruction complete after 1s
+module.app.aws_security_group.tasks: Destruction complete after 1s
+module.app.aws_lb_target_group.this: Destruction complete after 0s
+module.network.aws_subnet.private[1]: Destruction complete after 1s
+module.data_bucket.aws_s3_bucket.this: Destruction complete after 1s
+module.app.aws_iam_role.task: Destruction complete after 3s
+module.app.aws_iam_role.execution: Destruction complete after 2s
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 06m00s elapsed]
+module.database.aws_db_instance.this: Still destroying... [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU, 00m10s elapsed]
+module.app.aws_lb.this: Still destroying... [id=arn:aws:elasticloadbalancing:ap-southea...er/app/cobble-dev-alb/d8fbac0630fa51a4, 00m10s elapsed]
+module.app.aws_lb.this: Destruction complete after 17s
+module.network.aws_subnet.public[1]: Destroying... [id=subnet-011c0aeff29c95c77]
+module.network.aws_subnet.public[0]: Destroying... [id=subnet-080a6a8829afb6fce]
+module.app.aws_security_group.load_balancer: Destroying... [id=sg-03e7a859c6480adba]
+module.access_logs.aws_s3_bucket.this: Destroying... [id=cobble-dev-access-logs-740667376104]
+module.network.aws_subnet.public[1]: Destruction complete after 1s
+module.access_logs.aws_s3_bucket.this: Destruction complete after 1s
+module.network.aws_internet_gateway.this: Still destroying... [id=igw-0dff024127a30e502, 06m10s elapsed]
+module.database.aws_db_instance.this: Still destroying... [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU, 00m20s elapsed]
+module.network.aws_internet_gateway.this: Destruction complete after 6m14s
+module.app.aws_security_group.load_balancer: Destruction complete after 5s
+module.network.aws_subnet.public[0]: Destruction complete after 5s
+module.database.aws_db_instance.this: Still destroying... [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU, 00m30s elapsed]
+module.database.aws_db_instance.this: Still destroying... [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU, 00m40s elapsed]
+module.database.aws_db_instance.this: Still destroying... [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU, 00m51s elapsed]
+module.database.aws_db_instance.this: Still destroying... [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU, 01m01s elapsed]
+module.database.aws_db_instance.this: Still destroying... [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU, 01m11s elapsed]
+module.database.aws_db_instance.this: Still destroying... [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU, 01m21s elapsed]
+module.database.aws_db_instance.this: Still destroying... [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU, 01m31s elapsed]
+module.database.aws_db_instance.this: Still destroying... [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU, 01m41s elapsed]
+module.database.aws_db_instance.this: Still destroying... [id=db-5KQDCFGT2RYNH7SHPRXOXLVZUU, 01m51s elapsed]
+module.database.aws_db_instance.this: Destruction complete after 1m52s
+module.database.aws_db_subnet_group.this: Destroying... [id=cobble-dev]
+module.database.aws_security_group.this: Destroying... [id=sg-01ca12214d2354207]
+aws_kms_key.this: Destroying... [id=9c8810bf-e667-438c-bed8-e2f95dd34331]
+module.database.aws_db_parameter_group.this: Destroying... [id=cobble-dev-postgres16]
+module.database.aws_db_parameter_group.this: Destruction complete after 0s
+aws_kms_key.this: Destruction complete after 0s
+module.database.aws_db_subnet_group.this: Destruction complete after 0s
+module.network.aws_subnet.database[1]: Destroying... [id=subnet-06b70be7c3d6265d9]
+module.network.aws_subnet.database[0]: Destroying... [id=subnet-093a58726bdb23935]
+module.database.aws_security_group.this: Destruction complete after 1s
+module.network.aws_subnet.database[1]: Destruction complete after 1s
+module.network.aws_subnet.database[0]: Destruction complete after 1s
+module.network.aws_vpc.this: Destroying... [id=vpc-072de134831f068c4]
+module.network.aws_vpc.this: Destruction complete after 1s
+
+Error: waiting for S3 Account Public Access Block (740667376104) delete: found resource
+

@@ -1,6 +1,6 @@
 # Solution A: the full landing zone
 
-The complete design we'd recommend for running Cobble in production: six AWS
+The full target design for running Cobble in production: six AWS
 accounts with guardrails, single sign-on, locked audit logs, central threat
 detection, and separate dev, staging and prod environments.
 
@@ -12,7 +12,7 @@ It comes in two parts, and you don't need the whole thing to see it working:
 | [`landing-zone/`](landing-zone/) | The organisation around the environments: people, accounts and guardrails, central security, the container registry. Set up once and left running | **Demo (what we show):** [`lz-dev.ps1`](lz-dev.ps1) `up` adds the security services and a dev environment to the existing accounts in about 15 minutes, and `down` removes them in about 10. [Quickstart](../../runbooks/demo-landing-zone-quickstart.md). Full build: [runbooks/deploy-solution-a.md](../../runbooks/deploy-solution-a.md) |
 
 Why it's designed this way is explained in
-[deliverable 2's key decisions](../../docs/02-landing-zone-design/README.md#key-decisions).
+[deliverable 2's key decisions](../../docs/deliverables/landing-zone-design.md#key-decisions).
 
 ## The accounts
 
@@ -74,7 +74,7 @@ The full build runs in this order. Each step hands values to the next.
 |---|---|---|---|---|
 | 0 | [`../bootstrap`](../bootstrap/) | Management account | The bucket for Terraform's records (shared with Solution B) | |
 | People | [`landing-zone/identity`](landing-zone/identity/) | The account that runs Identity Center | Groups, and a login for each person in `users.csv` | |
-| 1 | [`landing-zone/1-organization`](landing-zone/1-organization/) | Management account | Account folders, 5 member accounts, 4 guardrails, each group's access | `account_ids`, `organization_id` |
+| 1 | [`landing-zone/1-organization`](landing-zone/1-organization/) | Management account | Account folders, 5 member accounts in code (4 exist today: Shared Services waits for the account limit to free up, about mid-January 2027), 4 guardrails, each group's access | `account_ids`, `organization_id` |
 | 2 | [`landing-zone/2-security`](landing-zone/2-security/) | Security account | Locked audit logs, audit trail, threat detection, security checks, email alerts | `config_bucket_name`, `config_kms_key_arn` |
 | 3 | [`landing-zone/3-shared-services`](landing-zone/3-shared-services/) | Shared Services account | Container registry | `container_registry_url` |
 | 4 | [`workload`](workload/) with `dev`, `staging`, `prod.tfvars` | Each environment's account | Network, web servers, database, data bucket, GitHub roles, budget | `app_url` |

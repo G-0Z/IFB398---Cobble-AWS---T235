@@ -10,7 +10,7 @@ bucket `cobble-tfstate-669591255093` is missing.
 ## Before you start
 
 - Terraform 1.10 or later, and the AWS CLI
-- Signed in to the team's account ([deploy.md](deploy.md#sign-in)) with rights to create S3 buckets. Never use the root user
+- Signed in to the team's account ([deploy-solution-b.md](deploy-solution-b.md#sign-in)) with rights to create S3 buckets. Never use the root user
 
 ## Steps
 

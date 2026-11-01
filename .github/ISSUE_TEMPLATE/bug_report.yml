@@ -1,0 +1,31 @@
+name: Bug report
+description: Something doesn't work as it should
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. cd infrastructure/solution-a
+        2. .\lz-dev.ps1 up
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Error output
+      description: The last `Error:` lines, or the evidence log file name. Redact account IDs, emails and ARNs.
+      render: text
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [landing zone, workload, modules, CI, runbooks, docs / deliverables]

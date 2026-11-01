@@ -72,7 +72,7 @@ this subscription, so confirm again after every build.
 | Check | How | Working if |
 |---|---|---|
 | The website | Open the `App:` address in a browser | The nginx welcome page loads. A 503 means it's still starting: wait a minute |
-| The security services | `.\lz-dev.ps1 status` | Every account shows `GuardDuty: True` and `SecurityHub: True`. `Config` is True for dev and security only, which is expected |
+| The security services | `.\lz-dev.ps1 status` | Every member account shows `GuardDuty: True` and `SecurityHub: True`. `Config` is True for management, security and dev only, which is expected. The management row's `GuardDuty` is True only while Solution B is deployed |
 | The console | Sign in at https://d-97679ebd7b.awsapps.com/start, expand an account, click **CobblePlatformAdmin** | The 5 accounts are listed (4 Cobble accounts and the management account) and you can open each one |
 
 Click the role that matches your group. Platform admins (`max.gosling`) get
@@ -97,7 +97,9 @@ aws sso login --profile AdministratorAccess-669591255093   # if it's been a few 
 ```
 
 It ends with a table. **Every column must read `False`.** If one says
-`True`, run `.\lz-dev.ps1 down` again.
+`True`, run `.\lz-dev.ps1 down` again. The one exception is `management`
+GuardDuty while Solution B is deployed: Solution B owns that detector, and
+`down` leaves it alone.
 
 The accounts, sign-in and guardrails stay. They're free, and the next
 `up` reuses them.
