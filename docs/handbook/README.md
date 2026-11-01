@@ -1,5 +1,7 @@
 # Cobble AWS platform: engineering handbook
 
+> **Handbook:** **Start here** · [Architecture](architecture.md) · [Infrastructure code](infrastructure-code.md) · [Operations](operations.md) · [Security](security.md) · [Deliverables](deliverables.md) · [Glossary](glossary.md) · [Standards](../standards/README.md)
+
 This handbook explains the Cobble AWS platform to someone who has never seen
 it: what it is, how it's put together, how it's deployed and run, how it's
 secured, and what the project set out to deliver. It's written for
@@ -52,13 +54,16 @@ Read in order the first time. Each page stands alone after that.
 | [security.md](security.md) | Which controls exist, how strong each one is, what the threat model says, what the scanners found, and how the design lines up with NIST CSF, Essential Eight, ISO 27001 and SOCI |
 | [deliverables.md](deliverables.md) | What the project brief asked for, what was delivered against each item, and what's planned next |
 
-Deeper material lives alongside the code and in the deliverable folders;
+Changing the code? The [Terraform standards](../standards/README.md) are the
+rules this handbook's platform was built to.
+
+Deeper material lives alongside the code and in the deliverable pages;
 each page links to it. In particular:
 
 - [`infrastructure/`](../../infrastructure/README.md): every folder has its own README saying what it builds and why.
 - [`runbooks/`](../../runbooks/README.md): step-by-step instructions for every deploy, demo and teardown.
-- [`docs/0x-*/`](../README.md): the original deliverable write-ups.
-- [Glossary](../glossary.md): plain-English definitions of the AWS and Terraform terms used throughout.
+- [The deliverables](../README.md#the-eight-deliverables): the original write-ups, one page each.
+- [Glossary](glossary.md): plain-English definitions of the AWS and Terraform terms used throughout.
 
 ## Two words you'll see everywhere
 
@@ -77,20 +82,26 @@ The platform's documents describe status with two separate scales, because
 
 | Word | Meaning |
 |---|---|
-| Demonstrated | Deployed and seen working, with logs and screenshots (the runs of 17 to 18 October 2026) |
+| Demonstrated | Deployed and seen working, with logs and screenshots (the runs of 17 to 19 October 2026) |
 | Configured | In the code, not yet run live |
 | Not yet built | Planned for the next phase |
 
 ## Current state in one paragraph
 
-Both solutions deploy from code, tear down cleanly and redeploy identically.
-Solution A's landing zone with a dev environment has been built and removed
-with one command each way four times (18 to 19 October 2026), with one
-cycle screen-recorded. Every
+Solution A's landing zone with a dev environment deploys, tears down and
+redeploys identically: it has been built and removed with one command each
+way four times (18 to 19 October 2026), with one cycle screen-recorded.
+Solution B deploys and tears down from code; its recorded redeploy cycle is
+still to do. Every
 change to the code is formatted, validated, tested against a mocked AWS and
-security-scanned before it can merge, and a nightly job checks that nothing
-in a deployed environment has been changed by hand. The platform is not yet
-ready for real tenant data: the three largest open risks are tenant
+security-scanned in CI, and reviewed before it merges. A nightly drift
+workflow is built, ready for environments that stay deployed. No real tenant data is used. What the tests
+show feeds a proposal to the Centre: before the platform holds tenant data
+or hosts a first Cobble module, three risks need fixing. They are tenant
 isolation (left to the application), an over-broad administrator role, and
 backups that live in the same account as the data. Each has a planned fix
 ([security.md](security.md#what-would-reduce-the-high-risks)).
+
+---
+
+[↑ Back to the top](#cobble-aws-platform-engineering-handbook) · Next: [Architecture →](architecture.md)

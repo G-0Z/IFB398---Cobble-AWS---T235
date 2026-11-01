@@ -132,8 +132,8 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       # Fails on any finding, of any severity. Deliberate exceptions are
-      # inline #tfsec:ignore / #trivy:ignore comments with a reason, plus
-      # .trivyignore.yaml for the one Trivy can't take inline.
+      # inline #trivy:ignore (or older #tfsec:ignore) comments with a reason,
+      # plus .trivyignore.yaml for any Trivy can't take inline (none today).
       - name: Run Trivy (Terraform misconfiguration scan)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
@@ -142,3 +142,44 @@ jobs:
           trivyignores: .trivyignore.yaml
           exit-code: '1'
           version: v0.74.0
+
+  module-docs:
+    name: Module READMEs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      # Same version as infrastructure/modules/.terraform-docs.yml asks for;
+      # the checksum is the one published with the release.
+      - name: Install terraform-docs
+        run: |
+          curl -sSLo terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v0.24.0/terraform-docs-v0.24.0-linux-amd64.tar.gz
+          echo "9005daf969de0b50134493a2c00078b49f5f5b39d021cda7c89bf4d4f3d776d3  terraform-docs.tar.gz" | sha256sum -c
+          tar -xzf terraform-docs.tar.gz terraform-docs
+          sudo mv terraform-docs /usr/local/bin/
+
+      # Fails if any module's generated Reference section is out of date.
+      # Fix: run `terraform-docs -c ../.terraform-docs.yml .` in that module.
+      - name: Check every module README is up to date
+        run: |
+          status=0
+          for dir in infrastructure/modules/*/; do
+            if ! (cd "$dir" && terraform-docs -c ../.terraform-docs.yml --output-check . > /dev/null); then
+              echo "::error file=${dir}README.md::Reference section is out of date. Run terraform-docs -c ../.terraform-docs.yml . in ${dir}"
+              status=1
+            fi
+          done
+          exit $status
+
+  # One check that sums up all the others, so the main ruleset can require a
+  # single, stable check name instead of every matrix job.
+  ci-passed:
+    name: CI passed
+    if: always()
+    needs: [terraform-fmt, terraform-validate, terraform-test, security-scan, module-docs]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any check failed or was cancelled
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1

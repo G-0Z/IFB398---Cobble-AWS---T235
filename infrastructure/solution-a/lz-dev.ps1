@@ -131,8 +131,8 @@ switch ($Action) {
       if ($i -eq 20) { Write-Warning "$url isn't answering 200 yet. ECS > service > Tasks shows why." }
       Start-Sleep 30
     }
-    "`nUp. App: $url"
-    'Confirm the "AWS Notification - Subscription Confirmation" email in n11543027@qut.edu.au, or no alerts arrive.'
+    "`nUp. App: $url" | log
+    'Confirm the "AWS Notification - Subscription Confirmation" email in n11543027@qut.edu.au, or no alerts arrive.' | log
   }
 
   'down' {
@@ -167,9 +167,9 @@ switch ($Action) {
       }
     }
     cmd /c "aws securityhub disable-security-hub 2>nul" | Out-Null
-    "`nDown. Everything below should be False; the accounts stay for the next run:"
-    Show-Status
+    "`nDown. Everything below should be False; the accounts stay for the next run:" | log
+    Show-Status | log
   }
 
-  'status' { $ids = Get-AccountIds; Show-Status }
+  'status' { $ids = Get-AccountIds; Show-Status | log }
 }

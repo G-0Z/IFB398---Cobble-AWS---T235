@@ -64,5 +64,5 @@ infrastructure/modules/**/.terraform.lock.hcl
 *.mp4
 
 # Earlier presentation drafts (~9 MB each), kept on the team's machines only.
-docs/Presentation/Cobble-AWS-Platform-updated.pptx
-docs/Presentation/Cobble-AWS-Platform-v*.pptx
+docs/presentation/Cobble-AWS-Platform-updated.pptx
+docs/presentation/Cobble-AWS-Platform-v*.pptx

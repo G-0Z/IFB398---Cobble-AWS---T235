@@ -1,5 +1,7 @@
 # Infrastructure code
 
+> **Handbook:** [Start here](README.md) · [Architecture](architecture.md) · **Infrastructure code** · [Operations](operations.md) · [Security](security.md) · [Deliverables](deliverables.md) · [Glossary](glossary.md) · [Standards](../standards/README.md)
+
 How the Terraform in [`infrastructure/`](../../infrastructure/README.md) is
 organised, how an environment is assembled from it, where its settings and
 state live, and what checks every change goes through.
@@ -31,14 +33,15 @@ Two kinds of folder:
   tests.
 
 Every folder has a README that says what it builds, what you fill in, and
-which runbook to follow.
+which runbook to follow. Module READMEs end with a usage example and a
+reference section generated from the code by terraform-docs.
 
 ## The modules
 
 | Module | Builds | Used by |
 |---|---|---|
 | [`network`](../../infrastructure/modules/network/) | A VPC across two zones with public and private subnets and flow logs. Optional: NAT gateways (`none`, `single`, `one_per_az`), a database subnet layer, an S3 gateway endpoint, a locked default security group | A, B |
-| [`s3-bucket`](../../infrastructure/modules/s3-bucket/) | One hardened bucket: KMS-encrypted, versioned, public access blocked, HTTPS-only, access-logged, optional lifecycle rules | A, B |
+| [`s3-bucket`](../../infrastructure/modules/s3-bucket/) | One hardened bucket: KMS-encrypted, versioned, public access blocked, access-logged, an optional bucket policy (used for HTTPS-only on the log buckets), optional lifecycle rules | A, B |
 | [`log-delivery`](../../infrastructure/modules/log-delivery/) | An encrypted CloudWatch log group plus the IAM permission a service needs to write to it | A, B |
 | [`container-service`](../../infrastructure/modules/container-service/) | ECS Fargate cluster, service and task definition; ALB with health checks and HTTPS; security-group chain; task and execution roles; optional WAF and auto scaling; deployment circuit breaker | A; B's optional demo page |
 | [`github-oidc`](../../infrastructure/modules/github-oidc/) | The GitHub OIDC provider and the two roles (plan, apply), scoped to this repository and one state file | A, B |
@@ -50,7 +53,8 @@ which runbook to follow.
 Modules follow HashiCorp's standard structure (`main.tf`, `variables.tf`,
 `outputs.tf`, `versions.tf`, README, `tests/`). A rule the codebase keeps:
 new optional features are `enable_<feature>` switches that default to off,
-so adding something for Solution A never changes what Solution B builds.
+so adding something for Solution A never changes what Solution B builds. A
+few existing protections default to on (for example `enable_guardduty`).
 
 ## How an environment is assembled
 
@@ -104,7 +108,8 @@ committed because they can contain sensitive values.
 
 Terraform's record of what it has built lives in one S3 bucket created by
 [`bootstrap/`](../../infrastructure/bootstrap/): versioned, encrypted,
-public access blocked, protected from deletion, with native locking
+public access blocked, not force-destroyable (Terraform won't delete it
+while it holds state files), with native locking
 (Terraform 1.10+). Bootstrap keeps its *own* state locally, because a bucket
 can't be created by the run that stores state in it.
 
@@ -135,13 +140,16 @@ Every root config's `providers.tf` does three things:
 - **Pins the account.** `allowed_account_ids` makes Terraform refuse to run
   against anything but the intended account, so a wrong profile can't
   deploy dev into prod.
-- **Assumes a role when needed.** The landing-zone steps and `workload` are
-  run from the management account and reach into the target account
-  through `OrganizationAccountAccessRole` (passed as `assume_role_name`).
+- **Assumes a role when needed.** Everything is run from the management
+  account. `workload` reaches into its environment's account through the
+  role passed as `assume_role_name` (`OrganizationAccountAccessRole`).
+  `2-security` and `3-shared-services` assume `OrganizationAccountAccessRole`
+  in their providers, with no setting. `identity` and `1-organization` run
+  in the management account directly.
 - **Tags everything.** `default_tags` applies the Implementation Guide's
   required tags to every resource: `Application`, `Environment`,
   `ManagedBy = IaC`, `Owner`, `CostCentre`, `DataClass`, `Criticality`
-  ([naming conventions §6](../naming-conventions.md#6-tags)).
+  ([tags standard](../standards/naming.md#tags)).
 
 ## Checks on every change
 
@@ -155,6 +163,8 @@ Nothing in it touches a real AWS account.
 | Terraform validate | `terraform init -backend=false` then `terraform validate` | All 7 root configs |
 | Terraform module tests | `terraform test` against `tests/*.tftest.hcl` | All 9 modules plus `solution-a/workload` |
 | Trivy security scan | `trivy config` for Terraform misconfigurations. Any finding of any severity fails the job | All 7 root configs, following module calls into `modules/` |
+| Module READMEs | `terraform-docs --output-check`: each README's generated reference matches the code | All 9 modules |
+| CI passed | Passes only if every job above passed, so a ruleset can require one check | |
 
 Notes on how it's set up:
 
@@ -164,20 +174,21 @@ Notes on how it's set up:
 - Every action is pinned to a commit hash with the release in a comment, so
   a moved tag can't change what runs. The workflow's GitHub token is
   read-only.
-- Terraform `1.16.2` in CI matches the committed lock files; it's bumped
+- Terraform `1.16.2` in CI and the drift workflow matches the committed lock files; it's bumped
   deliberately. Lock files are committed per root config, not per module.
-- Deliberate Trivy exceptions are inline `#trivy:ignore` comments with a
-  reason, plus [`.trivyignore.yaml`](../../.trivyignore.yaml) for the one
-  rule that can't be ignored inline.
-- `main` requires one approving review. GitHub Free can't make passing
-  checks mandatory on a private repository, so reviewers check the result
-  before approving; this is recorded as a known gap.
+- Deliberate exceptions are inline comments with a reason: `#trivy:ignore`
+  for new ones, and older `#tfsec:ignore` ones, which Trivy also honours.
+  [`.trivyignore.yaml`](../../.trivyignore.yaml) is kept for any exception
+  that can't go inline (none today).
+- `main` requires one approving review, enforced by a GitHub ruleset. The
+  ruleset doesn't require the CI checks yet (GitHub Pro could), so reviewers
+  check the result before approving; this is recorded as a known gap.
 
 Beyond CI, [Checkov](https://www.checkov.io/) is run by hand as a stricter
 second opinion, and a manual review on 7 October 2026 found five issues no
 scanner could see. Every finding from all three, and what was decided about
 it, is in the
-[scan findings register](../03-security-controls/scan-findings.md).
+[scan findings register](../deliverables/security-controls.md#scan-findings-register).
 
 ## Drift detection
 
@@ -192,17 +203,12 @@ Solution B aren't checked because they're torn down between demos.
 
 ## Conventions
 
-- Folders and files are `kebab-case`; Terraform labels are `snake_case`;
-  AWS resource names are `cobble-<environment>-<thing>`; a name says what
-  the thing is, not how it's built.
-- Landing-zone folders are numbered in the order they're applied.
-- Module folder names are nouns for what gets built (`postgres-database`,
-  not `rds`).
-- Renaming a root config is almost never safe: it's tied to a state key,
-  the CI matrices and module `source` paths.
-
-The full guide, with worked examples of decoding a name, is
-[naming-conventions.md](../naming-conventions.md).
+The rules for changing this code (layout, file names, naming, state,
+modules, variables, version control, docs and testing) are the
+[Terraform standards](../standards/README.md). The short version: folders
+and files are `kebab-case`, Terraform labels `snake_case`, AWS names
+`cobble-<environment>-<thing>`; never change a state key; new optional
+module features default to off.
 
 ## Everyday commands
 
@@ -213,3 +219,7 @@ The full guide, with worked examples of decoding a name, is
 | Run a module's tests | `modules/<name>/` or `solution-a/workload/` | `terraform init -backend=false` then `terraform test` |
 | Scan like CI does | repo root | `trivy config --ignorefile .trivyignore.yaml infrastructure/solution-a/workload` |
 | Deploy, demo, tear down | | [operations.md](operations.md) |
+
+---
+
+[↑ Back to the top](#infrastructure-code) · ← [Architecture](architecture.md) · Next: [Operations →](operations.md)

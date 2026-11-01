@@ -1,0 +1,15 @@
+# Security updates only (open-pull-requests-limit: 0 turns off routine version bumps).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: {interval: monthly}
+    open-pull-requests-limit: 0
+  - package-ecosystem: terraform
+    directories:
+      - /infrastructure/bootstrap
+      - /infrastructure/solution-b
+      - /infrastructure/solution-a/workload
+      - /infrastructure/solution-a/landing-zone/*
+    schedule: {interval: monthly}
+    open-pull-requests-limit: 0

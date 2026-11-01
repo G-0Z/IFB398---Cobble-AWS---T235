@@ -36,7 +36,7 @@ what costs money:
 | | |
 |---|---|
 | **Builds** | Single sign-on for one person, 5 member accounts in their folders, 4 guardrails, central audit trail, GuardDuty, Security Hub, Config, alerts, and the dev environment (network, web server, database, data bucket) |
-| **Skips** | Step 3 (container registry): dev runs a stock nginx image instead. Staging and prod environments: their accounts are created, but nothing is deployed in them |
+| **Skips** | The container registry (`3-shared-services`): dev runs a stock nginx image instead. Staging and prod environments: their accounts are created, but nothing is deployed in them |
 | **Time** | First run, when the accounts didn't exist yet: about half a day, mostly waiting for AWS. Every run since: about 15 minutes up, 10 minutes down (13 and 10 on 18 October 2026) |
 | **Cost** | About A$0.30 to A$0.40 an hour while it's up, so roughly A$10 to A$15 for the session. Nothing after the teardown |
 
@@ -80,7 +80,7 @@ budget alerts to `n11543027@qut.edu.au`.
 Work through this list first. Do everything in **one PowerShell window**
 and keep it open: later steps reuse values saved in earlier ones.
 
-- [ ] **Signed in as an administrator.** The default CLI login (IAM user `mgosling`) can only change its own password, so use the Identity Center admin profile:
+- [ ] **Signed in as an administrator.** The default CLI profile is an IAM user in the team's account. Don't use it: use the Identity Center (SSO) admin profile for this runbook:
 
   ```powershell
   aws sso login --profile AdministratorAccess-669591255093
@@ -213,7 +213,7 @@ aws organizations list-accounts --query "Accounts[?Status=='ACTIVE'].[Name,Id]" 
 ```
 
 All 5 accounts should be listed, with the IDs in `$ids`. Refresh the access
-portal: under `max.gosling` you now see all six accounts.
+portal: under `max.gosling` you now see all five accounts.
 
 **Check:**
 
@@ -246,7 +246,7 @@ $cfgKey    = terraform output -raw config_kms_key_arn
 ```
 
 This also makes the Security account the delegated administrator for
-GuardDuty, Security Hub, Config and Access Analyzer, and adds the other four
+GuardDuty, Security Hub, Config and Access Analyzer, and adds the other three
 Cobble accounts as members of GuardDuty and Security Hub. Their auto-enable
 settings only cover accounts that join later, and these already exist.
 
@@ -265,7 +265,7 @@ alerts arrive. The teardown deletes the topic, so confirm again after every
 rebuild.
 
 > [!NOTE]
-> This step also applies the account safety settings to the management account: a stricter IAM password policy, S3 public access block and default EBS encryption. The password policy applies to the team's existing IAM users the next time they change their password. Step 7 removes all three.
+> This step also applies the account safety settings to the management account: a stricter IAM password policy, S3 public access block, default EBS encryption and a Config recorder. The password policy applies to the team's existing IAM users the next time they change their password. Step 7 removes all four.
 
 ---
 
@@ -277,7 +277,7 @@ The committed `dev.tfvars`, plus demo values on the command line:
 |---|---|
 | `account_id`, `config_bucket_name`, `config_kms_key_arn` | From steps 2 and 3 |
 | `assume_role_name=OrganizationAccountAccessRole` | You're running it from the management account |
-| `container_image` = stock nginx, `read_only_root_filesystem=false` | No registry, because step 3 is skipped |
+| `container_image` = stock nginx, `read_only_root_filesystem=false` | No registry, because the container registry (`3-shared-services`) is skipped |
 | `enable_github_deploy=false` | GitHub's deploy roles aren't needed for a demo |
 | `app_max_count=2` | Shows auto scaling, as in the single-account demo |
 | `alert_email=n11543027@qut.edu.au` | Budget alerts go to the same inbox as security alerts for now |
@@ -328,8 +328,8 @@ region on Sydney unless told otherwise: in another region S3 says the bucket
 | Organizations > AWS accounts (management account) | The folder tree: Security, Infrastructure, Workloads > NonProduction / Production, each with its account | Separate accounts per purpose and environment (D2) |
 | Organizations > Policies > Service control policies | The 4 guardrails attached to Root | Guardrails cover every member account (D2, D3) |
 | **A guardrail blocking an admin** | Portal > `cobble-dev` > `CobblePlatformAdmin`. Switch the region to Europe (London) and try to create an S3 bucket | "Explicit deny in a service control policy": even a full administrator can't work outside the allowed regions |
-| IAM Identity Center | The `cobble-` groups, the 3 permission sets, MFA required | Single sign-on with MFA, no shared IAM users (D3) |
-| Portal > `cobble-security` | CloudTrail: the organisation trail. S3: `cobble-audit-logs-<security account ID>` > Properties > Object Lock (the bucket is in this account, not the management account). GuardDuty > Accounts: the four other Cobble accounts enrolled. Security Hub: both standards (findings fill in over the next hours), and Settings > Accounts listing the Cobble accounts as members. Config > Aggregators: all accounts | Central, tamper-resistant logging and detection across the organisation (D3) |
+| IAM Identity Center | The `cobble-` groups, the 3 permission sets, MFA required | Single sign-on with MFA, the supported sign-in instead of IAM users (D3) |
+| Portal > `cobble-security` | CloudTrail: the organisation trail. S3: `cobble-audit-logs-<security account ID>` > Properties > Object Lock (the bucket is in this account, not the management account). GuardDuty > Accounts: the three other Cobble accounts enrolled. Security Hub: both standards (findings fill in over the next hours), and Settings > Accounts listing the Cobble accounts as members. Config > Aggregators: all accounts | Central, tamper-resistant logging and detection across the organisation (D3) |
 | Portal > `cobble-dev` | VPC: six subnets in three layers. ECS: the web server has a private IP only. RDS: "Publicly accessible: No", encrypted. Secrets Manager: the database password. S3: encrypted, versioned data bucket. Budgets: the US$100 dev budget | The workload design running in its own account (D1, D4) |
 | `app_url` in a browser | The page loads through the load balancer | The environment works end to end |
 
@@ -376,7 +376,7 @@ an email:
 - `UnauthorizedAccess:EC2/MaliciousIPCaller.Custom`
 
 You might also get emails you didn't trigger, such as "AWS Config should be
-enabled" for `cobble-prod`, `cobble-staging` and `cobble-shared-services`.
+enabled" for `cobble-prod` and `cobble-staging`.
 They're real findings. Those accounts have no Config recorder because only
 dev is deployed, so they're expected in this demo.
 
@@ -390,7 +390,7 @@ this private repo but nothing else should be in there. Never commit the
 `*.tfplan` files (`.gitignore` already blocks them).
 
 Also screenshot the console views from step 5. Save them in
-`docs/04-iac-evidence/images/` and blur account IDs, email addresses and
+`docs/media/screenshots/` and blur account IDs, email addresses and
 ARNs first. Grouped by where you sign in, so you switch as little as
 possible:
 
@@ -408,7 +408,7 @@ possible:
 | `cobble-dev`, **PlatformAdmin** | `08-scp-deny.png` | Region Europe (London) > S3 > Create bucket | The SCP explicit-deny error, with role and region in view |
 | `cobble-security`, PlatformAdmin | `09-cloudtrail-org-trail.png` | CloudTrail > Trails | Organisation trail, multi-region, log file validation on |
 | | `10-s3-object-lock.png` | S3 > `cobble-audit-logs-…` > Properties | Object Lock enabled, with retention |
-| | `11-guardduty-accounts.png` | GuardDuty > Accounts | The 4 other Cobble accounts, Enabled |
+| | `11-guardduty-accounts.png` | GuardDuty > Accounts | The 3 other Cobble accounts, Enabled |
 | | `12-securityhub-standards.png` | Security Hub > Security standards | Both standards enabled |
 | | `12b-securityhub-summary.png` | Security Hub > Summary | Findings across accounts |
 | | `13-securityhub-members.png` | Security Hub > Settings > Accounts | The Cobble accounts as members |
@@ -458,6 +458,19 @@ logs included. `force_destroy_buckets = true` in `2-security/settings.auto.tfvar
 allows that. The audit logs are only under a 1-day GOVERNANCE lock in this
 demo, which an administrator may bypass.
 
+First stop GuardDuty adding members automatically. GuardDuty refuses to
+remove members while auto-enable is `ALL`; the next run's step 3 sets it
+back.
+
+```powershell
+Invoke-InAccount $ids.security {
+  $d = aws guardduty list-detectors --query "DetectorIds[0]" --output text
+  aws guardduty update-organization-configuration --detector-id $d --auto-enable-organization-members NONE
+}
+```
+
+Then destroy:
+
 ```powershell
 cd "$lz\2-security"
 cmd /c "terraform plan -destroy -no-color -var security_account_id=$($ids.security) -out security-destroy.tfplan 2>&1" | Tee-Object "$ev\7-security_destroy-plan.txt"
@@ -482,10 +495,25 @@ foreach ($a in $ids.dev, $ids.staging, $ids.prod, $ids.shared_services) {
 }
 ```
 
+The management account isn't in `$ids`, so do it there too, with your
+current sign-in (no role switch). Leave Solution B's detector alone: it's
+tagged `Environment=poc`. Any other detector is the landing zone's.
+
+```powershell
+foreach ($d in (aws guardduty list-detectors --query "DetectorIds" --output text) -split '\s+') {
+  if ($d -and (aws guardduty get-detector --detector-id $d --query Tags.Environment --output text) -ne 'poc') { aws guardduty delete-detector --detector-id $d }
+}
+cmd /c "aws securityhub disable-security-hub 2>nul"
+```
+
 **Check** that nothing from step 3 or 4 is still running, in any account:
 
 ```powershell
 aws organizations list-delegated-administrators --query "DelegatedAdministrators[].Id"   # empty
+$gd  = aws guardduty list-detectors --query "DetectorIds" --output text
+$sh  = cmd /c "aws securityhub describe-hub --query HubArn --output text 2>nul"
+$cfg = aws configservice describe-configuration-recorders --query "ConfigurationRecorders[].name" --output text
+"{0,-16} GuardDuty: {1,-6} SecurityHub: {2,-6} Config: {3}" -f 'management', [bool]$gd, [bool]$sh, [bool]$cfg   # all False (GuardDuty True while Solution B is deployed)
 foreach ($p in $ids.PSObject.Properties) {
   Invoke-InAccount $p.Value {
     $gd  = aws guardduty list-detectors --query "DetectorIds" --output text
@@ -588,6 +616,6 @@ $devArgs   = "-var-file=dev.tfvars -var account_id=$($ids.dev) -var assume_role_
 | A `cobble-` group or user already exists | 1 | Added by hand, or lost from state | Import it: see [step 1](#1-people-single-sign-on) |
 | Sample finding never shows in `cobble-security` | 5 | It was created in another account, usually the management account | Create it in `cobble-security`, from CloudShell or the PowerShell block in [step 5](#5-what-to-record) |
 | `Missing expression after unary operator '--'` | 5 | The bash command (with `\` line breaks) was pasted into PowerShell | Use the PowerShell block in [step 5](#5-what-to-record), or run the bash one in CloudShell |
-| GuardDuty > Accounts in `cobble-security` lists no members | 3 | Step 3 applied before the GuardDuty member resources existed | Plan and apply step 3 again: it adds the 4 accounts as members |
+| GuardDuty > Accounts in `cobble-security` lists no members | 3 | Step 3 applied before the GuardDuty member resources existed | Plan and apply step 3 again: it adds the 3 accounts as members |
 | GuardDuty banner: management account "has not allowed the delegated administrator" for Malware Protection | 5 | Optional add-on, not used here | Ignore it, or run `aws iam create-service-linked-role --aws-service-name malware-protection.guardduty.amazonaws.com` once as the management admin |
 | 503 from `app_url` for more than 5 minutes | 4 | Web server not starting | ECS > the service > Tasks > a stopped task: read the reason |

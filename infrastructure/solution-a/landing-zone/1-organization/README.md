@@ -5,7 +5,7 @@ guardrails that apply to all of them, and who can sign in to which account.
 
 | | |
 |---|---|
-| **Builds** | Account folders (Security, Infrastructure, Workloads > NonProduction / Production), 5 member accounts, 4 guardrails ([`policies/`](policies/)), and each group's access to each account. Permanent: torn-down demos leave all of this in place |
+| **Builds** | Account folders (Security, Infrastructure, Workloads > NonProduction / Production), 5 member accounts in code (4 exist today: Shared Services waits for the account limit to free up, about mid-January 2027), 4 guardrails ([`policies/`](policies/)), and each group's access to each account. Permanent: torn-down demos leave all of this in place |
 | **Runs in** | The management account. After [People and groups](../identity/), before step 2 |
 | **You fill in** | `settings.auto.tfvars` (copy the `.example`): the management account ID and an email address for each new account. Leave out `shared_services` and that account isn't created (add it later and re-apply) |
 | **Gives the next steps** | `account_ids`, `organization_id` |
@@ -21,6 +21,6 @@ down and rebuilt on its own.
 | File | Holds |
 |---|---|
 | [`organization.tf`](organization.tf) | The organisation, its folders (OUs), and the Access Analyzer role step 2 needs |
-| [`accounts.tf`](accounts.tf) | The five member accounts. Protected: `terraform destroy` won't remove them |
+| [`accounts.tf`](accounts.tf) | The five member accounts (four exist today; Shared Services is left out of the settings until the account limit frees up). Protected: `terraform destroy` won't remove them |
 | [`guardrails.tf`](guardrails.tf) | Attaches the guardrails in `policies/` |
 | [`identity-center.tf`](identity-center.tf) | Which group gets which role in which account |

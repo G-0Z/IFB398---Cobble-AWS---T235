@@ -1,5 +1,7 @@
 # Operations
 
+> **Handbook:** [Start here](README.md) · [Architecture](architecture.md) · [Infrastructure code](infrastructure-code.md) · **Operations** · [Security](security.md) · [Deliverables](deliverables.md) · [Glossary](glossary.md) · [Standards](../standards/README.md)
+
 How the platform is deployed, demoed, released, watched, patched, backed up
 and torn down, and who is responsible for each part. The step-by-step
 runbooks are in [`runbooks/`](../../runbooks/README.md); this page explains
@@ -42,7 +44,7 @@ plan, `apply`, `output`.
 |---|---|---|---|---|
 | 0 | `bootstrap` | Management | The state bucket (shared with Solution B). Re-run later with `organization_id` so CI roles can reach state | |
 | People | `landing-zone/identity` | Whichever account administers Identity Center | Three groups and a login per row of `users.csv` | group names |
-| 1 | `landing-zone/1-organization` | Management | OUs, 5 member accounts, 4 guardrails, each group's role in each account | `organization_id`, `account_ids` |
+| 1 | `landing-zone/1-organization` | Management | OUs, 5 member accounts in code (4 exist today: Shared Services waits for the account limit to free up, about mid-January 2027), 4 guardrails, each group's role in each account | `organization_id`, `account_ids` |
 | 2 | `landing-zone/2-security` | Security (via assumed role) | Locked log bucket, organisation trail, GuardDuty, Security Hub, Config aggregator, Access Analyzer, alert topic, key | `config_bucket_name`, `config_kms_key_arn` |
 | 3 | `landing-zone/3-shared-services` | Shared Services | Container registry, account baseline, budget | `container_registry_url` |
 | 4 | `workload` + `dev.tfvars`, then `staging`, then `prod` | Each environment's account | Network, app, database, bucket, GitHub roles, budget | `app_url` |
@@ -80,18 +82,19 @@ without creating or closing an account.
 ```powershell
 cd infrastructure/solution-a
 .\lz-dev.ps1 up       # ~15 min: people + organisation (0 changes if already there), security (68), dev (75). Ends with the app URL
-.\lz-dev.ps1 status   # per account: GuardDuty / Security Hub / Config on or off; dev app URL
-.\lz-dev.ps1 down     # ~10 min: destroys dev and security; hands security services back and switches them off in each member. Accounts stay
+.\lz-dev.ps1 status   # management and each member account: GuardDuty / Security Hub / Config on or off; dev app URL
+.\lz-dev.ps1 down     # ~10 min: destroys dev and security; hands security services back and switches them off in each member and in the management account (leaving Solution B's detector). Accounts stay
 ```
 
 Safeguards built into the script: it refuses to run unless signed in to the
-management account; it refuses to apply a step-1 plan that would delete
+management account; it refuses to apply an organisation plan that would delete
 anything; it never creates an account that exists or closes one; it logs
 every run to `infrastructure/solution-a/evidence/lz-dev-<action>-<timestamp>.txt`;
 both `up` and `down` can be re-run and pick up where they stopped.
 
-After `down`, every column of the status table must read `False`. If one
-says `True`, run `down` again. Cost while up is about A$0.35 an hour;
+After `down`, every column of the status table must read `False`, except
+the management row's GuardDuty while Solution B is deployed. If one says
+`True`, run `down` again. Cost while up is about A$0.35 an hour;
 nothing after `down`.
 
 Quickstart with troubleshooting:
@@ -140,7 +143,7 @@ and redeployed from code, a final `terraform plan -detailed-exitcode` exits
 0, and the run logs are saved as evidence. Ideally someone who didn't write
 the code runs it, following only the runbook, which proves the instructions
 as well as the code. Runs are recorded in the
-[evidence log](../Evidence/README.md#evidence-log).
+[evidence log](../deliverables/evidence.md#evidence-log).
 
 ## Releasing the application
 
@@ -165,10 +168,15 @@ Pull request   ──► format, validate, tests, Trivy scan               built
 Merge to main  ──► deploy to dev                                     planned
                ──► deploy to staging   after 1 approval              planned
                ──► deploy to prod      after 1 approval, different person
-Nightly        ──► drift check on dev, staging, prod                 built
+Nightly        ──► drift check on dev, staging, prod                 built; none enrolled
 ```
 
-The plan and apply roles exist in every Solution A account. Until the deploy
+The nightly drift workflow is built, but no environment is enrolled yet: it
+needs an environment that stays deployed, with its plan-role variable set.
+Today drift is caught by re-running the deployment and getting 0 changes.
+
+The plan and apply roles are created in each workload account (dev,
+staging, prod) once it's deployed with GitHub deploys on. Until the deploy
 workflow is written, a platform admin deploys by following the runbook from
 their own machine. The GitHub environments with required reviewers are what
 will gate the apply role.
@@ -178,11 +186,11 @@ will gate the apply role.
 | What is watched | How | Who is told |
 |---|---|---|
 | Threats: compromised credentials, crypto-mining, unusual API calls | GuardDuty in every account, managed from Security | Security alerts email (high and critical) |
-| Security posture against CIS v3.0 and AWS best practices | Security Hub, organisation-wide | Security alerts email (high and critical); weekly review |
+| Security posture | Security Hub, organisation-wide. The Security account is subscribed to CIS v3.0 and AWS best practices (FSBP); member accounts get AWS's default standards | Security alerts email (high and critical); weekly review |
 | Configuration changes | AWS Config, aggregated in Security | Weekly review |
 | Resources shared outside the organisation | IAM Access Analyzer | Security Hub |
 | Every API call | Organisation CloudTrail → locked archive | Investigations |
-| Network traffic | VPC Flow Logs (30 days; 90 in prod) | Investigations |
+| Network traffic | VPC Flow Logs (30 days) | Investigations |
 | Container CPU and memory | ECS metrics; Container Insights in prod | Auto scaling acts on CPU (target 60%) |
 | Load | Auto scaling: staging 1–2, prod 2–10 tasks | AWS adds or removes tasks |
 | Drift from code | Nightly plan with the read-only role | Failed workflow emails repository watchers |
@@ -192,7 +200,7 @@ will gate the apply role.
 Not yet proven end to end: the alert emails are configured, but no alert has
 been received in a live test yet. That needs a deployment left running.
 
-Designed only, for the next phase: CloudWatch alarms on load balancer 5xx
+Designed only, not built yet: CloudWatch alarms on load balancer 5xx
 and unhealthy hosts, on database CPU, storage and connections; a dashboard
 per environment; tracing; WAF logs. Until then the module team watches
 service health in the ECS console and the load balancer metrics during a
@@ -223,7 +231,7 @@ A critical or high finding (ECR, Security Hub, GuardDuty) becomes a ticket
 for the owning team: critical fixed within 7 days, high within 30. A fix
 that can't be made in time needs a risk acceptance from the platform product
 owner, recorded with an expiry date. Terraform misconfiguration findings
-block the merge.
+fail CI, and reviewers don't approve a failing run.
 
 ## Backup and recovery
 
@@ -283,7 +291,7 @@ timeline, and keep the logs.
 | Cost alert | Cost Explorer grouped by service. Usual causes: a forgotten environment, NAT data transfer, auto scaling at its ceiling. Tear down or scale down, then find the cause |
 | Region outage | Designed only; needs the cross-region backups first |
 
-Full text: [operations model §6](../05-deployment-operations/README.md#6-runbooks).
+Full text: [operations model §6](../deliverables/deployment-operations.md#6-runbooks).
 
 ## Who does what
 
@@ -331,7 +339,7 @@ prices and sources are in
 | What | How |
 |---|---|
 | Landing zone demo | `.\lz-dev.ps1 down`. Accounts, sign-in and guardrails stay |
-| dev or staging | `terraform destroy` in `workload` with that environment's values file and state key, by a person: the GitHub roles can't, because a guardrail stops them switching off Config |
+| dev or staging | `terraform destroy` in `workload` with that environment's values file and state key, by a person: the GitHub roles can't, because a guardrail stops them switching off Config. The same guardrail stops the apply role creating or changing the Config recorder or replacing flow logs, so deploys of those parts also go through `OrganizationAccountAccessRole` today |
 | prod | Set `protect_from_deletion = false`, apply, then destroy. Deliberately two steps |
 | Step 2 (Security) | `terraform destroy` after the environments. Log buckets only go with `force_destroy_buckets = true`; audit logs under a compliance-mode lock never do |
 | Steps 1 and 3, people, accounts | Not torn down. Accounts are `prevent_destroy`; they're closed by hand only at the end of the project |
@@ -350,3 +358,7 @@ After any teardown: `terraform plan` should offer to create everything
 again; `status` should read `False` everywhere; check the console for
 leftover VPCs, load balancers, clusters or databases; check Billing the next
 day.
+
+---
+
+[↑ Back to the top](#operations) · ← [Infrastructure code](infrastructure-code.md) · Next: [Security →](security.md)

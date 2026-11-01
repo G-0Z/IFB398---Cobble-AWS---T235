@@ -1,0 +1,35 @@
+# Generates the "Reference" section of every module README from the code.
+# Run from a module folder:  terraform-docs -c ../.terraform-docs.yml .
+# CI fails if a README is out of date (.github/workflows/ci.yml, "Module READMEs").
+formatter: markdown table
+version: ">= 0.24.0, < 1.0.0"
+
+sections:
+  show:
+    - requirements
+    - providers
+    - inputs
+    - outputs
+
+output:
+  file: README.md
+  mode: inject
+  template: |-
+    <!-- BEGIN_TF_DOCS -->
+    {{ .Content }}
+    <!-- END_TF_DOCS -->
+
+sort:
+  enabled: true
+  by: required
+
+settings:
+  anchor: false
+  default: true
+  escape: true
+  hide-empty: true
+  html: false
+  lockfile: false   # module lock files are git-ignored, so show the constraint, not a local version
+  indent: 3
+  required: true
+  type: true

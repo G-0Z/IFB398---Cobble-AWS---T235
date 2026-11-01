@@ -1,5 +1,7 @@
 # Architecture
 
+> **Handbook:** [Start here](README.md) · **Architecture** · [Infrastructure code](infrastructure-code.md) · [Operations](operations.md) · [Security](security.md) · [Deliverables](deliverables.md) · [Glossary](glossary.md) · [Standards](../standards/README.md)
+
 How the Cobble platform is shaped in AWS. This page describes Solution A,
 the full design; the [last section](#solution-b-the-same-design-in-one-account)
 explains how Solution B compresses it into one account. Everything here is
@@ -59,7 +61,7 @@ flowchart TB
 
 A version of this diagram marked up to show which parts have actually run in
 AWS is in
-[`cobble-target-architecture.png`](../01-reference-architecture/cobble-target-architecture.png)
+[`cobble-target-architecture.png`](../media/diagrams/cobble-target-architecture.png)
 (editable `.drawio` alongside it).
 
 ## Accounts
@@ -71,7 +73,7 @@ the same separation from the workloads.
 
 | Organisational unit | Account | Purpose | Built by |
 |---|---|---|---|
-| (root) | Management | Runs the organisation, billing and single sign-on. Runs no applications, because guardrails don't apply to the management account | [`1-organization`](../../infrastructure/solution-a/landing-zone/1-organization/) |
+| (root) | Management | Runs the organisation, billing and single sign-on. Meant to run no applications, because guardrails don't apply to it. In the team's organisation it also hosts Solution B and the demo | [`1-organization`](../../infrastructure/solution-a/landing-zone/1-organization/) |
 | Security | `cobble-security` | Holds the locked audit logs; is the delegated administrator for GuardDuty, Security Hub, Config and Access Analyzer across every account; sends alerts | [`2-security`](../../infrastructure/solution-a/landing-zone/2-security/) |
 | Infrastructure | `cobble-shared-services` | The container image registry every environment pulls from | [`3-shared-services`](../../infrastructure/solution-a/landing-zone/3-shared-services/) |
 | Workloads / NonProduction | `cobble-dev` | Where developers try changes. Can be torn down when idle | [`workload`](../../infrastructure/solution-a/workload/) + `dev.tfvars` |
@@ -93,8 +95,15 @@ backup accounts are not built yet (see [gaps](security.md#known-gaps)).
 
 Guardrails are AWS Organizations service control policies (SCPs). They
 apply to every member account and to everyone in it, including
-administrators. Nothing in a member account can override them, which is why
-the management account runs nothing.
+administrators. Nothing in a member account can override them. They don't
+apply to the management account, so the design keeps applications out of
+it. In the team's own organisation, Solution B and the demo workload do run
+there (it's the only account the team had), outside the guardrails.
+
+One exception: the guardrail that protects the security services exempts
+`OrganizationAccountAccessRole`, the role the management account uses to
+administer member accounts. So an administrator of the management account
+can still switch those services off, which `lz-dev.ps1 down` relies on.
 
 | Guardrail | Stops anyone from... | Policy file |
 |---|---|---|
@@ -111,8 +120,13 @@ denies, following AWS's published SCP examples.
 ### People: IAM Identity Center
 
 Staff sign in through IAM Identity Center (AWS single sign-on) with MFA
-required. Solution A has no IAM users and no long-lived passwords or access
-keys. **Groups** say who someone is; **permission sets** say what they can
+required. Solution A's code creates no IAM users and no long-lived
+passwords or access keys. The team's own account (Solution B's account,
+and Solution A's management account) still has the team's IAM users in a
+shared full-administrator group, with access keys. Identity Center is the
+supported sign-in; removing that group and its keys is Phase 2 milestone M1
+([ADR 0001](../decisions/0001-deferred-landing-zone-design.md) D10).
+**Groups** say who someone is; **permission sets** say what they can
 do in which account. Group membership is a CSV file
 ([`identity/users.csv`](../../infrastructure/solution-a/landing-zone/identity/)),
 so adding or removing a person is a one-line change and an apply.
@@ -136,18 +150,23 @@ it's a documented manual step rather than code.
 
 ### Automation: GitHub OIDC
 
-GitHub Actions gets access to each account through OpenID Connect: GitHub
-presents a short-lived token, AWS checks it came from this repository, and
-hands back temporary credentials for one of two roles
-([`modules/github-oidc`](../../infrastructure/modules/github-oidc/)).
+GitHub Actions can get access to a workload account (dev, staging, prod)
+through OpenID Connect: GitHub presents a short-lived token, AWS checks it
+came from this repository, and hands back temporary credentials for one of
+two roles ([`modules/github-oidc`](../../infrastructure/modules/github-oidc/)).
+The roles are only created when a workload is deployed with GitHub deploys
+on; the lz-dev demo and `demo.tfvars` leave them off.
 
 | Role | Who can assume it | What it can do |
 |---|---|---|
-| `…-terraform-plan` | Any pull request, and the nightly drift check | Read everything needed to run `terraform plan`. It is explicitly denied reading the *contents* of buckets and logs, so a pull request from any branch can never reach tenant data |
-| `…-terraform-apply` | Only a workflow run in the matching GitHub environment, which needs a reviewer's approval | Make changes in that one account. The organisation's guardrails still apply |
+| `…-terraform-plan` | Runs on pull requests and on `main`. CI doesn't sign in to AWS, so only the nightly drift check would use it | Read everything needed to run `terraform plan`. It is explicitly denied reading the *contents* of buckets and logs, so a pull request from any branch can never reach tenant data |
+| `…-terraform-apply` | Only a run on `main` in the matching GitHub environment. Staging and prod are meant to require a reviewer, but no environments or deploy workflow exist yet, so nothing uses it today | Make changes in that one account. The organisation's guardrails still apply |
 
 Neither role has stored keys. Both can only touch their own environment's
-Terraform state file.
+Terraform state file. The protect-security-services guardrail also stops
+the apply role creating or changing the Config recorder or replacing flow
+logs; only `OrganizationAccountAccessRole` can, so those parts are deployed
+with it today.
 
 ## Inside one environment
 
@@ -170,7 +189,7 @@ security groups that reference each other rather than IP ranges.
 
 | Layer | Holds | Can reach | Can be reached from |
 |---|---|---|---|
-| Public | Load balancer, NAT gateway(s) | The private layer, on the application's port only | The internet, HTTPS only (through the web firewall in staging and prod) |
+| Public | Load balancer, NAT gateway(s) | The private layer, on the application's port only | The internet: HTTP today, and HTTPS (with HTTP redirected) once a certificate is set; through the web firewall in staging and prod |
 | Private | Web servers (ECS tasks, no public IP) | The database; AWS services (S3 via a gateway endpoint); the internet for outbound calls via NAT | The load balancer only |
 | Database | PostgreSQL | Nothing: there is no route to the internet | The web servers only, on port 5432 |
 
@@ -231,7 +250,7 @@ changes.
 | Web firewall | no | no | yes | yes |
 | Database | smallest, single zone | smallest, single zone | smallest, single zone | larger, Multi-AZ standby |
 | Backups kept | 7 days | 7 days | 7 days | 35 days |
-| Logs kept | 30 days | 30 days | 30 days | 90 days |
+| App logs kept | 7 days | 30 days | 30 days | 90 days |
 | Deletion protection | no | no | no | yes (database, load balancer, buckets) |
 | Container Insights | no | no | no | yes |
 
@@ -246,7 +265,7 @@ security services, which means the member accounts can't opt out
 |---|---|---|
 | CloudTrail (organisation trail) | Records every API call in every account and region, with log-file integrity validation | An S3 bucket in the Security account with **Object Lock** (governance mode, 365 days): logs can't be changed or deleted before they expire. Encrypted with the Security account's key |
 | GuardDuty | Threat detection: compromised credentials, crypto-mining, unusual API activity | Security Hub, and email for high/critical |
-| Security Hub | Checks every account against CIS AWS Foundations Benchmark v3.0 and AWS Foundational Security Best Practices | Central findings view; email for high/critical |
+| Security Hub | The Security account is subscribed to CIS AWS Foundations Benchmark v3.0 and AWS Foundational Security Best Practices; member accounts get AWS's default standards | Central findings view; email for high/critical |
 | AWS Config | Records how every resource's configuration changes over time | An aggregator in the Security account; history stored in a central bucket |
 | IAM Access Analyzer | Flags anything shared outside the organisation | Security Hub |
 | SNS | Email alerts for high and critical findings | The security alerts address |
@@ -263,9 +282,10 @@ GuardDuty, stop the trail, or delete the flow logs.
   volumes are encrypted by default account-wide.
 - **In transit.** The load balancer accepts TLS 1.2 or later (with a
   certificate). The database rejects unencrypted connections
-  (`rds.force_ssl`). The audit, access-log and state buckets refuse
-  non-HTTPS requests; the tenant data bucket doesn't yet, which is a listed
-  gap.
+  (`rds.force_ssl`). The audit, Config-history and Solution A access-log buckets refuse
+  non-HTTPS requests, and so does the state bucket once bootstrap is re-run
+  with the organisation ID. The tenant data bucket and Solution B's buckets
+  don't yet, which is a listed gap.
 - **Secrets.** No password appears in code, settings files or task
   definitions. RDS generates the admin password and stores it in Secrets
   Manager; the ECS task reads it at start-up through a reference to the
@@ -276,17 +296,17 @@ GuardDuty, stop the trail, or delete the flow logs.
 | What | How | Retention |
 |---|---|---|
 | Every AWS API call | Organisation CloudTrail → locked bucket in Security | 365 days (Object Lock) |
-| Network connections | VPC Flow Logs → encrypted CloudWatch log group | 30 days; 90 in prod |
+| Network connections | VPC Flow Logs → encrypted CloudWatch log group | 30 days in every environment |
 | HTTP requests | ALB access logs → access-log bucket | Bucket lifecycle |
-| Application output | CloudWatch log group `/cobble-<env>/app` | 30 days; 90 in prod |
+| Application output | CloudWatch log group `/cobble-<env>/app` | 7 days in the demo, 30 in dev and staging, 90 in prod |
 | Resource configuration | AWS Config → central bucket | History |
 | Container CPU and memory | ECS metrics; Container Insights in prod | CloudWatch |
-| Drift from code | Nightly `terraform plan` with the read-only role | GitHub Actions run |
+| Drift from code | Nightly `terraform plan` with the read-only role (built; no environment enrolled yet). Today: re-run the deployment and expect 0 changes | GitHub Actions run |
 | Spend | AWS Budgets | Email alerts |
 
 What's missing today: application-level alarms (5xx rate, unhealthy hosts,
 database CPU/storage/connections), dashboards, WAF logs, and S3 object-level
-events in CloudTrail. These are the next phase's monitoring work
+events in CloudTrail. These are later monitoring work
 ([operations.md](operations.md#monitoring-and-alerting)).
 
 ## Backups and recovery
@@ -330,7 +350,7 @@ simplification is deliberate, and Solution A is the full answer to it.
 | Audit trail deleted when it's torn down | Audit logs in a separate account, locked against deletion |
 | No NAT gateway (saves about A$62 a month), so private subnets have no outbound internet | A NAT gateway (one per zone in prod) |
 | One encryption key for everything | A key per account |
-| Team members sign in as IAM users with MFA | Single sign-on through Identity Center |
+| The team's IAM users stay in the account, with MFA but also access keys (which MFA doesn't cover), until M1 removes them | Single sign-on through Identity Center, and no IAM users |
 | No guardrails (they need an organisation) | Four SCPs no administrator can override |
 | No database, optional public demo web page | A private database and private web servers in every environment |
 
@@ -343,7 +363,7 @@ container.
 ## The decisions behind the design
 
 Each is recorded with what would make the team revisit it
-([full list](../02-landing-zone-design/README.md#key-decisions)).
+([full list](../deliverables/landing-zone-design.md#key-decisions)).
 
 1. **Two solutions from one set of modules.** Two codebases would drift
    apart; one keeps Solution B an honest subset of A.
@@ -360,7 +380,8 @@ Each is recorded with what would make the team revisit it
    Server. Licensing makes it far more expensive at small sizes, and no
    Cobble database exists yet. All the controls are built the same way, so
    swapping is a module change. The team's position is that SQL Server is
-   the target and the swap happens next phase.
+   the target. The swap is stretch work, once the Centre chooses a licence
+   at G1 of Phase 2.
 6. **ALB + WAF rather than CloudFront + API Gateway.** Until there's a domain
    and defined API routes, a public load balancer with a web firewall gives
    the needed protection for less cost and complexity.
@@ -369,7 +390,7 @@ Each is recorded with what would make the team revisit it
 
 ## What has actually run
 
-As of late October 2026 (full evidence in [`docs/Evidence/`](../Evidence/README.md)):
+As of late October 2026 (full evidence on the [evidence page](../deliverables/evidence.md)):
 
 - **Demonstrated:** the organisation, OUs, accounts, four guardrails,
   Identity Center groups and permission sets, the Security account's trail,
@@ -378,8 +399,12 @@ As of late October 2026 (full evidence in [`docs/Evidence/`](../Evidence/README.
   (VPC, ECS, RDS, Secrets Manager, data bucket, budget, a 200 response from
   the app through the load balancer). Also Solution B in full.
 - **Configured, not yet run live:** staging and prod, the web firewall,
-  HTTPS (needs a certificate), the Shared Services registry, the GitHub
-  deploy workflow, an end-to-end alert email.
-- **Not yet built:** application alarms, cross-account/cross-region
+  HTTPS (needs a certificate), the Shared Services registry, an end-to-end
+  alert email.
+- **Not yet built:** the GitHub deploy workflow, application alarms, cross-account/cross-region
   backups, narrowed admin roles and break-glass, Inspector, WAF logging,
   disaster recovery.
+
+---
+
+[↑ Back to the top](#architecture) · ← [Start here](README.md) · Next: [Infrastructure code →](infrastructure-code.md)

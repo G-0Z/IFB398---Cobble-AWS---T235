@@ -1,95 +1,110 @@
-# Cobble AWS Platform
+# Cobble AWS Platform: a secure, multi-account foundation built from code
 
 [![CI](https://github.com/G-0Z/IFB398---Cobble-AWS---T235/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/G-0Z/IFB398---Cobble-AWS---T235/actions/workflows/ci.yml)
 [![Drift detection](https://github.com/G-0Z/IFB398---Cobble-AWS---T235/actions/workflows/drift.yml/badge.svg)](https://github.com/G-0Z/IFB398---Cobble-AWS---T235/actions/workflows/drift.yml)
 ![Terraform](https://img.shields.io/badge/Terraform-%E2%89%A51.10-7B42BC?logo=terraform&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS-ap--southeast--2-FF9900?logo=amazonwebservices&logoColor=white)
 
-A secure, multi-account AWS foundation for **Cobble**, the Cyber Security
-Centre's multi-tenant platform for hosting software modules for many
-customer organisations at once. Everything is written in Terraform, so the
-whole platform can be deployed, torn down and rebuilt identically.
+**Team T235 | QUT IFB398 IT Capstone, Phase 1 (2026 Semester 2) |
+Industry partner: Cyber Security Centre**
 
-**IFB398 Capstone · Team T235 · QUT, Semester 2 2026** · Industry partner:
-Cyber Security Centre
+**Cobble** is the Cyber Security Centre's platform for hosting software
+modules for many customer organisations at once. This project builds the AWS
+platform underneath it (accounts, network, sign-in, logging, monitoring,
+backups and security controls) in Terraform, and tests it. It works in three
+steps:
 
-> [!NOTE]
-> This repository builds the platform *underneath* Cobble: accounts,
-> network, sign-in, logging, monitoring, backups and security controls. The
-> Cobble application itself is out of scope. Wherever a running app is
-> needed to prove the platform works, a stock nginx container stands in.
+1. **Build** the platform from code, so it can be deployed, torn down and
+   rebuilt identically.
+2. **Test** it in AWS: deploy and tear down, scan every change, check for
+   drift, and try to break the guardrails.
+3. **Propose** to the Centre what it's ready for, such as holding tenant
+   data or a first Cobble module being built on it, and what has to happen
+   first.
 
-## New here? Start with the handbook
+No real tenant data and no Cobble modules are involved. Where a running app
+is needed, a stock nginx container stands in.
 
-The [**engineering handbook**](docs/handbook/README.md) explains the
-platform to someone who has never seen it, in five pages:
+![Where the project sits: Cobble on DigitalOcean today, the AWS foundation this project builds and tests, and Cobble running on AWS next, owned and run by the Centre](docs/media/diagrams/project-context.png)
 
-| | |
+*Where the project sits. Cobble's code stays with the Centre. Our work is the middle box: a tested AWS foundation that the Centre will own and run after Phase 2.*
+
+<p align="center">
+<img src="docs/media/diagrams/cobble-target-architecture.png" width="100%" alt="Cobble on AWS: the target architecture, marked up to show what has run in AWS, what is in code only, and what isn't built yet">
+<br><em>The target architecture. Green has run in AWS, blue is in the code but not yet run live, and grey isn't built yet.</em>
+</p>
+
+## Contents
+
+- [For assessors: where to find the evidence](#for-assessors-where-to-find-the-evidence)
+- [Documentation](#documentation)
+- [Two solutions, one codebase](#two-solutions-one-codebase)
+- [Quickstart](#quickstart)
+- [Where it stands](#where-it-stands-end-of-phase-1)
+- [Repository](#repository)
+- [Contributing](#contributing)
+- [Team T235](#team-t235)
+
+## For assessors: where to find the evidence
+
+| Report section | Evidence |
 |---|---|
-| [Architecture](docs/handbook/architecture.md) | Accounts, guardrails, network, the path of a request, identity, logging, backups, and the decisions behind them |
-| [Infrastructure code](docs/handbook/infrastructure-code.md) | How the Terraform is organised, where settings and state live, what CI checks |
-| [Operations](docs/handbook/operations.md) | Deploying, demoing, releasing, monitoring, patching, backups, incidents, cost, teardown |
-| [Security](docs/handbook/security.md) | Controls, threat model, scan findings, compliance posture, known gaps |
-| [Deliverables](docs/handbook/deliverables.md) | What the brief asked for, what was delivered, and what's next |
+| **Definition** | [Project definition](docs/project/definition.md) · [the brief and each deliverable](docs/handbook/deliverables.md) · [governance, risks and ethics, with the risk register](docs/project/governance-risks-ethics.md) |
+| **Planning** | [Phase 1 sprint record](docs/project/phase-1-sprints.md) · [Phase 2 plan](docs/project/phase-2-plan.md) · [decision records](docs/decisions/README.md) · [project board](https://github.com/users/G-0Z/projects/2) |
+| **Outputs** | [The eight deliverables](docs/README.md#the-eight-deliverables) · [Terraform](infrastructure/README.md) · [runbooks](runbooks/README.md) · [engineering handbook](docs/handbook/README.md) · [Terraform standards](docs/standards/README.md) |
+| **Operation** | [How we work](docs/project/way-of-working.md) · [meetings](docs/project/phase-1-meetings.md) · [design iterations](docs/project/design-iterations.md) · [contributing](CONTRIBUTING.md) · [changelog](CHANGELOG.md) |
+| **Tests and proof** | [Evidence log, screenshots and checklists](docs/deliverables/evidence.md) · [deployment logs](infrastructure/solution-a/evidence/) · [CI workflows](.github/workflows/README.md) |
 
-## Architecture
+[↑ Contents](#contents)
 
-```mermaid
-flowchart TB
-    USERS["Tenant users"]
-    STAFF["Staff · single sign-on + MFA"]
-    GH["GitHub Actions · OIDC, no stored keys"]
+## Documentation
 
-    subgraph ORG["AWS Organization · 4 guardrails on every member account"]
-        MGMT["Management<br/>organisation · sign-in"]
-        SEC["Security<br/>locked audit logs · GuardDuty<br/>Security Hub · Config · alerts"]
-        SHARED["Shared Services<br/>container registry"]
-        subgraph ENV["dev · staging · prod (one account each)"]
-            WAF["WAF"] --> ALB["Load balancer<br/>public subnets"]
-            ALB --> APP["ECS Fargate<br/>private subnets"]
-            APP --> DB[("PostgreSQL<br/>no internet route")]
-        end
-    end
+| | Read it to... |
+|---|---|
+| [**Engineering handbook**](docs/handbook/README.md) | Understand the platform from scratch: [architecture](docs/handbook/architecture.md), [infrastructure code](docs/handbook/infrastructure-code.md), [operations](docs/handbook/operations.md), [security](docs/handbook/security.md), [deliverables](docs/handbook/deliverables.md) |
+| [**Terraform standards**](docs/standards/README.md) | Change the code the same way it was built: [directory structure](docs/standards/directory-structure.md), [file layout](docs/standards/file-layout.md), [naming](docs/standards/naming.md), [state](docs/standards/state.md), [modules](docs/standards/modules.md), [variables and outputs](docs/standards/variables-and-outputs.md), [version control](docs/standards/version-control.md), [documentation](docs/standards/documentation.md), [testing and validation](docs/standards/testing-and-validation.md) |
+| [**Runbooks**](runbooks/README.md) | Deploy, demo or tear down, step by step |
+| [**Module READMEs**](infrastructure/modules/README.md) | Use a building block: plain-English summary, real usage, generated inputs and outputs |
+| [**CI workflows**](.github/workflows/README.md) | See what every check does, and fix a failing one |
+| [**Project docs**](docs/README.md) | Find a deliverable, the plans, meetings or decisions |
 
-    USERS --> WAF
-    STAFF --> MGMT
-    GH --> ENV
-    ENV -- "logs, findings" --> SEC
-    SHARED -- "images" --> APP
-```
-
-Each environment is its own AWS account. Only the load balancer faces the
-internet; the web servers sit in private subnets and the database in a
-third layer with no route out. Every account's audit trail and security
-findings flow to a separate Security account, where they can't be deleted.
-[Full architecture →](docs/handbook/architecture.md)
+[↑ Contents](#contents)
 
 ## Two solutions, one codebase
 
 Both are built from the same Terraform modules, so Solution B is a working
-slice of Solution A rather than a separate prototype.
+slice of Solution A ([ADR 0003](docs/decisions/0003-two-solutions-mvp-and-full-landing-zone.md)).
 
 | | **Solution B** · minimum viable platform | **Solution A** · full landing zone |
 |---|---|---|
-| In one line | The smallest secure version, in one account | The design we'd recommend for production |
+| In one line | The smallest secure version, in one account | The full design the Implementation Guide describes |
 | AWS accounts | 1 | 6: management, security, shared services, dev, staging, prod |
 | Builds | Encryption key, audit trail, threat detection, private network with flow logs, hardened bucket, GitHub roles, budget alert | All of B, plus guardrails, single sign-on, tamper-proof central logs, organisation-wide detection, and per environment: web servers behind a load balancer and web firewall, a private database, auto scaling |
 | Deploys | 48 resources, ~5 minutes | Landing zone + dev: 143 resources, ~15 minutes |
 | Cost (AUD) | ~A$0 (deployed for demos) | Demo ~A$0.35/hour · everything running ~A$790/month |
 | Code | [`infrastructure/solution-b/`](infrastructure/solution-b/) | [`infrastructure/solution-a/`](infrastructure/solution-a/) |
 
-### What Solution B leaves out, and how Solution A fills the gap
+What B leaves out to stay near A$0, and how A fills each gap, is in
+[ADR 0009](docs/decisions/0009-solution-b-shortcuts.md).
 
-Each simplification in B is deliberate, to keep its cost near zero.
+<table>
+<tr>
+<th width="50%">Tested: a guardrail refusing an administrator</th>
+<th width="50%">Tested: a threat finding, raised and seen centrally</th>
+</tr>
+<tr>
+<td><img src="docs/media/screenshots/08-scp-deny.png" width="100%" alt="S3 refusing to create a bucket in London: explicit deny in a service control policy"></td>
+<td><img src="docs/media/screenshots/15-sample-finding.png" width="100%" alt="A sample GuardDuty finding in the Security account"></td>
+</tr>
+<tr>
+<td>Even a full administrator can't create a bucket outside the allowed
+regions: the organisation's guardrail denies it.</td>
+<td>GuardDuty findings from every account land in the Security account,
+where the workload teams can't delete them.</td>
+</tr>
+</table>
 
-| Solution B simplifies... | Solution A instead has... |
-|---|---|
-| Everything in one account | Six accounts, so a mistake in dev can't reach prod |
-| Audit logs deleted when it's torn down | Audit logs in a separate account, locked against deletion |
-| No outbound internet from the private network | A NAT gateway for outbound traffic (one per zone in prod) |
-| One encryption key for everything | A separate key in each account |
-| Team members sign in as IAM users | Single sign-on through IAM Identity Center |
-| Automatic checks, but deploys are run by hand | Read-only roles for checks, and deploys that need a reviewer's approval |
+[↑ Contents](#contents)
 
 ## Quickstart
 
@@ -97,94 +112,66 @@ You need [Terraform](https://developer.hashicorp.com/terraform/install)
 1.10+, the [AWS CLI](https://aws.amazon.com/cli/), and an SSO sign-in to the
 team's AWS organisation. [runbooks/](runbooks/README.md) has every step.
 
-**Solution A, the landing zone with a dev environment** (the demo we show):
-
 ```powershell
+# Solution A: the landing zone with a dev environment (the demo we show)
 aws sso login --profile AdministratorAccess-669591255093
 cd infrastructure/solution-a
 .\lz-dev.ps1 up       # ~15 min: security services + dev, into the existing accounts
 .\lz-dev.ps1 status   # what's running, per account
 .\lz-dev.ps1 down     # ~10 min: back to A$0/hour. Accounts and guardrails stay
-```
 
-**Solution B:**
-
-```powershell
+# Solution B
 cd infrastructure/solution-b
-terraform init
-terraform apply
+terraform init; terraform apply
 terraform destroy     # when you're done
 ```
 
-Running the same commands again rebuilds exactly the same thing.
+[↑ Contents](#contents)
 
-## What's proven
+## Where it stands (end of Phase 1)
 
-| | |
+| Step | Status |
 |---|---|
-| Solution A landing zone + dev | Built and torn down with one command each way, four times (18–19 Oct 2026). Up in 13 minutes, down in 10. Re-running `up` while up reports 0 changes. [Logs](infrastructure/solution-a/evidence/) |
-| Solution B | 48 resources deployed and torn down |
-| Every change | Formatted, validated, tested against a mocked AWS and security-scanned by Trivy before merge ([`ci.yml`](.github/workflows/ci.yml)) |
-| Deployed environments | Checked nightly for drift from the code ([`drift.yml`](.github/workflows/drift.yml)) |
+| **Build** | Both solutions are in code, built from 9 shared, tested modules |
+| **Test** | Solution A's landing zone and dev built and torn down four times (18–19 Oct 2026): up in 13 minutes, down in 10, and 0 changes on a re-run. Solution B: 48 resources deployed and torn down. Every change is formatted, validated, tested against a mocked AWS and scanned by Trivy. A nightly drift check is built but no environment is enrolled yet (none stays deployed); drift is caught by re-running the deployment and getting 0 changes. Staging and prod are tested in code only |
+| **Propose** | The tests point to three things to fix before the platform holds tenant data or hosts a first module: tenant isolation, a broad admin role, and backups in the same account as the data ([threat model](docs/deliverables/threat-model.md#what-would-reduce-the-high-risks)). The [Phase 2 plan](docs/project/phase-2-plan.md) gives the Centre the options |
 
-Screenshots, logs and the Implementation Guide acceptance checklist are in
-[Evidence](docs/Evidence/README.md). The three largest open risks (tenant
-isolation, a broad admin role, backups in the same account as the data) and
-their fixes are in [Security](docs/handbook/security.md#what-would-reduce-the-high-risks).
+Nothing is running now: everything that costs money is torn down.
 
-## Repository layout
+[↑ Contents](#contents)
+
+## Repository
 
 ```
-.
-├── infrastructure/          Terraform
-│   ├── bootstrap/               state bucket (set up once)
-│   ├── solution-b/              Solution B
-│   ├── solution-a/
-│   │   ├── lz-dev.ps1           one-command landing zone demo
-│   │   ├── workload/            one environment; demo / dev / staging / prod.tfvars
-│   │   └── landing-zone/        identity → 1-organization → 2-security → 3-shared-services
-│   └── modules/                 9 tested building blocks shared by both solutions
-├── runbooks/                Step-by-step deploy, demo and teardown instructions
-├── docs/
-│   ├── handbook/                Engineering handbook: start here
-│   ├── 01-…07-*/                Capstone deliverables 1–7
-│   ├── Evidence/                Deliverable 4: proof it works
-│   ├── Presentation/            Deliverable 8: deck and script
-│   └── Meeting Minutes/, Sprint Plans/   project records
-└── .github/workflows/       CI on every change; nightly drift check
+infrastructure/        Terraform: bootstrap, solution-b, solution-a, and 9 shared modules
+runbooks/              step-by-step deploy, demo and teardown
+docs/
+  handbook/            engineering handbook: start here
+  standards/           Terraform standards: the rules for changing the code
+  deliverables/        the written deliverables, one page each
+  project/             definition, way of working, sprints, meetings, Phase 2 plan
+  decisions/           architecture decision records
+  media/               diagrams and console screenshots
+.github/               CI, nightly drift check, issue and PR templates
 ```
 
-## Documentation
+[↑ Contents](#contents)
 
-| I want to... | Go to |
-|---|---|
-| Understand the platform from scratch | [Engineering handbook](docs/handbook/README.md) |
-| Read a capstone deliverable | [docs/](docs/README.md) |
-| Deploy, demo or tear down | [runbooks/](runbooks/README.md) |
-| See what the code builds, file by file | [infrastructure/](infrastructure/README.md) |
-| See proof it works | [Evidence](docs/Evidence/README.md) |
-| See how feedback shaped the design | [Design iterations](docs/design-iterations.md) |
-| See the plan for Phase 2 | [Phase 2 roadmap](docs/phase-2-roadmap.md) |
-| Look up a term | [Glossary](docs/glossary.md) |
-| Contribute a change | [CONTRIBUTING.md](CONTRIBUTING.md) |
+## Contributing
 
-## Team
+Work on a `<Firstname>-dev` branch, run the checks, open a pull request to
+`main`, and get one review. [CONTRIBUTING.md](CONTRIBUTING.md) has the commands
+and the rules that matter most; the [standards](docs/standards/README.md) have the rest.
 
-| Member | Role | Led |
+[↑ Contents](#contents)
+
+## Team T235
+
+| | Role | Owns |
 |---|---|---|
-| Khai Do | Operations lead | Deployment, monitoring, backup and the support model |
-| Max Gosling | Project manager, build lead | Terraform, the demo, the sprint plan and the issues register |
-| Jacob Hardcastle | Definition lead | The brief, requirements, scope and client meetings |
-| Timothy Hartmann | Design lead | Landing zone, security controls and the risk register |
+| Max Gosling ([@G-0Z](https://github.com/G-0Z)) | Project manager, build lead | Terraform, the demo, the sprint plan and the issues register |
+| Khai Do ([@tdo212](https://github.com/tdo212)) | Operations lead | Deployment, monitoring, backup and the support model |
+| Jacob Hardcastle ([@JacobHardcastle](https://github.com/JacobHardcastle)) | Definition lead | The brief, requirements, scope and client meetings |
+| Timothy Hartmann ([@TimHartmann98](https://github.com/TimHartmann98)) | Design lead | Landing zone, security controls and the risk register |
 
-Industry partner contact: Wayne, Cyber Security Centre. How the team
-planned and worked is in the [sprint reports](docs/Sprint%20Plans/README.md)
-and [meeting minutes](docs/Meeting%20Minutes/README.md).
-
-## Status
-
-Phase 1 is in its final sprint (26 October to 8 November 2026). Both
-solutions deploy, tear down and redeploy in AWS, and nothing is currently
-left running. Phase 2 (Semester 1 2027) starts with the Centre choosing how
-to run the platform; the options and sprint plan are in the
-[Phase 2 roadmap](docs/phase-2-roadmap.md).
+**Industry partner:** Wayne, Cyber Security Centre.

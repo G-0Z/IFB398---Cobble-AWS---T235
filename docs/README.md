@@ -1,55 +1,44 @@
-# Capstone deliverables
+# Project documentation
+
+The project has three steps: **build** the platform from code, **test** it in
+AWS, then **propose** to the Cyber Security Centre what it's ready for:
+holding tenant data, or a first Cobble module being built on it. No real
+tenant data is used. A stock nginx container and test data stand in.
 
 > [!TIP]
-> **New to the project?** Read the [engineering handbook](handbook/README.md)
-> first. It explains the platform end to end without assuming you know the
-> brief; this page is the index of the formal deliverables behind it.
+> **New to the project?** Start with the [engineering handbook](handbook/README.md).
+> It explains the platform end to end without assuming you know the brief.
 
-The project brief asks for eight deliverables. Most have a numbered folder
-here. Deliverable 4 is the code itself, in
-[`infrastructure/`](../infrastructure/README.md), so its page holds the
-evidence that the code works.
-
-| # | Deliverable | What it answers | Status |
-|---|---|---|---|
-| 1 | [Reference architecture](01-reference-architecture/README.md) | How is Cobble hosted in AWS? | Drafted, with a [diagram of what has been tested](01-reference-architecture/README.md#what-has-been-tested) |
-| 2 | [Landing zone design](02-landing-zone-design/README.md) | Which accounts exist, who can do what, and which rules can't be broken? Also lists the key design decisions | Drafted |
-| 3 | [Security controls](03-security-controls/README.md) | Which controls protect the platform, and where are they built? | Drafted, with a [scan findings register](03-security-controls/scan-findings.md) |
-| 4 | [Infrastructure as code: evidence](Evidence/README.md) | Does the code deploy and redeploy reliably? | Both solutions deploy and tear down. Landing zone demo recorded 18 Oct 2026, with logs and screenshots |
-| 5 | [Deployment and operations](05-deployment-operations/README.md) | How is the platform deployed, monitored, patched, backed up and supported? | Drafted |
-| 6 | [Threat model](06-threat-model/README.md) | What could go wrong, and how much risk is left? | Drafted, with a detailed [risk assessment](06-threat-model/threat-model-and-risk-assessment.md) and [risk management plan](06-threat-model/risk-management.md) |
-| 7 | [Compliance mapping](07-compliance-mapping/README.md) | How does the design line up with NIST CSF, Essential Eight and ISO 27001? | Drafted |
-| 8 | [Presentation](Presentation/README.md) | What do we tell stakeholders, and what do we demo? | 19-slide deck and speaking script (20 Oct 2026) |
-
-## Project records
-
-How the team planned and ran the work.
-
-| Record | What's in it |
+| Folder | What's in it |
 |---|---|
-| [Design iterations](design-iterations.md) | How the design evolved, every piece of feedback we received, and what each one changed |
-| [Sprint plan](Sprint%20Plans/IFB398-T235-Sprint%20Plan-Phase%201%20and%202.md) | Every Phase 1 and Phase 2 sprint, with dates, goals and status |
-| [Sprint reports](Sprint%20Plans/README.md) | One per Phase 1 sprint: the tracker items, who owned them, and what got done |
-| [Meeting minutes](Meeting%20Minutes/README.md) | Every weekly team meeting, and both client meetings with Wayne |
-| [Project board](https://github.com/users/G-0Z/projects/2) | Every deliverable as an issue, broken into sub-issues, with dates and a P0 to P2 priority |
+| [`handbook/`](handbook/README.md) | How the platform works, for someone new: [architecture](handbook/architecture.md), [infrastructure code](handbook/infrastructure-code.md), [operations](handbook/operations.md), [security](handbook/security.md), [deliverables](handbook/deliverables.md), and the [glossary](handbook/glossary.md) |
+| [`standards/`](standards/README.md) | The rules for changing the code: directory structure, file layout, naming, state, modules, variables and outputs, version control, documentation, testing |
+| [`deliverables/`](#the-eight-deliverables) | The capstone deliverables, one page each (below) |
+| [`decisions/`](decisions/README.md) | Twelve architecture decision records |
+| `project/` | How the project ran and what's next: [definition](project/definition.md), [how we work](project/way-of-working.md), [design iterations](project/design-iterations.md), [governance, risks and ethics](project/governance-risks-ethics.md), [Phase 1 sprints](project/phase-1-sprints.md), [Phase 1 meetings](project/phase-1-meetings.md), [Phase 2 plan](project/phase-2-plan.md) |
+| `media/` | Diagrams (with `.drawio` sources) and redacted console screenshots |
 
-## Reference pages
+Outside `docs/`: the [infrastructure code](../infrastructure/README.md), the
+[runbooks](../runbooks/README.md) and the [CI workflows](../.github/workflows/README.md).
 
-| Page | Use it to |
-|---|---|
-| [Engineering handbook](handbook/README.md) | Understand the architecture, code, operations and security from scratch |
-| [Phase 2 roadmap](phase-2-roadmap.md) | See the options the Centre chooses from, the sign-off gates and the Semester 1 2027 sprints |
-| [Glossary](glossary.md) | Look up a term |
-| [Naming conventions](naming-conventions.md) | Name a folder, file or AWS resource |
-| [Frameworks and standards](frameworks-and-standards.md) | See which frameworks the design follows, and where |
+## The eight deliverables
+
+| # | Deliverable | What it answers |
+|---|---|---|
+| 1 | [Reference architecture](deliverables/reference-architecture.md) | How is Cobble hosted in AWS, and what has actually been tested? |
+| 2 | [Landing zone design](deliverables/landing-zone-design.md) | Which accounts exist, who can do what, and which rules can't be broken? |
+| 3 | [Security controls](deliverables/security-controls.md) | Which controls protect the platform, where are they built, and what did the scanners find? |
+| 4 | [Infrastructure as code](../infrastructure/README.md), with its [evidence](deliverables/evidence.md) | Does the code deploy, tear down and redeploy reliably? |
+| 5 | [Deployment and operations](deliverables/deployment-operations.md) | How is the platform deployed, monitored, patched, backed up and supported? |
+| 6 | [Threat model and risk assessment](deliverables/threat-model.md) | What could go wrong, how much risk is left, and how risks are managed |
+| 7 | [Compliance mapping](deliverables/compliance-mapping.md) | How does the design line up with NIST CSF, Essential Eight, ISO 27001 and SOCI? |
+| 8 | Stakeholder presentation | Given at the end of Phase 1 (Week 13), with a live landing-zone demo. The final presentation falls in Phase 2 |
 
 ## How we describe status
 
-The deliverables answer two different questions, so they use two sets of
-words. The [glossary](glossary.md#how-finished-a-control-is) has the full
-definitions.
-
 | Question | Words used |
 |---|---|
-| Has it actually run in AWS? | **Demonstrated** (deployed and seen working, in the runs of 17 to 18 October 2026), **configured** (in the code, but not yet run live) or **not yet built** |
+| Has it actually run in AWS? | **Demonstrated** (deployed and seen working), **configured** (in the code, not yet run live) or **not yet built** |
 | How strong is the control? | **Designed** (written down only), **configured** (built by the code; an administrator could still change it) or **enforced** (built, and a guardrail stops anyone turning it off) |
+
+The [glossary](handbook/glossary.md#how-finished-a-control-is) has the full definitions.

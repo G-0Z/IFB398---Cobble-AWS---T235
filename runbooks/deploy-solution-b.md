@@ -26,8 +26,11 @@ $env:AWS_PROFILE = "cobble-poc"
 aws sts get-caller-identity             # Account must be 669591255093
 ```
 
-The older IAM users (with MFA) still work through `aws configure`, but
-they're being retired.
+The team's older IAM users still work through `aws configure`, but don't
+use them. They sit in a shared full-administrator group (`PoC-Admins`) with
+access keys, which MFA doesn't cover. Single sign-on is the supported
+sign-in, and removing the group and keys is Phase 2 milestone M1
+([ADR 0001](../docs/decisions/0001-deferred-landing-zone-design.md) D10).
 
 ## Deploy
 
@@ -76,7 +79,7 @@ terraform plan -detailed-exitcode   # exit code 0
 
 Ideally a teammate who didn't write the code runs this, following only this
 runbook. Record the result in the
-[evidence log](../docs/Evidence/README.md#evidence-log).
+[evidence log](../docs/deliverables/evidence.md#evidence-log).
 
 ## If something goes wrong
 

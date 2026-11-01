@@ -1,16 +1,18 @@
 # Security
 
+> **Handbook:** [Start here](README.md) · [Architecture](architecture.md) · [Infrastructure code](infrastructure-code.md) · [Operations](operations.md) · **Security** · [Deliverables](deliverables.md) · [Glossary](glossary.md) · [Standards](../standards/README.md)
+
 The controls that protect the platform, how strong each one is, what the
 threat model says about what's left, what the scanners and reviews found,
 and how the design lines up with the frameworks the brief named.
 
 **In one paragraph:** nobody has a permanent password or key to AWS; every
 account is its own blast radius; four guardrails hold even against
-administrators; everything is encrypted at rest and in transit; only a load
+administrators in member accounts; everything is encrypted at rest and in transit; only a load
 balancer faces the internet; every action is recorded in logs that can't be
 deleted; threats and misconfigurations are detected centrally and
-automatically. The three things that must be fixed before real tenant data
-arrives are tenant isolation (which the infrastructure leaves to the
+automatically. The three things the proposal says must be fixed before the
+platform holds tenant data or hosts a first module are tenant isolation (which the infrastructure leaves to the
 application), an administrator role that can do anything everywhere, and
 backups that sit in the same account as the data.
 
@@ -22,14 +24,14 @@ designed / configured / enforced, for Solution B / Solution A.
 
 | Area | What's in place | Strength (B / A) | Built in | What's left |
 |---|---|---|---|---|
-| **Identity and access** | Single sign-on with groups and permission sets; no IAM users or long-lived keys in A; GitHub gets a read-only role (denied data reads) and an apply role behind reviewer approval; root user denied in member accounts | Designed / Configured (root denial: Enforced) | [`identity-center.tf`](../../infrastructure/solution-a/landing-zone/1-organization/identity-center.tf), [`github-oidc`](../../infrastructure/modules/github-oidc/), [`policies/`](../../infrastructure/solution-a/landing-zone/1-organization/policies/) | Admin role is `AdministratorAccess` everywhere; apply role is admin of its account; no break-glass role; B still uses IAM users |
-| **MFA** | Required at every Identity Center sign-in; on each IAM user in B | Designed / Configured (console setting) | Identity Center settings, no API | Can't be enforced as code; evidenced by screenshot and access reviews. Not phishing-resistant |
+| **Identity and access** | Single sign-on with groups and permission sets; A's code creates no IAM users or long-lived keys; GitHub gets a read-only role (denied data reads) and an apply role trusted only from `main` through a GitHub environment (reviewers meant for staging and prod; no environments or deploy workflow yet, so unused today); root user denied in member accounts | Designed / Configured (root denial: Enforced) | [`identity-center.tf`](../../infrastructure/solution-a/landing-zone/1-organization/identity-center.tf), [`github-oidc`](../../infrastructure/modules/github-oidc/), [`policies/`](../../infrastructure/solution-a/landing-zone/1-organization/policies/) | Admin role is `AdministratorAccess` everywhere; apply role is admin of its account; no break-glass role; the team's account (B's account, A's management account) still has the team's IAM users in a shared full-admin group with access keys, removed at M1 (ADR 0001 D10) |
+| **MFA** | Required at every Identity Center sign-in; also on each of the team's remaining IAM users, which also have access keys that MFA doesn't cover (removed at M1) | Designed / Configured (console setting) | Identity Center settings, no API | Can't be enforced as code; evidenced by screenshot and access reviews. Not phishing-resistant |
 | **Secrets** | No passwords in code or settings; RDS generates the admin password into Secrets Manager; the task reads it at start-up | — / Configured | [`postgres-database`](../../infrastructure/modules/postgres-database/), [`ecs.tf`](../../infrastructure/modules/container-service/ecs.tf) | App uses the database admin user; no alert on unexpected secret reads |
-| **Encryption** | Customer-managed KMS key per account, rotated; encrypts database, buckets, logs, secrets; EBS encrypted by default; TLS 1.2+ at the ALB; database refuses non-TLS; audit and log buckets refuse non-HTTPS | Configured (one key) / Configured (key per account) | [`workload/kms.tf`](../../infrastructure/solution-a/workload/kms.tf), [`2-security/kms.tf`](../../infrastructure/solution-a/landing-zone/2-security/kms.tf), [`load-balancer.tf`](../../infrastructure/modules/container-service/load-balancer.tf) | Keys per environment, not per data type. HTTPS needs a certificate, which needs a domain |
+| **Encryption** | Customer-managed KMS key per account, rotated; encrypts database, buckets, logs, secrets; EBS encrypted by default; TLS 1.2+ at the ALB; database refuses non-TLS; audit, Config and Solution A access-log buckets refuse non-HTTPS | Configured (one key) / Configured (key per account) | [`workload/kms.tf`](../../infrastructure/solution-a/workload/kms.tf), [`2-security/kms.tf`](../../infrastructure/solution-a/landing-zone/2-security/kms.tf), [`load-balancer.tf`](../../infrastructure/modules/container-service/load-balancer.tf) | Keys per environment, not per data type. HTTPS needs a certificate, which needs a domain |
 | **Network segmentation** | Account per environment; three subnet layers; only the ALB is public; security-group chain ALB → tasks → database; database has no route out; default security group locked; flow logs | Configured / Configured | [`network`](../../infrastructure/modules/network/), [`security-groups.tf`](../../infrastructure/modules/container-service/security-groups.tf) | Tasks can reach any address on 443; no egress filtering; no interface endpoints |
 | **Logging** | Organisation CloudTrail, all regions, integrity validation, Object Lock in a separate account; VPC flow, ALB access, S3 access and application logs | Configured (deleted on teardown) / Enforced | [`cloudtrail.tf`](../../infrastructure/solution-a/landing-zone/2-security/cloudtrail.tf), [`log-archive.tf`](../../infrastructure/solution-a/landing-zone/2-security/log-archive.tf) | No S3 object-level events; no WAF logs; trail not streamed to CloudWatch (so no CIS metric alarms) |
-| **Monitoring** | GuardDuty, Security Hub (CIS v3.0 + FSBP), Config, Access Analyzer in every account, administered from Security; email on high/critical | Configured (GuardDuty only) / Enforced | [`detection.tf`](../../infrastructure/solution-a/landing-zone/2-security/detection.tf), [`alerts.tf`](../../infrastructure/solution-a/landing-zone/2-security/alerts.tf) | No application or database alarms; no dashboards; alert not yet proven end to end |
-| **Vulnerability management** | ECR scan on push; Trivy on every change blocks merge; Checkov by hand; patch SLAs (7 days critical, 30 high) | Configured / Configured | [`3-shared-services`](../../infrastructure/solution-a/landing-zone/3-shared-services/), [`ci.yml`](../../.github/workflows/ci.yml) | Basic image scanning only; no Inspector on running workloads; no dependency scanning; containers run as root |
+| **Monitoring** | GuardDuty, Security Hub (the Security account subscribed to CIS v3.0 + FSBP; member accounts get AWS's default standards), Config, Access Analyzer in every account, administered from Security; email on high/critical | Configured (GuardDuty only) / Enforced | [`detection.tf`](../../infrastructure/solution-a/landing-zone/2-security/detection.tf), [`alerts.tf`](../../infrastructure/solution-a/landing-zone/2-security/alerts.tf) | No application or database alarms; no dashboards; alert not yet proven end to end |
+| **Vulnerability management** | ECR scan on push; Trivy on every change (a finding fails CI); Checkov by hand; patch SLAs (7 days critical, 30 high) | Configured / Configured | [`3-shared-services`](../../infrastructure/solution-a/landing-zone/3-shared-services/), [`ci.yml`](../../.github/workflows/ci.yml) | Basic image scanning only; no Inspector on running workloads; no dependency scanning; containers run as root |
 | **Incident response** | High/critical findings emailed; runbooks for outage, database, compromise, drift, WAF, cost; roles agreed | — / Configured | [`alerts.tf`](../../infrastructure/solution-a/landing-zone/2-security/alerts.tf), [operations.md](operations.md#incident-runbooks) | Email only, no paging; no regulator-reporting procedure |
 | **Backup and recovery** | Point-in-time restore (7/35 days); Multi-AZ, deletion protection and final snapshot in prod; S3 versioning; locked audit logs; quarterly restore test | Configured (versioning) / Configured | [`postgres-database`](../../infrastructure/modules/postgres-database/), [operations.md](operations.md#backup-and-recovery) | **No copy outside the account or region** |
 
@@ -54,14 +56,15 @@ reviews exist.
   review is required. See
   [infrastructure-code.md](infrastructure-code.md#checks-on-every-change).
 - **After deployment:** Security Hub scores the live accounts against CIS
-  and AWS best practice; the nightly drift job flags anything changed
-  outside the code.
+  and AWS best practice; re-running the deployment shows anything changed
+  outside the code (a clean run reports 0 changes). The nightly drift job
+  is built, but no environment is enrolled in it yet.
 - **By people:** a quarterly access review and a quarterly restore test.
 
 ## What the scanners found
 
 Everything found by Trivy, Checkov and the manual review, with the decision
-on each, is in the [scan findings register](../03-security-controls/scan-findings.md).
+on each, is in the [scan findings register](../deliverables/security-controls.md#scan-findings-register).
 The short version:
 
 - **Trivy** (runs in CI on all 7 root configs): 0 open findings. Each
@@ -85,7 +88,7 @@ The short version:
 Scope: the AWS platform in this repository (Solution A, with notes where B
 differs). Method: STRIDE at each trust boundary, rated likelihood × impact
 for a production Cobble with real tenants, as the platform stands today.
-The full write-up is [deliverable 6](../06-threat-model/README.md).
+The full write-up is [deliverable 6](../deliverables/threat-model.md).
 
 ### Trust boundaries
 
@@ -107,7 +110,7 @@ The full write-up is [deliverable 6](../06-threat-model/README.md).
 |---|---|---|---|---|
 | T1 | A tenant reads or changes another tenant's data through the shared database or bucket | Network path limited to ALB → app → database; encryption | Pooled tenancy; isolation depends on the application; app uses the master database user; one task role covers the whole bucket | **High** |
 | T2 | A stolen admin session changes or destroys infrastructure | MFA; 4-hour sessions; guardrails; every action logged | `PlatformAdmin` is `AdministratorAccess` everywhere, including management where guardrails don't apply; no break-glass role or alert | **High** |
-| T3 | A malicious pull request or compromised workflow uses the CI roles | OIDC; repo-bound trust; plan role denied data; apply behind approval; pinned actions | Apply role is admin of its account; checks can't be made mandatory on GitHub Free | Medium |
+| T3 | A malicious pull request or compromised workflow uses the CI roles | OIDC; repo-bound trust; plan role denied data; apply behind approval; pinned actions | Apply role is admin of its account; the ruleset on `main` requires a review but not the CI checks | Medium |
 | T4 | Web attacks or floods against the public load balancer | WAF managed rules, IP reputation, rate limit; only the ALB is public | No WAF in dev; rules untuned; no WAF logs; no per-route throttling | Medium |
 | T5 | Abuse goes unnoticed and can't be traced | ALB access logs; CloudTrail; GuardDuty | No WAF logs; no alarms on errors or traffic spikes | Medium |
 | T6 | Compromised code exfiltrates data over open egress | KMS limits who can decrypt; public access blocked; GuardDuty | Tasks can reach any address on 443; no endpoint policies; no S3 data events | Medium |
@@ -117,18 +120,19 @@ The full write-up is [deliverable 6](../06-threat-model/README.md).
 | T10 | An AZ or region outage takes the service down | Two AZs; Multi-AZ database and NAT per AZ in prod; auto scaling | No recovery region (the guardrail blocks Melbourne); single NAT outside prod; no DR runbook | Medium |
 | T11 | An outage is noticed by users before the team | Security findings emailed | No application or database alarms | Medium |
 | T12 | A vulnerable or malicious image is deployed | Immutable tags; scan on push; org-only pull; circuit breaker | Basic scanning only; no Inspector, signing, SBOM or digest pinning; root containers | Medium |
-| T13 | Someone signs in with a phished password | MFA at every sign-in | MFA not phishing-resistant; B uses IAM users | Medium |
+| T13 | Someone signs in with a phished password | MFA at every sign-in | MFA not phishing-resistant; the team's IAM users (with access keys) remain until M1 | Medium |
 
 ### What would reduce the High risks
 
 | Threat | Next step | Effort |
 |---|---|---|
-| T1 tenant isolation | A database user per module with least privilege; a task role per module; tenant-prefixed bucket access; row-level-security negative tests in CI | Large: needs the application |
-| T2 admin access | Separate database-admin, deployment and security-auditor roles; narrow `PlatformAdmin` outside management; a monitored break-glass role with an alarm on use | Medium |
-| T9 backups | AWS Backup to a vault in a separate backup account with a copy in Melbourne; Vault Lock; a timed, recorded restore | Medium |
+| T1 tenant isolation | A database user per module with least privilege; a task role per module; tenant-prefixed bucket access; row-level-security negative tests in CI | Large: needs the application. Phase 2's M2 proves the platform side with a stand-in module |
+| T2 admin access | Separate database-admin, deployment and security-auditor roles; narrow `PlatformAdmin` outside management; a monitored break-glass role with an alarm on use | Medium: Phase 2, M1 |
+| T9 backups | AWS Backup to a vault in a separate backup account, and a timed, recorded restore (Phase 2, M4). Later: a copy in Melbourne and Vault Lock | Medium |
 
 Everything rated Medium or Low is accepted for a proof of concept and
-scheduled for the next phase. The assumptions: AWS runs the underlying
+listed as recommended follow-on work; the [Phase 2 plan](../project/phase-2-plan.md) covers
+milestones M1 to M5 only. The assumptions: AWS runs the underlying
 infrastructure securely (shared responsibility); the application will
 implement tenant isolation as the Implementation Guide specifies; staging
 holds only synthetic data.
@@ -136,7 +140,7 @@ holds only synthetic data.
 ## Compliance posture
 
 The design is mapped to four frameworks in
-[deliverable 7](../07-compliance-mapping/README.md). It shows where the
+[deliverable 7](../deliverables/compliance-mapping.md). It shows where the
 platform *supports* each framework; it doesn't claim certification.
 
 | Framework | Position |
@@ -148,8 +152,10 @@ platform *supports* each framework; it doesn't claim certification.
 
 ## Known gaps
 
-The consolidated list, each with its planned fix. Most are scheduled in the
-[next phase](deliverables.md#whats-next).
+The consolidated list, each with its planned fix. Phase 2's milestones cover
+access (M1), tenant boundaries (M2), monitoring (M3), recovery (M4) and
+staging (M5) ([what's next](deliverables.md#whats-next)); the rest is
+recommended follow-on work.
 
 | Gap | Risk | Fix |
 |---|---|---|
@@ -166,3 +172,7 @@ The consolidated list, each with its planned fix. Most are scheduled in the
 | No disaster recovery or backup accounts; recovery region blocked by the region guardrail | Region loss is unrecoverable | Add the accounts and allow Melbourne once DR is designed |
 | Tasks have open egress on 443 | Exfiltration path | Interface endpoints with policies; egress filtering |
 | No regulator-reporting procedure | SOCI deadlines missed if they apply | Written procedure with contacts |
+
+---
+
+[↑ Back to the top](#security) · ← [Operations](operations.md) · Next: [Deliverables →](deliverables.md)

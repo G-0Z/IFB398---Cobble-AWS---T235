@@ -19,7 +19,7 @@ follow it from start to finish.
 For when something goes wrong in a running platform (an outage, a database
 failure, stolen credentials, drift, the web firewall blocking real users, a
 cost spike), see the
-[incident runbooks](../docs/05-deployment-operations/README.md#6-runbooks).
+[incident runbooks](../docs/deliverables/deployment-operations.md#6-runbooks).
 
 ## What you need
 
@@ -70,10 +70,11 @@ another one:
 
 1. Use a **standard AWS account** with rights to create IAM roles, encryption keys and networks. AWS Academy Learner Lab accounts won't work: they restrict IAM and the regions available.
 2. Replace the account ID everywhere it's written down. Terraform doesn't allow variables in some of these places, so they're literal values:
-   - `account_id` in `infrastructure/bootstrap/variables.tf`
+   - `account_id` and the `state_bucket_name` default in `infrastructure/bootstrap/variables.tf`
    - the bucket name in every `backend.tf`: `infrastructure/solution-b/`, `infrastructure/solution-a/workload/` and the four `infrastructure/solution-a/landing-zone/*/` folders
    - `state_bucket_name` in `infrastructure/solution-a/workload/variables.tf`
    - `account_id` in `infrastructure/solution-b/poc.auto.tfvars` and `infrastructure/solution-a/workload/demo.tfvars`
+   - the profile name, account ID and organisation ID in `infrastructure/solution-a/lz-dev.ps1`
 3. Follow [bootstrap.md](bootstrap.md), then the runbook for the solution you want.
 
 > [!WARNING]

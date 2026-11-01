@@ -72,7 +72,7 @@ this subscription, so confirm again after every build.
 | Check | How | Working if |
 |---|---|---|
 | The website | Open the `App:` address in a browser | The nginx welcome page loads. A 503 means it's still starting: wait a minute |
-| The security services | `.\lz-dev.ps1 status` | Every account shows `GuardDuty: True` and `SecurityHub: True`. `Config` is True for dev and security only, which is expected |
+| The security services | `.\lz-dev.ps1 status` | Every member account shows `GuardDuty: True` and `SecurityHub: True`. `Config` is True for management, security and dev only, which is expected. The management row's `GuardDuty` is True only while Solution B is deployed |
 | The console | Sign in at https://d-97679ebd7b.awsapps.com/start, expand an account, click **CobblePlatformAdmin** | The 5 accounts are listed (4 Cobble accounts and the management account) and you can open each one |
 
 Click the role that matches your group. Platform admins (`max.gosling`) get

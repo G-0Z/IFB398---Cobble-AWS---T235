@@ -43,8 +43,11 @@ README saying what it builds and how to run it.
 
 Every change to any of them is formatted, validated, tested and
 security-scanned automatically ([`ci.yml`](../.github/workflows/ci.yml)).
-dev, staging and prod also get a nightly check that nothing has been changed
-by hand ([`drift.yml`](../.github/workflows/drift.yml)).
+A nightly check that nothing has been changed by hand is built
+([`drift.yml`](../.github/workflows/drift.yml)), but no environment is
+enrolled yet: it needs an environment that stays deployed, with its
+plan-role variable set. Today drift is caught by re-running the deployment
+and getting 0 changes.
 
 ## Where to find things
 
@@ -53,7 +56,7 @@ by hand ([`drift.yml`](../.github/workflows/drift.yml)).
 | Everything that gets built | [`solution-b/main.tf`](solution-b/main.tf) | [`solution-a/workload/main.tf`](solution-a/workload/main.tf), then each landing-zone step |
 | The settings to change | [`solution-b/poc.auto.tfvars`](solution-b/poc.auto.tfvars) | One file per environment: [`demo`](solution-a/workload/demo.tfvars), [`dev`](solution-a/workload/dev.tfvars), [`staging`](solution-a/workload/staging.tfvars), [`prod`](solution-a/workload/prod.tfvars); each landing-zone step's `settings.auto.tfvars` |
 | Accounts and guardrails | (one account) | [`1-organization/`](solution-a/landing-zone/1-organization/), [`policies/`](solution-a/landing-zone/1-organization/policies/) |
-| Who can sign in, and what they can do | IAM users (being replaced) | [`identity/`](solution-a/landing-zone/identity/), [`identity-center.tf`](solution-a/landing-zone/1-organization/identity-center.tf) |
+| Who can sign in, and what they can do | Single sign-on; the team's IAM users and access keys remain until Phase 2 milestone M1 | [`identity/`](solution-a/landing-zone/identity/), [`identity-center.tf`](solution-a/landing-zone/1-organization/identity-center.tf) |
 | Encryption keys | [`security-baseline/kms.tf`](modules/security-baseline/kms.tf) | [`workload/kms.tf`](solution-a/workload/kms.tf), [`2-security/kms.tf`](solution-a/landing-zone/2-security/kms.tf) |
 | Audit logging | [`security-baseline/cloudtrail.tf`](modules/security-baseline/cloudtrail.tf) | [`2-security/cloudtrail.tf`](solution-a/landing-zone/2-security/cloudtrail.tf), [`log-archive.tf`](solution-a/landing-zone/2-security/log-archive.tf) |
 | Threat detection and security checks | [`security-baseline/guardduty.tf`](modules/security-baseline/guardduty.tf) | [`2-security/detection.tf`](solution-a/landing-zone/2-security/detection.tf), [`alerts.tf`](solution-a/landing-zone/2-security/alerts.tf) |
@@ -82,8 +85,8 @@ enforcing needs guardrails, which need the multi-account organisation.
 | Separate account per environment | Designed | Configured | `landing-zone/1-organization/accounts.tf` |
 | Only Sydney (and `us-east-1`) can be used | Not covered | Enforced | `1-organization/policies/restrict-regions.json.tftpl` |
 | Root user blocked in member accounts | Not covered | Enforced | `1-organization/policies/deny-root-user.json` |
-| Single sign-on with separate admin, developer and read-only roles | Designed (IAM users with MFA for now) | Configured | `1-organization/identity-center.tf` |
-| MFA for everyone | Designed (set on each IAM user) | Configured (an Identity Center console setting) | Runbooks |
+| Single sign-on with separate admin, developer and read-only roles | Designed (single sign-on is the supported way in; the team's IAM users stay in a shared admin group until M1) | Configured (the code creates no IAM users) | `1-organization/identity-center.tf` |
+| MFA for everyone | Designed (set on each IAM user, but the users also have access keys, which MFA doesn't cover; removing them is M1) | Configured (an Identity Center console setting) | Runbooks |
 | Data encrypted with our own key, rotated automatically | Configured (one shared key) | Configured (a key per account) | `security-baseline/kms.tf`, `workload/kms.tf`, `2-security/kms.tf` |
 | Every bucket versioned, never public, access-logged | Configured | Configured, plus an account-wide block on public buckets | `s3-bucket/main.tf`, `account-baseline/main.tf` |
 | Audit trail of every action, all regions, tamper-evident | Configured (deleted on teardown) | Enforced | `security-baseline/cloudtrail.tf`, `2-security/cloudtrail.tf` |
@@ -96,7 +99,7 @@ enforcing needs guardrails, which need the multi-account organisation.
 | Email alert on high and critical findings | Not covered | Configured | `2-security/alerts.tf` |
 | Container images scanned when pushed | Not covered | Configured | `3-shared-services/main.tf` |
 | Running servers scanned for vulnerabilities (Inspector) | Designed | Designed (Phase 2) | |
-| Network traffic logged (VPC Flow Logs) | Configured (30 days) | Configured (30 or 90 days) | `network/flow-logs.tf` |
+| Network traffic logged (VPC Flow Logs) | Configured (30 days) | Configured (30 days) | `network/flow-logs.tf` |
 | Web servers in private subnets; database with no route to the internet | Configured (no web servers unless the demo is on) | Configured | `network/` |
 | Network's default firewall rule locked down | Not covered | Configured | `network/default-security-group.tf` |
 | Only the load balancer reaches the web servers; only they reach the database | Configured (demo only) | Configured | `container-service/security-groups.tf`, `postgres-database/main.tf` |
@@ -104,20 +107,20 @@ enforcing needs guardrails, which need the multi-account organisation.
 | HTTPS with TLS 1.2 or later | Not covered (demo is HTTP) | Configured (once there's a certificate) | `container-service/load-balancer.tf` |
 | Database password never in code | Not covered (no database) | Configured | `postgres-database/main.tf` |
 | Backups | Configured (file versioning) | Configured (plus database backups, 35 days in prod) | `s3-bucket/`, `postgres-database/` |
-| GitHub deploys without stored keys: read-only role for checks, approval needed to deploy | Configured | Configured | `github-oidc/main.tf` |
+| GitHub deploys without stored keys: a read-only role (only the nightly drift check would use it; CI doesn't sign in to AWS) and an apply role trusted only from `main` through a GitHub environment (reviewers meant for staging and prod; no environments or deploy workflow yet) | Configured | Configured (workload accounts only, when GitHub deploys are on) | `github-oidc/main.tf` |
 | Terraform refuses to run against the wrong account | Configured | Configured | Each `providers.tf` |
 | Monthly cost alert | Configured (US$1, about A$1.45) | Configured (per account) | `solution-b/main.tf`, `workload/main.tf` |
 | The Guide's required tags on every resource | Configured | Configured | Each `providers.tf` |
-| Every change formatted, validated, tested and scanned | Configured (GitHub Free can't make it mandatory) | Configured (same) | `.github/workflows/ci.yml` |
+| Every change formatted, validated, tested and scanned | Configured (the ruleset requires a review, not the checks) | Configured (same) | `.github/workflows/ci.yml` |
 
 Every security scanner finding, and what we decided about it, is in the
-[scan findings register](../docs/03-security-controls/scan-findings.md).
+[scan findings register](../docs/deliverables/security-controls.md#scan-findings-register).
 
 Known gaps in Solution A:
 
 - The audit trail isn't streamed to CloudWatch, so the CIS alarms on it aren't set up. Phase 2.
 - The application signs in to the database as the main (admin) user. A user with fewer rights is Phase 2.
-- GitHub's deploy role is an administrator of its own account, guarded by approval and the guardrails. Narrowing it is Phase 2.
+- GitHub's deploy role is an administrator of its own account, guarded by the GitHub environment it trusts and the guardrails. Narrowing it is Phase 2.
 - One Security account does the job of AWS's separate Log Archive and Security Tooling accounts, to save cost.
 
 ## What it costs
@@ -183,6 +186,6 @@ nothing.
 ## Why it's built this way
 
 The design decisions, with their reasons, are in
-[deliverable 2](../docs/02-landing-zone-design/README.md#key-decisions). The
+[deliverable 2](../docs/deliverables/landing-zone-design.md#key-decisions). The
 AWS and Terraform guidance the code follows is listed in
-[frameworks and standards](../docs/frameworks-and-standards.md).
+[frameworks and standards](../docs/deliverables/compliance-mapping.md#frameworks-and-standards).

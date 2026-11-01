@@ -5,7 +5,7 @@ people and groups, guardrails, central security, the container registry,
 and then the dev, staging and prod environments.
 
 > [!IMPORTANT]
-> **The five AWS accounts it creates are permanent.** Everything inside them can be torn down and rebuilt, but the accounts themselves are only closed by hand at the end of the project (see [Tear down](#tear-down)). Running everything costs about A$790 a month. **To show Solution A working without any of that, use [demo-solution-a.md](demo-solution-a.md) instead.**
+> **The five AWS accounts it creates are permanent.** The code defines five member accounts; four exist today, because Shared Services waits for the account limit to free up (about mid-January 2027). Everything inside them can be torn down and rebuilt, but the accounts themselves are only closed by hand at the end of the project (see [Tear down](#tear-down)). Running everything costs about A$790 a month. **To show Solution A working without any of that, use [demo-solution-a.md](demo-solution-a.md) instead.**
 
 | | |
 |---|---|
@@ -109,7 +109,7 @@ Copy these as you go. Each is produced by one step and consumed by a later one.
 | Value | Produced in | Used in |
 |---|---|---|
 | `organization_id` | Step 1 | Step 0 re-run (`-var "organization_id=..."`) |
-| `account_ids` (management, security, shared services, dev, staging, prod) | Step 1 | The account ID fields in steps 2 and 3, and `account_id` in each step 4 `.tfvars` |
+| `account_ids` (security, shared services, dev, staging, prod: member accounts only) | Step 1 | The account ID fields in steps 2 and 3, and `account_id` in each step 4 `.tfvars` |
 | `config_bucket_name`, `config_kms_key_arn` | Step 2 | Steps 3 and 4 |
 | `container_registry_url` | Step 3 | Step 4 `container_image` (as `<container_registry_url>:<version>`) |
 | `app_url` | Step 4 | Verification only |
@@ -216,7 +216,7 @@ Then plan and apply as in [How every step works](#how-every-step-works). It need
 
 **Goal:** stand up the Security account (Security Hub, GuardDuty, AWS Config and alerting).
 
-Fill in `management_account_id`, `security_account_id` (both from step 1) and `security_alert_email`. Plan and apply.
+Fill in `management_account_id` (the management account's ID from your step 1 settings file; it isn't an output), `security_account_id` (from step 1's `account_ids`) and `security_alert_email`. Plan and apply.
 
 **Record:** `config_bucket_name` and `config_kms_key_arn`.
 
@@ -311,7 +311,7 @@ terraform plan -var-file="$e.tfvars" -var "assume_role_name=OrganizationAccountA
 
 | What | How |
 |---|---|
-| dev or staging (to save cost) | `terraform destroy -var-file="$e.tfvars" -var "assume_role_name=OrganizationAccountAccessRole"` in `solution-a/workload`, after `init` with that environment's key. Run by a person: GitHub's roles can't, because a guardrail stops them switching off configuration history. Rebuild later with apply |
+| dev or staging (to save cost) | `terraform destroy -var-file="$e.tfvars" -var "assume_role_name=OrganizationAccountAccessRole"` in `solution-a/workload`, after `init` with that environment's key. Run by a person: GitHub's roles can't, because a guardrail stops them switching off configuration history. The same guardrail stops the apply role creating or changing the Config recorder or replacing flow logs, so those parts are deployed through `OrganizationAccountAccessRole` too. Rebuild later with apply |
 | prod | Set `protect_from_deletion = false` in `prod.tfvars`, apply, then destroy. Deliberately two steps |
 | Step 2 (security) | `terraform destroy` in `landing-zone/2-security`, after the environments. It hands the security services back from the Security account, then switches them off. The log buckets only go if `force_destroy_buckets = true`, and audit logs under a COMPLIANCE lock never do |
 | Steps 1 and 3, people, accounts | Not torn down. They cost little or nothing. The member accounts are protected and are closed by hand in AWS Organizations only at the end of the project: see [demo-landing-zone-dev.md, Decommission](demo-landing-zone-dev.md#decommission-end-of-project-only) |

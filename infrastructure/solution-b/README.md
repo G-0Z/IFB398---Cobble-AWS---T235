@@ -76,8 +76,8 @@ records or trust. Cylinders are S3 buckets.
 
 ## How it differs from Solution A
 
-Solution B keeps cost near zero by simplifying. The
-[root README](../../README.md#what-solution-b-leaves-out-and-how-solution-a-fills-the-gap)
+Solution B keeps cost near zero by simplifying.
+[ADR 0009](../../docs/decisions/0009-solution-b-shortcuts.md)
 lists each simplification and how Solution A handles it.
 
 This folder was called `envs/poc` until October 2026. Its record in the
